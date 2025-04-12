@@ -4,16 +4,23 @@ import { paginate, addProdRequest } from '$lib/services/productCatalog.service';
 import {error} from '@sveltejs/kit';
 //import { depends}  from '$app/navigation';
 
-export async function load({params, url }) {
+export async function load({params, url, request }) {
   const page = url.searchParams.get('page') || 1;
- // depends(`url:page=${page}`);
+  let searchString = url.searchParams.get("searchString")?.toString();
+  if(searchString) {
+    const products = await paginate(page, 6, searchString);
+    return{
+      products: products
+    }
+  }
 
-  const products = await paginate(page) //params.limit, params.sort, params.search, params.category);
+  const products = await paginate(page);
   console.log(page);
   return{
       products: products
   }
 }
+
 export const actions = {
     addProdRequest: async ({ request, locals }) => {
         const form = await request.formData();

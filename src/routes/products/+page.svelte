@@ -48,10 +48,17 @@
         modal.close();
         showModal = false;
     }
+
+    let search = $state('');
 </script>
 
 <main class="products-container">
     <h1>Produktet tona organike 🌱</h1>
+
+    <form use:enhance method="get" action="?/">
+        <input type="text" name="searchString" placeholder="Search products..." bind:value={search} />
+        <button type="submit">Search</button>
+    </form>
     
     {#if isLoading}
         <div class="loading-spinner">
@@ -123,7 +130,7 @@
 </main>
 
 
-<dialog bind:this={modal} >
+<dialog bind:this={modal}>
         {#if showModal}
         <div class="modal">
           <div class="modal-header">
