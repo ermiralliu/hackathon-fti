@@ -1,108 +1,116 @@
 <script>
-// @ts-nocheck
-
-    let newProduct = {
-    name: '',
-    price: '',
-    image: null,
-    imagePreview: ''
-  };
-  // Handle image upload
-  function handleImageUpload(event) {
-    const file = event.target.files[0];
-    if (file) {
-      newProduct.image = file;
-      newProduct.imagePreview = URL.createObjectURL(file);
+    // @ts-nocheck
+    import { enhance } from "$app/forms";
+    
+    let currentImage = $state(null);
+    let imagePreview = $state("");
+    
+    function handleImageUpload(event) {
+      const file = event.target.files[0];
+      if (file) {
+        currentImage = file;
+        imagePreview = URL.createObjectURL(file);
+      }
     }
-  }
-  
-  // Add new product
-  function addProduct() {
-    if (newProduct.name && newProduct.price) {
-      products.update(p => [...p, {
-        id: Date.now(),
-        ...newProduct,
-        price: parseFloat(newProduct.price)
-      }]);
-      
-      // Reset form
-      newProduct = {
-        name: '',
-        price: '',
-        image: null,
-        imagePreview: ''
-      };
-    }
-  }
-  
 </script>
+
 <div class="tab-content">
     <h2>Add New Product</h2>
-    <div class="form-group">
-      <label for="product-name">Product Name</label>
-      <input 
-        id="product-name" 
-        type="text" 
-        bind:value={newProduct.name} 
-        placeholder="Enter product name"
-      />
-    </div>
-    <div class="form-group">
-      <label for="product-price">Price ($)</label>
-      <input 
-        id="product-price" 
-        type="number" 
-        bind:value={newProduct.price} 
-        placeholder="Enter price"
-      />
-    </div>
-    <div class="form-group">
-      <label for="product-image">Product Image</label>
-      <input 
-        id="product-image" 
-        type="file" 
-        accept="image/*" 
-        on:change={handleImageUpload}
-      />
-      {#if newProduct.imagePreview}
-        <img src={newProduct.imagePreview} alt="Preview" class="image-preview"/>
-      {/if}
-    </div>
-    <button on:click={addProduct} class="submit-btn">Add Product</button>
-  </div>
+    <!-- Add enctype attribute here -->
+    <form use:enhance method="POST" action="?/create" enctype="multipart/form-data">
+        <!-- Product Name -->
+        <div class="form-group">
+            <label for="product-name">Product Name</label>
+            <input
+                id="product-name"
+                type="text"
+                name="name"
+                placeholder="Enter product name"
+                required
+            />
+        </div>
+
+        <!-- Product Type -->
+        <div class="form-group">
+            <label for="product-type">Product Type</label>
+            <select id="product-type" name="type" required>
+                <option value="" selected disabled>-- Select type --</option>
+                <option value="fruit">Fruit</option>
+                <option value="vegetable">Vegetable</option>
+                <option value="alcoholic beverages">Alcoholic Beverage</option>
+                <option value="juice">Juice</option>
+                <option value="dairy">Dairy</option>
+                <option value="other">Other</option>
+            </select>
+        </div>
+  
+        <!-- Product Price -->
+        <div class="form-group">
+            <label for="product-price">Price ($)</label>
+            <input
+                id="product-price"
+                type="number"
+                name="price"
+                placeholder="Enter price"
+                step="0.01"
+                min="0"
+                required
+            />
+        </div>
+    
+        <!-- Product Description -->
+        <div class="form-group">
+            <label for="product-description">Description</label>
+            <textarea
+                id="product-description"
+                name="description"
+                placeholder="Enter product description"
+                rows="4"
+            ></textarea>
+        </div>
+    
+        <!-- Product Image -->
+        <div class="form-group">
+            <label for="product-image">Product Image</label>
+            <input
+                id="product-image"
+                type="file"
+                accept="image/*"
+                name="photo"
+                onchange={handleImageUpload}
+            />
+            {#if imagePreview}
+                <img src={imagePreview} alt="Preview" class="image-preview" />
+            {/if}
+        </div>
+    
+        <!-- Submit Button -->
+        <button type="submit" class="submit-btn">Add Product</button>
+    </form>
+</div>
 
   <style>
-    /* Base Styles */
     :global(body) {
       margin: 0;
       padding: 0;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background-color: #f8f9fa;
       color: #212529;
-      min-width: 320px; /* Prevent horizontal scrolling on very narrow screens */
+      min-width: 320px;
     }
-  
-    
-  
-    
-    
     .tab-content {
       max-width: 1200px;
       margin: 0 auto;
     }
-    
-    /* Form Styles */
     .form-group {
       margin-bottom: 20px;
     }
-    
     .form-group label {
       display: block;
       margin-bottom: 8px;
       font-weight: 600;
       color: #495057;
     }
-    
     .form-group input {
       width: 100%;
       padding: 10px;
@@ -111,7 +119,6 @@
       font-size: 16px;
       background-color: #f8f9fa;
     }
-    
     .submit-btn {
       background-color: #28a745;
       color: white;
@@ -123,13 +130,9 @@
       font-weight: 600;
       transition: background-color 0.3s;
     }
-    
     .submit-btn:hover {
       background-color: #218838;
     }
-    
-    
-    
     .image-preview {
       max-width: 100%;
       max-height: 300px;
@@ -138,57 +141,51 @@
       border-radius: 4px;
       box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
-    
-    
-    
-    
-    
+    textarea {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ced4da;
+        border-radius: 4px;
+        font-size: 16px;
+        background-color: #f8f9fa;
+        resize: vertical;
+    }
+    .form-group select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    font-size: 16px;
+    background-color: #f8f9fa;
+    color: #212529;
+    appearance: none; 
+    }
     @media (max-width: 576px) {
-      
-      
       .tab-content {
         padding: 10px;
       }
-  
-      /* Better handling for very narrow screens */
       .form-group input {
-        width: calc(100% - 30px); /* Account for padding */
+        width: calc(100% - 30px);
       }
-  
-      /* Ensure buttons don't overflow */
       button {
         white-space: normal;
         word-wrap: break-word;
       }
     }
-  
-    /* Extra small devices (phones, 400px and down) */
     @media (max-width: 400px) {
-      
-  
-      /* Make form elements more compact */
       .form-group {
         margin-bottom: 12px;
       }
-  
       .form-group input {
         padding: 8px 10px;
         font-size: 14px;
       }
-  
-      /* Adjust button sizes */
       button {
         padding: 8px 12px;
         font-size: 14px;
       }
-  
-      
-  
-      /* Smaller image preview */
-      .image-preview {
+        .image-preview {
         max-height: 200px;
       }
     }
-  
-    
   </style>

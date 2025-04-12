@@ -9,11 +9,11 @@
 
 <style>
     nav {
-        background-color: #333;
+        background-color: #213555;
         padding: 1rem;
-        position: fixed; /* Make the nav bar fixed */
+        position: fixed; 
         top: 0; 
-        width: 100%; /* Ensure it spans the width of the screen */
+        width: 100%;
         z-index: 1000;
         
     }

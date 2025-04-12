@@ -2,16 +2,23 @@
 import prisma from "../prisma";
 import type { Product } from "@prisma/client";
 
-export async function addProduct(farmerId: number, entry: Product) {
+
+export async function addProduct(farmerId: number, entry: Omit<Product, 'id' | 'farmer' | 'farmerId'>) {
   try {
-    await prisma.product.create({
-      data: entry
-    });
-    console.log("should've been created successfully");
+      await prisma.product.create({
+          data: {
+              ...entry,
+              farmer: {
+                  connect: { id: farmerId } // Connect to an existing farmer
+              }
+          }
+      });
+      console.log("Product created successfully");
   } catch (error: any) {
-    console.error('Error deleting record:', error);
+      console.error('Error creating product:', error);
   }
 }
+
 
 export async function deleteProduct(entryId: number, farmerId: number) {
   // po ve userId =2 just for tests for convenience sake
@@ -55,4 +62,8 @@ export async function updateProduct(productId: number, updates: Partial<Product>
     console.error(`Error updating product with ID ${productId}:`, error);
     return null; // Or you could throw the error if you want the calling function to handle it
   }
+}
+export async function getFarmer(userId: number) {
+  return await prisma.user.findUnique({where: {id: userId}})
+  
 }
