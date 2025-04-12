@@ -1,5 +1,7 @@
 <!-- src/routes/products/+page.svelte -->
 <script>
+// @ts-nocheck
+
     import { goto } from '$app/navigation';
     import { fade, fly } from 'svelte/transition';
     let {data} = $props();
@@ -14,9 +16,6 @@
         window.location.reload();
     }
 
-    /**
-     * @param {number} page
-     */
     function changePage(page) {
         goto(`/products?page=${page}`, {noScroll:true});
     }
@@ -28,7 +27,30 @@
         }
         return pages;
     }
+    let showModal = $state(false);
+    let quantity = $state('');
+    let messageProdRequest = $state('');
+    let selectedProduct = $state(null);
 
+    let modal;
+
+    $effect(() => {
+        if(showModal)
+            modal.showModal();
+    });
+  
+    function openModal() {
+      showModal = true;
+    }
+  
+    function closeModal() {
+      showModal = false;
+    }
+
+    function confirmQuantity() {
+        console.log('Quantity confirmed:', quantity);
+        closeModal();
+    }
 </script>
 
 <main class="products-container">
@@ -65,12 +87,15 @@
                     </div>
                     <div class="product-details">
                         <h2>{product.name}</h2>
-                        <p class="product-description">{product.description}</p>
+                        <p class="product-description">{product.type}</p>
                         <div class="product-meta">
                             <span class="price">{product.price}€</span>
                             <span class="farmer">By {product.farmer.name}</span>
                         </div>
-                        <button onclick={openModal}>
+                        <button onclick={() => {
+                            selectedProduct = product,
+                            openModal()
+                            }}>
                             Me shume
                         </button>
                     </div>
@@ -99,10 +124,122 @@
     {/if}
 </main>
 
+{#if showModal}
+    
+    <dialog bind:this={modal}>
+        <div class="modal">
+          <div class="modal-header">
+            <h2>{selectedProduct.name}</h2>
+            <button onclick={closeModal}>&times;</button>
+          </div>
+          <div class="modal-body">
+            <img 
+                src={selectedProduct.imageUrl || '/placeholder-product.jpg'} 
+                alt={selectedProduct.name}
+                loading="lazy"
+            />
+            <form>
+            <label for="description">Description:</label>
+            <p>{selectedProduct.description}</p>
+            <label for="price">Price:</label>
+            <p>{selectedProduct.price}</p>
+
+              <label for="quantity">Quantity:</label>
+              <input type="text" id="quantity" bind:value={quantity} />
+              <label for="message">Message:</label>
+              <input type="text" id="quantity" bind:value={messageProdRequest} />
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button onclick={closeModal}>Cancel</button>
+            <button class="primary" onclick={confirmQuantity}>Confirm</button>
+          </div>
+        </div>
+      </dialog>
+{/if}
 
   
 <style>
 
+dialog {
+  border: none;
+  border-radius: 8px;
+  padding: 20px;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+dialog::backdrop {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+}
+
+.modal-header button {
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  margin-left: auto;
+}
+
+.modal-body {
+  margin-bottom: 15px;
+}
+
+.modal-body form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.modal-body label {
+  font-weight: bold;
+}
+
+.modal-body input {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.modal-footer button {
+  padding: 8px 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.modal-footer button.primary {
+  background-color: #007bff;
+  color: white;
+  border-color: #007bff;
+}
+    .products-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem 1rem;
+    }
 
     h1 {
         text-align: center;
