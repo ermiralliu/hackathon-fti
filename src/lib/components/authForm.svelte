@@ -34,7 +34,7 @@
       Role:
       <select name="role">
         <option value="consumer" selected> Bleres </option>
-        <option value="frmer"> Fermer </option>
+        <option value="fermer"> Fermer </option>
       </select>
     </label>
   {/if}
