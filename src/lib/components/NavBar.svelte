@@ -9,8 +9,13 @@
 
 <style>
     nav {
-        background-color: #333;
+        background-color: #213555;
         padding: 1rem;
+        position: fixed; 
+        top: 0; 
+        width: 100%;
+        z-index: 1000;
+        
     }
     ul {
         display: flex;
@@ -29,6 +34,7 @@
     a:hover {
         text-decoration: underline;
     }
+    
 </style>
 
 <nav>
