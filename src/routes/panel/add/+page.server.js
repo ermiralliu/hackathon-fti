@@ -1,7 +1,7 @@
 // @ts-nocheck
 import { addProduct } from "$lib/services/farmer.service";
 import { saveImageToStaticFolder } from "$lib/helpers/saveImage.helper";
-import { error, redirect } from '@sveltejs/kit';
+import { error } from '@sveltejs/kit';
 
 export function load(){
 
@@ -10,7 +10,7 @@ export function load(){
 export const actions = {
     create: async ({ request, locals }) => {
         const form = await request.formData();
-        const farmerId = locals.user?.id;
+        const farmerId = locals.user?.id ?? 1;
         
         
 
@@ -42,7 +42,7 @@ export const actions = {
                 type, 
                 price, 
                 description, 
-                image: imagePath
+                imagePath: imagePath
             });
 
             return {

@@ -75,9 +75,10 @@
             {#each products as product (product.id)}
                 <article class="product-card">
                     <div  in:fade={{ duration: 700 }} out:fade>
+                        {console.log(product.imagePath)}
                     <div class="product-image">
                         <img 
-                            src={product.imageUrl || '/placeholder-product.jpg'} 
+                            src={"../../.."+product.imagePath} 
                             alt={product.name}
                             loading="lazy"
                         />
@@ -134,7 +135,7 @@
           </div>
           <div class="modal-body">
             <img 
-                src={selectedProduct.imageUrl || '/placeholder-product.jpg'} 
+                src={"../../.."+selectedProduct.imagePath || '/placeholder-product.jpg'} 
                 alt={selectedProduct.name}
                 loading="lazy"
             />
