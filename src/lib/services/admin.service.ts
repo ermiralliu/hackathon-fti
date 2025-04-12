@@ -1,7 +1,5 @@
 import prisma from "$lib/prisma";
-import type { Role } from "@prisma/client";
-
-// USERS
+import type { Role, ProductType } from "@prisma/client";// USERS
 
 /**
  * Merr përdoruesit me pagination.
@@ -16,8 +14,11 @@ export async function getAllUsers(page: number = 1, pageSize: number = 6) {
         skip,
         take,
         orderBy: { id: "asc" },
+        where : {
+          isValid: true
+        }
       }),
-      prisma.user.count(), // Numëron gjithsej përdoruesit
+      prisma.user.count(), 
     ]);
 
     const totalPages = Math.ceil(totalCount / pageSize);
@@ -40,10 +41,11 @@ export async function getAllUsers(page: number = 1, pageSize: number = 6) {
 export async function invalidateUser(userId: number) {
   try {
     console.log("Invalidating user with id:", userId);
-    return await prisma.user.update({
+    const updatedUser = await prisma.user.update({
       where: { id: userId },
-      data: { isValid: false }, // Përdorim fushën isValid për ta bërë të pavlefshëm përdoruesin
+      data: { isValid: false },
     });
+    return updatedUser; // Make sure to return the updated user
   } catch (error) {
     console.error(`Error invalidating user with id ${userId}:`, error);
     throw new Error(`Failed to invalidate user with id ${userId}`);
@@ -137,5 +139,92 @@ export async function updateProductById(
   } catch (error) {
     console.error(`Error updating product with id ${id}:`, error);
     throw new Error(`Failed to update product with id ${id}`);
+  }
+}
+export async function getFarmerProducts(userId: number) {
+  try {
+    const products = await prisma.product.findMany({
+      where: {
+        farmerId: userId
+      },
+      include: {
+        farmer: {
+          select: {
+            name: true,
+            email: true
+          }
+        }
+      },
+      orderBy: {
+        createdAt: 'desc'
+      }
+    });
+
+    return products;
+  } catch (error) {
+    console.error(`Error fetching products for farmer ${userId}:`, error);
+    throw new Error(`Failed to fetch products for farmer ${userId}`);
+  }
+}
+
+/**
+ * Përditëson produktin e një fermeri specifik
+ */
+export async function updateFarmerProduct(
+  userId: number,
+  productId: number,
+  data: { 
+    name: string; 
+    description: string; 
+    price: number; 
+    type: ProductType // Përdorni ProductType në vend të string
+  }
+) {
+  try {
+    // Kontrollo që produkti i përket fermerit
+    const product = await prisma.product.findFirst({
+      where: {
+        id: productId,
+        farmerId: userId
+      }
+    });
+
+    if (!product) {
+      throw new Error('Product not found or does not belong to this farmer');
+    }
+
+    return await prisma.product.update({
+      where: { id: productId },
+      data
+    });
+  } catch (error) {
+    console.error(`Error updating product ${productId} for farmer ${userId}:`, error);
+    throw error;
+  }
+}
+
+/**
+ * Fshin produktin e një fermeri specifik
+ */
+export async function deleteFarmerProduct(userId: number, productId: number) {
+  try {
+    // Kontrollo që produkti i përket fermerit
+    const product = await prisma.product.findFirst({
+      where: {
+        id: productId,
+        farmerId: userId
+      }
+    });
+
+    if (!product) {
+      throw new Error('Product not found or does not belong to this farmer');
+    }
+
+    return await prisma.product.delete({
+      where: { id: productId }
+    });
+  } catch (error) {
+    console.error(`Error deleting product ${productId} for farmer ${userId}:`, error);
+    throw error;
   }
 }

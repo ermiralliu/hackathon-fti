@@ -37,15 +37,20 @@ export const actions: Actions = {
     const userId = Number(formData.get("userId"));
 
     try {
-      await invalidateUser(userId);  // Heqim përdorimin e transaksionit (tx)
-  
-      return redirect(303, url.pathname);
+      await invalidateUser(userId);
+      // Return success instead of redirect
+      return { 
+        success: true,
+        message: `User ${userId} invalidated successfully`
+      };
     } catch (error) {
       console.error("Error deleting user:", error);
-      return fail(500, { error: "Failed to delete user" });
+      return fail(500, { 
+        error: "Failed to delete user",
+        details: error instanceof Error ? error.message : String(error)
+      });
     }
   },
-
   updateUser: async ({ request }) => {
     const formData = await request.formData();
     const id = Number(formData.get("id"));
