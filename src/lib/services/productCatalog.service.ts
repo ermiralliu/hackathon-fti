@@ -1,4 +1,5 @@
 
+import type { PurchaseRequest } from "@prisma/client";
 import prisma from "../prisma";
 
 
