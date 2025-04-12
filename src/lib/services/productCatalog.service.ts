@@ -1,6 +1,7 @@
 
 import prisma from "../prisma";
 
+
 export async function paginate( page = 1, pageSize = 6){ // do shtohen extra arguments per search me specifike
   const skip = (page - 1) * pageSize;
   const take = pageSize;
@@ -28,16 +29,6 @@ export async function paginate( page = 1, pageSize = 6){ // do shtohen extra arg
   ]);
 
   const totalPages = Math.ceil(totalCount / pageSize);
-  // // const farmerNames = await prisma.user.findMany({
-  // //   where: {
-  // //     role: 'FARMER',
-  // //   },
-  // //   select: {
-  // //     id: true,
-  // //     name: true,
-  // //   },
-  // // });
-  // products[1].farmer.name
 
   return {
     products,
@@ -45,4 +36,26 @@ export async function paginate( page = 1, pageSize = 6){ // do shtohen extra arg
     currentPage: page,
     totalCount, 
   };
+}
+
+export async function addProdRequest(consumerId: number, productId:number, entry: Omit<PurchaseRequest, 'id' |'consumerId' | 'consumer' | 'createdAt' | 'product'|'productId' | 'finished'>) {
+  try {
+    const purchaseRequest = await prisma.purchaseRequest.create({
+      data: {
+        ...entry,
+        status: 'pending',
+        product: {
+          connect: { id: productId },
+        },
+        consumer: {
+          connect: { id: consumerId },
+        },
+      },
+    });
+    console.log('Purchase Request created successfully');
+    return purchaseRequest;
+  } catch (err) {
+    console.error('Error creating Purchase Request:', err);
+    throw err;
+  }
 }

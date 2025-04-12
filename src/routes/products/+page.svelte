@@ -34,22 +34,19 @@
 
     let modal;
 
-    $effect(() => {
-        if(showModal)
-            modal.showModal();
-    });
+    // $effect(() => {
+    //     if(showModal)
+    //         modal.showModal();
+    // });
   
     function openModal() {
-      showModal = true;
+        modal.showModal();
+        showModal = true;
     }
   
     function closeModal() {
-      showModal = false;
-    }
-
-    function confirmQuantity() {
-        console.log('Quantity confirmed:', quantity);
-        closeModal();
+        modal.close();
+        showModal = false;
     }
 </script>
 
@@ -125,9 +122,9 @@
     {/if}
 </main>
 
-{#if showModal}
-    
-    <dialog bind:this={modal}>
+
+<dialog bind:this={modal} >
+        {#if showModal}
         <div class="modal">
           <div class="modal-header">
             <h2>{selectedProduct.name}</h2>
@@ -139,25 +136,27 @@
                 alt={selectedProduct.name}
                 loading="lazy"
             />
-            <form>
-            <label for="description">Description:</label>
-            <p>{selectedProduct.description}</p>
-            <label for="price">Price:</label>
-            <p>{selectedProduct.price}</p>
+            <form use:enhance method="POST" action="?/addProdRequest" enctype="multipart/form-data">
+                <label for="description">Description:</label>
+                <p>{selectedProduct?.description}</p>
+                <label for="price">Price:</label>
+                <p>{selectedProduct?.price}</p>
 
-              <label for="quantity">Quantity:</label>
-              <input type="text" id="quantity" bind:value={quantity} />
-              <label for="message">Message:</label>
-              <input type="text" id="quantity" bind:value={messageProdRequest} />
+                <label for="quantity">Quantity:</label>
+                <input type="text" id="quantity" name="quantity" bind:value={quantity} required />
+                <label for="message">Message:</label>
+                <input type="text" name="message" bind:value={messageProdRequest} required />
+                <input type="hidden" name="productId" bind:value={selectedProduct.id} required />
+                <div class="modal-footer">
+                    <button type="button" onclick={closeModal}>Cancel</button>
+                    <button class="primary" type="submit">Confirm</button>
+                </div>
             </form>
           </div>
-          <div class="modal-footer">
-            <button onclick={closeModal}>Cancel</button>
-            <button class="primary" onclick={confirmQuantity}>Confirm</button>
-          </div>
+          
         </div>
+        {/if}
       </dialog>
-{/if}
 
   
 <style>
