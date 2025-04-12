@@ -56,7 +56,7 @@ model Product {
   requests   PurchaseRequest[]
   availability Boolean @default(true)
   imagePath  String?
-  type       ProductType
+  type       ProductType @default(other)
 }
 
 model PurchaseRequest {
