@@ -3,42 +3,139 @@ import type { Role } from "@prisma/client";
 
 // USERS
 
-export async function getAllUsers() {
-  return await prisma.user.findMany({
-    orderBy: { id: "asc" }
-  });
+/**
+ * Merr përdoruesit me pagination.
+ */
+export async function getAllUsers(page: number = 1, pageSize: number = 6) {
+  try {
+    const skip = (page - 1) * pageSize;
+    const take = pageSize;
+
+    const [users, totalCount] = await prisma.$transaction([
+      prisma.user.findMany({
+        skip,
+        take,
+        orderBy: { id: "asc" },
+      }),
+      prisma.user.count(), // Numëron gjithsej përdoruesit
+    ]);
+
+    const totalPages = Math.ceil(totalCount / pageSize);
+
+    return {
+      users,
+      totalPages,
+      currentPage: page,
+      totalCount,
+    };
+  } catch (error) {
+    console.error("Error fetching users:", error);
+    throw new Error("Failed to fetch users");
+  }
 }
 
-export async function deleteUserById(id: number) {
-  return await prisma.user.delete({
-    where: { id }
-  });
+/**
+ * Përdor për të vërtetuar përdoruesin (aktivizuar/invaliduar).
+ */
+export async function invalidateUser(userId: number) {
+  try {
+    console.log("Invalidating user with id:", userId);
+    return await prisma.user.update({
+      where: { id: userId },
+      data: { isValid: false }, // Përdorim fushën isValid për ta bërë të pavlefshëm përdoruesin
+    });
+  } catch (error) {
+    console.error(`Error invalidating user with id ${userId}:`, error);
+    throw new Error(`Failed to invalidate user with id ${userId}`);
+  }
 }
 
-export async function updateUserById(id: number, data: { email: string; username: string; role: Role }) {
-  return await prisma.user.update({
-    where: { id },
-    data
-  });
+/**
+ * Përditëson të dhënat e një përdoruesi në bazën e të dhënave me id të dhënë.
+ */
+export async function updateUserById(
+  id: number,
+  data: { email: string; username: string; role: Role }
+) {
+  try {
+    return await prisma.user.update({
+      where: { id },
+      data,
+    });
+  } catch (error) {
+    console.error(`Error updating user with id ${id}:`, error);
+    throw new Error(`Failed to update user with id ${id}`);
+  }
 }
 
 // PRODUCTS
 
-export async function getAllProducts() {
-  return await prisma.product.findMany({
-    orderBy: { id: "asc" }
-  });
+/**
+ * Merr produktet me pagination.
+ */
+export async function getAllProducts(page: number = 1, pageSize: number = 6) {
+  try {
+    const skip = (page - 1) * pageSize;
+    const take = pageSize;
+
+    const [products, totalCount] = await prisma.$transaction([
+      prisma.product.findMany({
+        skip,
+        take,
+        orderBy: { id: "asc" },
+        include: {
+          farmer: {
+            select: {
+              name: true,
+            },
+          },
+        },
+      }),
+      prisma.product.count(), // Numëron gjithsej produktet
+    ]);
+
+    const totalPages = Math.ceil(totalCount / pageSize);
+
+    return {
+      products,
+      totalPages,
+      currentPage: page,
+      totalCount,
+    };
+  } catch (error) {
+    console.error("Error fetching products:", error);
+    throw new Error("Failed to fetch products");
+  }
 }
 
+/**
+ * Fshin një produkt nga baza e të dhënave me id të dhënë.
+ */
 export async function deleteProductById(id: number) {
-  return await prisma.product.delete({
-    where: { id }
-  });
+  try {
+    return await prisma.product.delete({
+      where: { id },
+    });
+  } catch (error) {
+    console.error(`Error deleting product with id ${id}:`, error);
+    throw new Error(`Failed to delete product with id ${id}`);
+  }
 }
 
-export async function updateProductById(id: number, data: { name: string; description: string; price: number }) {
-  return await prisma.product.update({
-    where: { id },
-    data
-  });
+/**
+ * Përditëson të dhënat e një produkti në bazën e të dhënave me id të dhënë.
+ */
+export async function updateProductById(
+  id: number,
+  data: { name: string; description: string; price: number }
+) {
+  try {
+    return await prisma.product.update({
+      where: { id },
+      data,
+    });
+  } catch (error) {
+    console.error(`Error updating product with id ${id}:`, error);
+    throw new Error(`Failed to update product with id ${id}`);
+  }
 }

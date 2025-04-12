@@ -1,51 +1,27 @@
 <script lang="ts">
-    import { enhance } from '$app/forms';
+  import { enhance } from '$app/forms';
   import { onMount } from 'svelte';
 
   export let data;
   let activeTab: "users" | "products" = "users";
   let editingUserId: number | null = null;
   let editingProductId: number | null = null;
+  
+  // Pagination variables
+  let currentPage = 1;
+  let itemsPerPage = 5;
 
-  // Funksioni për të kontrolluar dhe siguruar që nuk kemi null në vlera
-  function getValidString(value: string | null): string {
-    return value ?? '';
+  // Calculate total pages for users and products
+  let totalUserPages = Math.ceil(data.users.length / itemsPerPage);
+  let totalProductPages = Math.ceil(data.products.length / itemsPerPage);
+
+
+  // Funksioni për të lëvizur ndërmjet faqeve
+  function changePage(page: number) {
+    currentPage = page;
   }
 
-  function getValidNumber(value: number | null): number {
-    return value ?? 0;
-  }
 
-  // Funksioni për të përditësuar përdoruesin
-  function updateUser(user: any) {
-    const updatedUser = {
-      ...user,
-      username: getValidString(user.username),
-      email: getValidString(user.email),
-      role: user.role ?? 'consumer',
-    };
-    // Përdorni funksionalitetin për përditësimin e përdoruesit
-    data.users = data.users.map(u => u.id === updatedUser.id ? updatedUser : u);
-    editingUserId = null; // Mbyll modalin e editimit
-  }
-
-  // Funksioni për të përditësuar produktin
-  function updateProduct(product: any) {
-    const updatedProduct = {
-      ...product,
-      name: getValidString(product.name),
-      description: getValidString(product.description),
-      price: getValidNumber(product.price),
-    };
-    // Përdorni funksionalitetin për përditësimin e produktit
-    data.products = data.products.map(p => p.id === updatedProduct.id ? updatedProduct : p);
-    editingProductId = null; // Mbyll modalin e editimit
-  }
-
-  // Funksioni për të fshirë produktin
-  function deleteProduct(productId: number) {
-    data.products = data.products.filter(product => product.id !== productId);
-  }
 </script>
 
 <div class="admin-panel">
@@ -86,8 +62,8 @@
                   </select>
                 </td>
                 <td>
-                  <button on:click={() => updateUser(user)}>Ruaj</button>
-                  <button on:click={() => editingUserId = null}>Anulo</button>
+                  <button >Ruaj</button>
+                  <button>Anulo</button>
                 </td>
               {:else}
                 <td>{user.username}</td>
@@ -98,13 +74,20 @@
                     <input type="hidden" name="userId" value={user.id} />
                     <button type="submit">Fshi</button>
                   </form>
-                  <button on:click={() => editingUserId = user.id}>Modifiko</button>
+                  <button>Modifiko</button>
                 </td>
               {/if}
             </tr>
           {/each}
         </tbody>
       </table>
+
+      <!-- Pagination Controls -->
+      <div class="pagination">
+        <button on:click={() => changePage(currentPage - 1)} disabled={currentPage === 1}>&laquo; Para</button>
+        <span>Faqja {currentPage} nga {totalUserPages}</span>
+        <button on:click={() => changePage(currentPage + 1)} disabled={currentPage === totalUserPages}>Pas &raquo;</button>
+      </div>
     {/if}
   {/if}
 
@@ -131,25 +114,54 @@
                 <td><input name="description" bind:value={product.description} /></td>
                 <td><input name="price" type="number" bind:value={product.price} /></td>
                 <td>
-                  <button on:click={() => updateProduct(product)}>Ruaj</button>
-                  <button on:click={() => editingProductId = null}>Anulo</button>
+                  <button >Ruaj</button>
+                  <button>Anulo</button>
                 </td>
               {:else}
                 <td>{product.name}</td>
                 <td>{product.description}</td>
                 <td>{product.price} €</td>
                 <td>
-                  <form method="POST" action="?/deleteProduct" style="display:inline;" on:submit={() => deleteProduct(product.id)}>
+                  <form method="POST" action="?/deleteProduct" style="display:inline;" >
                     <input type="hidden" name="productId" value={product.id} />
                     <button type="submit">Fshi</button>
                   </form>
-                  <button on:click={() => editingProductId = product.id}>Modifiko</button>
+                  <button >Modifiko</button>
                 </td>
               {/if}
             </tr>
           {/each}
         </tbody>
       </table>
+
+      <!-- Pagination Controls -->
+      <div class="pagination">
+        <button on:click={() => changePage(currentPage - 1)} disabled={currentPage === 1}>&laquo; Para</button>
+        <span>Faqja {currentPage} nga {totalProductPages}</span>
+        <button on:click={() => changePage(currentPage + 1)} disabled={currentPage === totalProductPages}>Pas &raquo;</button>
+      </div>
     {/if}
   {/if}
 </div>
+
+<style>
+  .pagination {
+    margin-top: 20px;
+    text-align: center;
+  }
+
+  .pagination button {
+    padding: 5px 15px;
+    margin: 0 5px;
+    cursor: pointer;
+  }
+
+  .pagination button:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+
+  .tabs button.active {
+    font-weight: bold;
+  }
+</style>

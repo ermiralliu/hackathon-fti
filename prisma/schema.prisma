@@ -25,6 +25,8 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  isValid Boolean @default(true)
+
   sessions  Session[]
   products  Product[]         // nëse është fermer
   requests  PurchaseRequest[] // nëse është konsumator
@@ -36,7 +38,7 @@ model User {
 model Session {
   id        String   @id @default(cuid())
   userId    Int
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id])
   expiresAt DateTime
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
