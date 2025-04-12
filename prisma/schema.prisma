@@ -54,6 +54,9 @@ model Product {
   farmerId   Int
 
   requests   PurchaseRequest[]
+  availability Boolean @default(true)
+  imagePath  String?
+  type       ProductType
 }
 
 model PurchaseRequest {
@@ -66,6 +69,9 @@ model PurchaseRequest {
 
   consumer   User     @relation(fields: [consumerId], references: [id])
   consumerId Int
+  status     Status
+  quantity   String?
+  finished   DateTime?   
 }
 
 model Message {
@@ -84,4 +90,19 @@ enum Role {
   farmer
   consumer
   admin
+}
+
+enum Status {
+  accepted
+  pending
+  declined
+}
+
+enum ProductType {
+  fruit
+  vegetable
+  alcoholicBeverage
+  juice
+  dairy
+  other
 }
