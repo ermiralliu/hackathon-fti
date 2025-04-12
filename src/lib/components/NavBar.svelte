@@ -11,6 +11,11 @@
     nav {
         background-color: #333;
         padding: 1rem;
+        position: fixed; /* Make the nav bar fixed */
+        top: 0; 
+        width: 100%; /* Ensure it spans the width of the screen */
+        z-index: 1000;
+        
     }
     ul {
         display: flex;
@@ -29,6 +34,7 @@
     a:hover {
         text-decoration: underline;
     }
+    
 </style>
 
 <nav>
