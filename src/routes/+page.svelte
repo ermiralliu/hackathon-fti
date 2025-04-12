@@ -49,14 +49,6 @@
     font-size: 16px;
   }
 
-  .page-container {
-    width: 100%;
-    padding: 0 1rem;
-    box-sizing: border-box;
-    max-width: 1400px;
-    margin: 0 auto;
-  }
-
   section {
     padding: 2.5rem 0;
     margin-bottom: 1.5rem;
@@ -230,10 +222,7 @@
   }
 
   @media (min-width: 1024px) {
-    .page-container {
-      padding: 0 2rem;
-    }
-
+    
     .how-it-works-section {
       padding: 3rem 2rem;
     }

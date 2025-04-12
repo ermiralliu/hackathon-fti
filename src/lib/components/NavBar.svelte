@@ -51,14 +51,26 @@
         ];
     }
 </script>
-
+<nav>
+    <ul>
+        {#each tabs as tab}
+            <li><a href={tab.link}>{tab.name}</a></li>
+        {/each}
+    </ul>
+    
+    <div class="language-switcher">
+        <LanguageSwitcher />
+    </div>
+</nav>
 <style>
     nav {
-        background-color: #333;
+        background-color: #213555;
         padding: 1rem;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
+        position: fixed; 
+        top: 0; 
+        width: 100%;
+        z-index: 1000;
+        
     }
 
     ul {
@@ -81,20 +93,6 @@
     a:hover {
         text-decoration: underline;
     }
-
-    .language-switcher {
-        margin-left: auto;
-    }
+    
 </style>
 
-<nav>
-    <ul>
-        {#each tabs as tab}
-            <li><a href={tab.link}>{tab.name}</a></li>
-        {/each}
-    </ul>
-    
-    <div class="language-switcher">
-        <LanguageSwitcher />
-    </div>
-</nav>
