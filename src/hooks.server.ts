@@ -10,7 +10,8 @@ export const handle: Handle = async ({ event, resolve }) => {
 		if (user) {
 			event.locals.user = user; // Make user data available in load functions and API routes
 		}
+    // console.log(JSON.stringify(user));
 	}
 
 	return await resolve(event);
-};
+}
