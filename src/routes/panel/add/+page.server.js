@@ -1,7 +1,7 @@
 // @ts-nocheck
 import { addProduct } from "$lib/services/farmer.service";
 import { saveImageToStaticFolder } from "$lib/helpers/saveImage.helper";
-import { error } from '@sveltejs/kit';
+import { error, redirect } from '@sveltejs/kit';
 
 export function load(){
 

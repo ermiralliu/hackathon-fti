@@ -24,6 +24,7 @@
 {/snippet}
 
 <form method="post" action="?/{auth}" use:enhance>
+  <h1>{isRegisterPage ? "Register" : "Login"}</h1>
   {@render Input("username", "Username:", "text")}
 
   {#if isRegisterPage}
@@ -64,13 +65,84 @@
   form {
     display: flex;
     flex-direction: column;
+    max-width: 400px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    color: black;
   }
 
-  button {
-    margin: 2%;
+  h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 1.8em;
   }
 
   label {
-    margin: 2%;
+    margin-bottom: 10px;
+    display: block;
+    color: black;
+  }
+
+  input,
+  select {
+    width: calc(100% - 12px);
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    background-color: #f9f9f9;
+    color: black; 
+  }
+
+  button {
+    margin-top: 20px;
+    padding: 10px 15px;
+    background-color: #c8e6c9;
+    color: black;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  button:disabled {
+    background-color: #e0e0e0;
+    color: #333; 
+    cursor: not-allowed;
+  }
+
+  a {
+    margin-top: 10px;
+    text-align: center;
+    display: block;
+    color: #007bff;
+  }
+
+  p[style="color:red"] {
+    margin-top: 10px;
+    text-align: center;
+    color: red; 
+  }
+
+  @media (max-width: 600px) {
+    form {
+      max-width: 90%;
+      margin: 10px auto;
+      padding: 10px;
+    }
+
+    input,
+    select {
+      width: calc(100% - 8px);
+      padding: 6px;
+    }
+
+    button {
+      padding: 8px 12px;
+    }
   }
 </style>
