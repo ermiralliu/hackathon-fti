@@ -5,127 +5,34 @@
 
   interface Translation {
     title: string;
-    tabs: {
-      users: string;
-      products: string;
-    };
-    tableHeaders: {
-      id: string;
-      name: string;
-      email: string;
-      role: string;
-      actions: string;
-      price: string;
-    };
-    messages: {
-      noUsers: string;
-      noProducts: string;
-    };
-    buttons: {
-      delete: string;
-      details: string;
-      save: string;
-      close: string;
-      farmerProducts: string;
-      prev: string;
-      next: string;
-    };
-    userModal: {
-      title: string;
-      username: string;
-      password: string;
-      email: string;
-      role: string;
-    };
-    roles: {
-      admin: string;
-      farmer: string;
-      consumer: string;
-    };
+    tabs: { users: string; products: string };
+    tableHeaders: { id: string; name: string; email: string; role: string; actions: string; price: string };
+    messages: { noUsers: string; noProducts: string };
+    buttons: { delete: string; details: string; save: string; close: string; farmerProducts: string; prev: string; next: string };
+    userModal: { title: string; username: string; password: string; email: string; role: string };
+    roles: { admin: string; farmer: string; consumer: string };
     pagination: string;
   }
 
   const translations: Record<string, Translation> = {
     en: {
       title: "Admin Panel",
-      tabs: {
-        users: "Users",
-        products: "Products"
-      },
-      tableHeaders: {
-        id: "ID",
-        name: "Name",
-        email: "Email",
-        role: "Role",
-        actions: "Actions",
-        price: "Price"
-      },
-      messages: {
-        noUsers: "No users found",
-        noProducts: "No products found"
-      },
-      buttons: {
-        delete: "Delete",
-        details: "Details",
-        save: "Save Changes",
-        close: "Close",
-        farmerProducts: "Farmer's Products",
-        prev: "« Prev",
-        next: "Next »"
-      },
-      userModal: {
-        title: "User Details",
-        username: "Username:",
-        password: "New Password (leave blank to keep current):",
-        email: "Email:",
-        role: "Role:"
-      },
-      roles: {
-        admin: "admin",
-        farmer: "farmer",
-        consumer: "consumer"
-      },
+      tabs: { users: "Users", products: "Products" },
+      tableHeaders: { id: "ID", name: "Name", email: "Email", role: "Role", actions: "Actions", price: "Price" },
+      messages: { noUsers: "No users found", noProducts: "No products found" },
+      buttons: { delete: "Delete", details: "Details", save: "Save Changes", close: "Close", farmerProducts: "Farmer's Products", prev: "« Prev", next: "Next »" },
+      userModal: { title: "User Details", username: "Username:", password: "New Password (leave blank to keep current):", email: "Email:", role: "Role:" },
+      roles: { admin: "admin", farmer: "farmer", consumer: "consumer" },
       pagination: "Page {0} of {1}"
     },
     sq: {
       title: "Paneli i Administratorit",
-      tabs: {
-        users: "Përdoruesit",
-        products: "Produktet"
-      },
-      tableHeaders: {
-        id: "ID",
-        name: "Emri",
-        email: "Email",
-        role: "Roli",
-        actions: "Veprime",
-        price: "Çmimi"
-      },
-      messages: {
-        noUsers: "Nuk ka përdorues",
-        noProducts: "Nuk ka produkte"
-      },
-      buttons: {
-        delete: "Fshi",
-        details: "Të dhënat",
-        save: "Ruaj ndryshimet",
-        close: "Mbyll",
-        farmerProducts: "Produktet e fermerit",
-        prev: "« Para",
-        next: "Pas »"
-      },
-      userModal: {
-        title: "Të dhënat e përdoruesit",
-        username: "Emri:",
-        password: "Fjalëkalimi i ri (lëreni bosh për të mos ndryshuar):",
-        email: "Email:",
-        role: "Roli:"
-      },
-      roles: {
-        admin: "admin",
-        farmer: "fermer",
-        consumer: "konsumator"
-      },
+      tabs: { users: "Përdoruesit", products: "Produktet" },
+      tableHeaders: { id: "ID", name: "Emri", email: "Email", role: "Roli", actions: "Veprime", price: "Çmimi" },
+      messages: { noUsers: "Nuk ka përdorues", noProducts: "Nuk ka produkte" },
+      buttons: { delete: "Fshi", details: "Të dhënat", save: "Ruaj ndryshimet", close: "Mbyll", farmerProducts: "Produktet e fermerit", prev: "« Para", next: "Pas »" },
+      userModal: { title: "Të dhënat e përdoruesit", username: "Emri:", password: "Fjalëkalimi i ri (lëreni bosh për të mos ndryshuar):", email: "Email:", role: "Roli:" },
+      roles: { admin: "admin", farmer: "fermer", consumer: "konsumator" },
       pagination: "Faqja {0} nga {1}"
     }
   };
@@ -141,19 +48,17 @@
   function t(key: string, ...params: any[]): string {
     const keys = key.split('.');
     let value: any = translations[currentLang];
-    
+
     for (const k of keys) {
       if (value && typeof value === 'object' && k in value) {
         value = value[k];
-      } else {
-        return key;
-      }
+      } else return key;
     }
-    
+
     if (typeof value === 'string' && params.length > 0) {
       return params.reduce((acc, param, index) => acc.replace(`{${index}}`, param), value);
     }
-    
+
     return value || key;
   }
 
@@ -186,11 +91,6 @@
   function closeModal() {
     showUserModal = false;
     selectedUser = null;
-  }
-
-  function viewFarmerProducts(userId: number) {
-    data.products = [];
-    goto(`/admin/farmer-products/${userId}`);
   }
 
   async function handleUpdateUser(event: any) {
@@ -236,15 +136,6 @@
   {#if activeTab === "users"}
     {#if !hasUsers}
       <div class="message error">{t('messages.noUsers')}</div>
-      <div class="pagination">
-        <a href="?page=1" class:disabled={currentPage === 1}>
-          {t('buttons.prev')}
-        </a>
-        <span>{t('pagination', currentPage, totalUserPages)}</span>
-        <a href="?page={currentPage + 1}" class:disabled={currentPage === totalUserPages || !hasUsers}>
-          {t('buttons.next')}
-        </a>
-      </div>
     {:else}
       <table>
         <thead>
@@ -274,31 +165,22 @@
           {/each}
         </tbody>
       </table>
-
-      <div class="pagination">
-        <a href="?page={currentPage - 1}" class:disabled={currentPage === 1}>
-          {t('buttons.prev')}
-        </a>
-        <span>{t('pagination', currentPage, totalUserPages)}</span>
-        <a href="?page={currentPage + 1}" class:disabled={currentPage === totalUserPages || data.users.length < 6}>
-          {t('buttons.next')}
-        </a>
-      </div>
     {/if}
+
+    <div class="pagination">
+      <a href="?page={currentPage - 1}" class:disabled={currentPage === 1}>
+        {t('buttons.prev')}
+      </a>
+      <span>{t('pagination', currentPage, totalUserPages)}</span>
+      <a href="?page={currentPage + 1}" class:disabled={currentPage === totalUserPages || data.users.length < 6}>
+        {t('buttons.next')}
+      </a>
+    </div>
   {/if}
 
   {#if activeTab === "products"}
     {#if !hasProducts}
       <div class="message error">{t('messages.noProducts')}</div>
-      <div class="pagination">
-        <a href="?page=1" class:disabled={currentPage === 1}>
-          {t('buttons.prev')}
-        </a>
-        <span>{t('pagination', currentPage, totalProductPages)}</span>
-        <a href="?page={currentPage + 1}" class:disabled={currentPage === totalProductPages || !hasProducts}>
-          {t('buttons.next')}
-        </a>
-      </div>
     {:else}
       <table>
         <thead>
@@ -325,17 +207,17 @@
           {/each}
         </tbody>
       </table>
-
-      <div class="pagination">
-        <a href="?page={currentPage - 1}" class:disabled={currentPage === 1}>
-          {t('buttons.prev')}
-        </a>
-        <span>{t('pagination', currentPage, totalProductPages)}</span>
-        <a href="?page={currentPage + 1}" class:disabled={currentPage === totalProductPages || data.products.length < 6}>
-          {t('buttons.next')}
-        </a>
-      </div>
     {/if}
+
+    <div class="pagination">
+      <a href="?page={currentPage - 1}" class:disabled={currentPage === 1}>
+        {t('buttons.prev')}
+      </a>
+      <span>{t('pagination', currentPage, totalProductPages)}</span>
+      <a href="?page={currentPage + 1}" class:disabled={currentPage === totalProductPages || data.products.length < 6}>
+        {t('buttons.next')}
+      </a>
+    </div>
   {/if}
 </div>
 
@@ -345,22 +227,22 @@
       <h2>{t('userModal.title')}</h2>
       <form method="POST" action="?/updateUser" use:enhance on:submit={handleUpdateUser}>
         <input type="hidden" name="id" value={selectedUser.id} />
-        
+
         <div class="form-group">
           <label for="username">{t('userModal.username')}</label>
           <input id="username" name="username" bind:value={editFormData.username} />
         </div>
-        
+
         <div class="form-group">
           <label for="password">{t('userModal.password')}</label>
           <input id="password" type="password" name="password" bind:value={editFormData.password} />
         </div>
-        
+
         <div class="form-group">
           <label for="email">{t('userModal.email')}</label>
           <input id="email" name="email" value={selectedUser.email} readonly class="readonly-field" />
         </div>
-        
+
         <div class="form-group">
           <label for="role">{t('userModal.role')}</label>
           <select id="role" name="role" bind:value={editFormData.role}>
@@ -373,11 +255,6 @@
         <div class="actions">
           <button type="submit" class="primary">{t('buttons.save')}</button>
           <button type="button" on:click={closeModal}>{t('buttons.close')}</button>
-          {#if selectedUser.role === 'farmer'}
-            <button type="button" on:click={() => viewFarmerProducts(selectedUser.id)} class="products-btn">
-              {t('buttons.farmerProducts')}
-            </button>
-          {/if}
         </div>
       </form>
     </div>
@@ -530,14 +407,6 @@
     background-color: #B71C1C;
   }
 
-  button.products-btn {
-    background-color: var(--warning);
-    color: var(--white);
-  }
-
-  button.products-btn:hover {
-    background-color: #E65100;
-  }
 
   .message {
     padding: 1rem;

@@ -1,10 +1,17 @@
-import { invalidateUser, getAllUsers, getAllProducts, updateUserById, deleteProductById, updateProductById } from "$lib/services/admin.service"; 
-import { fail, redirect, type Actions } from "@sveltejs/kit"; 
-import { Role, ProductType } from "@prisma/client"; // Added ProductType to the imports
+import {
+  invalidateUser,
+  getAllUsers,
+  getAllProducts,
+  updateUserById,
+  deleteProductById,
+  updateProductById
+} from "$lib/services/admin.service";
+import { fail, type Actions } from "@sveltejs/kit";
+import { Role, ProductType } from "@prisma/client";
 
 export async function load({ url }) {
-  const page = Number(url.searchParams.get('page')) || 1;  // Merr faqen aktuale nga URL
-  const pageSize = 6;  // Numri i elementeve për faqe
+  const page = Number(url.searchParams.get('page')) || 1;
+  const pageSize = 6;
 
   try {
     const { users, totalPages, currentPage, totalCount } = await getAllUsers(page, pageSize);
@@ -18,7 +25,7 @@ export async function load({ url }) {
       totalCount,
       productTotalPages,
       productCurrentPage,
-      productTotalCount,
+      productTotalCount
     };
   } catch (error) {
     console.error("Failed to fetch data:", error);
@@ -31,25 +38,25 @@ export async function load({ url }) {
 }
 
 export const actions: Actions = {
-  deleteUser: async ({ request, url }) => {
+  deleteUser: async ({ request }) => {
     const formData = await request.formData();
     const userId = Number(formData.get("userId"));
 
     try {
       await invalidateUser(userId);
-      // Return success instead of redirect
-      return { 
+      return {
         success: true,
         message: `User ${userId} invalidated successfully`
       };
     } catch (error) {
       console.error("Error deleting user:", error);
-      return fail(500, { 
+      return fail(500, {
         error: "Failed to delete user",
         details: error instanceof Error ? error.message : String(error)
       });
     }
   },
+
   updateUser: async ({ request }) => {
     const formData = await request.formData();
     const id = Number(formData.get("id"));
@@ -58,11 +65,9 @@ export const actions: Actions = {
     const role = formData.get("role") as Role;
 
     try {
-      await updateUserById(id, { email, username, role });  // Heqim përdorimin e transaksionit (tx)
-
-      // Kthe të dhënat e përditësuara pas përditësimit
-      const users = await getAllUsers(1, 6);  // Pasi e përditësojmë përdoruesin, mund të ngarkojmë përdoruesit e rinj
-      const products = await getAllProducts(1, 6);  // Ngarkojmë produktet e përditësuara
+      await updateUserById(id, { email, username, role });
+      const users = await getAllUsers(1, 6);
+      const products = await getAllProducts(1, 6);
       return { success: true, users, products };
     } catch (error) {
       console.error("Error updating user:", error);
@@ -70,16 +75,20 @@ export const actions: Actions = {
     }
   },
 
-  deleteProduct: async ({ request, url }) => {
+  deleteProduct: async ({ request }) => {
     const formData = await request.formData();
-    const productId = Number(formData.get("productId"));
+    const productIdRaw = formData.get("productId");
+
+    if (!productIdRaw || isNaN(Number(productIdRaw))) {
+      return fail(400, { error: "Invalid product ID" });
+    }
+
+    const productId = Number(productIdRaw);
 
     try {
-      await deleteProductById(productId);  // Heqim përdorimin e transaksionit (tx)
-
-      // Kthe të dhënat e përditësuara pas fshirjes
-      const users = await getAllUsers(1, 6);  // Ngarkojmë përdoruesit
-      const products = await getAllProducts(1, 6);  // Ngarkojmë produktet
+      await deleteProductById(productId);
+      const users = await getAllUsers(1, 6);
+      const products = await getAllProducts(1, 6);
       return { success: true, users, products };
     } catch (error) {
       console.error("Error deleting product:", error);
@@ -90,7 +99,7 @@ export const actions: Actions = {
   updateProduct: async ({ request }) => {
     const formData = await request.formData();
     const id = Number(formData.get("id"));
-    
+
     try {
       const updates = {
         name: String(formData.get("name")),
@@ -99,10 +108,8 @@ export const actions: Actions = {
         type: String(formData.get("type")) as ProductType,
         availability: formData.get("availability") === "true"
       };
-  
+
       await updateProductById(id, updates);
-  
-      // Return updated data
       const users = await getAllUsers(1, 6);
       const products = await getAllProducts(1, 6);
       return { success: true, users, products };
@@ -111,4 +118,4 @@ export const actions: Actions = {
       return fail(500, { error: "Failed to update product" });
     }
   }
-}; 
+};
