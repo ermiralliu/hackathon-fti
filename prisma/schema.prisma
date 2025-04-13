@@ -1,0 +1,108 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  // output   = "../../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  username  String   @unique
+  password  String
+  name      String?
+  role      Role
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  sessions  Session[]
+  products  Product[]         // nëse është fermer
+  requests  PurchaseRequest[] // nëse është konsumator
+
+  messagesSent     Message[] @relation("SentMessages")
+  messagesReceived Message[] @relation("ReceivedMessages")
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+}
+
+model Product {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String?
+  price       Float?
+  createdAt   DateTime @default(now())
+
+  farmer     User     @relation(fields: [farmerId], references: [id])
+  farmerId   Int
+
+  requests   PurchaseRequest[]
+  availability Boolean @default(true)
+  imagePath  String?
+  type       ProductType @default(other)
+}
+
+model PurchaseRequest {
+  id         Int      @id @default(autoincrement())
+  message    String?
+  createdAt  DateTime @default(now())
+
+  product    Product  @relation(fields: [productId], references: [id])
+  productId  Int
+
+  consumer   User     @relation(fields: [consumerId], references: [id])
+  consumerId Int
+  status     Status
+  quantity   String?
+  finished   DateTime?   
+}
+
+model Message {
+  id         Int      @id @default(autoincrement())
+  content    String
+  sentAt     DateTime @default(now())
+
+  sender     User     @relation("SentMessages", fields: [senderId], references: [id])
+  senderId   Int
+
+  receiver   User     @relation("ReceivedMessages", fields: [receiverId], references: [id])
+  receiverId Int
+}
+
+enum Role {
+  farmer
+  consumer
+  admin
+}
+
+enum Status {
+  accepted
+  pending
+  declined
+}
+
+enum ProductType {
+  fruit
+  vegetable
+  alcoholicBeverage
+  juice
+  dairy
+  other
+}
