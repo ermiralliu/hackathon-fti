@@ -169,6 +169,11 @@
                   <span class="label">From:</span>
                   <span class="value">{selectedRequest.consumer.name}</span>
               </div>
+
+              <div class="info-row">
+                <span class="label">Email:</span>
+                <span class="value">{selectedRequest.consumer.email}</span>
+            </div>
               
               <div class="info-row">
                   <span class="label">Date:</span>
@@ -214,7 +219,7 @@
               {#if selectedRequest.status !== 'rejected'}
               <form method="POST" action="?/updateRequestStatus" use:enhance>
                 <input type="hidden" value={selectedRequest.id} name="requestId">
-                <input type="hidden" value="rejected" name="status">
+                <input type="hidden" value="declined" name="status">
 
                 <button 
                     type="submit"
