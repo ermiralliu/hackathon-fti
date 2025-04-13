@@ -1,6 +1,6 @@
 import { invalidateUser, getAllUsers, getAllProducts, updateUserById, deleteProductById, updateProductById } from "$lib/services/admin.service"; 
 import { fail, redirect, type Actions } from "@sveltejs/kit"; 
-import { Role } from "@prisma/client";
+import { Role, ProductType } from "@prisma/client"; // Added ProductType to the imports
 
 export async function load({ url }) {
   const page = Number(url.searchParams.get('page')) || 1;  // Merr faqen aktuale nga URL
@@ -25,7 +25,6 @@ export async function load({ url }) {
     return {
       users: [],
       products: [],
-
       error: "Failed to fetch data"
     };
   }
@@ -91,20 +90,25 @@ export const actions: Actions = {
   updateProduct: async ({ request }) => {
     const formData = await request.formData();
     const id = Number(formData.get("id"));
-    const name = String(formData.get("name"));
-    const description = String(formData.get("description"));
-    const price = Number(formData.get("price"));
-
+    
     try {
-      await updateProductById(id, { name, description, price });  // Heqim përdorimin e transaksionit (tx)
-
-      // Kthe të dhënat e përditësuara pas përditësimit
-      const users = await getAllUsers(1, 6);  // Pasi e përditësojmë përdoruesin, mund të ngarkojmë përdoruesit e rinj
-      const products = await getAllProducts(1, 6);  // Ngarkojmë produktet e përditësuara
+      const updates = {
+        name: String(formData.get("name")),
+        description: String(formData.get("description")),
+        price: Number(formData.get("price")),
+        type: String(formData.get("type")) as ProductType,
+        availability: formData.get("availability") === "true"
+      };
+  
+      await updateProductById(id, updates);
+  
+      // Return updated data
+      const users = await getAllUsers(1, 6);
+      const products = await getAllProducts(1, 6);
       return { success: true, users, products };
     } catch (error) {
       console.error("Error updating product:", error);
       return fail(500, { error: "Failed to update product" });
     }
   }
-};
+}; 

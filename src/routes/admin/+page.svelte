@@ -1,7 +1,162 @@
 <script lang="ts">
   import { enhance } from '$app/forms';
   import { goto } from '$app/navigation';
-  
+  import LanguageSwitcher from '$lib/components/LanguageSwitcher.svelte';
+
+  interface Translation {
+    title: string;
+    tabs: {
+      users: string;
+      products: string;
+    };
+    tableHeaders: {
+      id: string;
+      name: string;
+      email: string;
+      role: string;
+      actions: string;
+      price: string;
+    };
+    messages: {
+      noUsers: string;
+      noProducts: string;
+    };
+    buttons: {
+      delete: string;
+      details: string;
+      save: string;
+      close: string;
+      farmerProducts: string;
+      prev: string;
+      next: string;
+    };
+    userModal: {
+      title: string;
+      username: string;
+      password: string;
+      email: string;
+      role: string;
+    };
+    roles: {
+      admin: string;
+      farmer: string;
+      consumer: string;
+    };
+    pagination: string;
+  }
+
+  const translations: Record<string, Translation> = {
+    en: {
+      title: "Admin Panel",
+      tabs: {
+        users: "Users",
+        products: "Products"
+      },
+      tableHeaders: {
+        id: "ID",
+        name: "Name",
+        email: "Email",
+        role: "Role",
+        actions: "Actions",
+        price: "Price"
+      },
+      messages: {
+        noUsers: "No users found",
+        noProducts: "No products found"
+      },
+      buttons: {
+        delete: "Delete",
+        details: "Details",
+        save: "Save Changes",
+        close: "Close",
+        farmerProducts: "Farmer's Products",
+        prev: "« Prev",
+        next: "Next »"
+      },
+      userModal: {
+        title: "User Details",
+        username: "Username:",
+        password: "New Password (leave blank to keep current):",
+        email: "Email:",
+        role: "Role:"
+      },
+      roles: {
+        admin: "admin",
+        farmer: "farmer",
+        consumer: "consumer"
+      },
+      pagination: "Page {0} of {1}"
+    },
+    sq: {
+      title: "Paneli i Administratorit",
+      tabs: {
+        users: "Përdoruesit",
+        products: "Produktet"
+      },
+      tableHeaders: {
+        id: "ID",
+        name: "Emri",
+        email: "Email",
+        role: "Roli",
+        actions: "Veprime",
+        price: "Çmimi"
+      },
+      messages: {
+        noUsers: "Nuk ka përdorues",
+        noProducts: "Nuk ka produkte"
+      },
+      buttons: {
+        delete: "Fshi",
+        details: "Të dhënat",
+        save: "Ruaj ndryshimet",
+        close: "Mbyll",
+        farmerProducts: "Produktet e fermerit",
+        prev: "« Para",
+        next: "Pas »"
+      },
+      userModal: {
+        title: "Të dhënat e përdoruesit",
+        username: "Emri:",
+        password: "Fjalëkalimi i ri (lëreni bosh për të mos ndryshuar):",
+        email: "Email:",
+        role: "Roli:"
+      },
+      roles: {
+        admin: "admin",
+        farmer: "fermer",
+        consumer: "konsumator"
+      },
+      pagination: "Faqja {0} nga {1}"
+    }
+  };
+
+  let currentLang = 'sq';
+  if (typeof localStorage !== 'undefined') {
+    const savedLang = localStorage.getItem('selectedLanguage');
+    if (savedLang && translations[savedLang]) {
+      currentLang = savedLang;
+    }
+  }
+
+  function t(key: string, ...params: any[]): string {
+    const keys = key.split('.');
+    let value: any = translations[currentLang];
+    
+    for (const k of keys) {
+      if (value && typeof value === 'object' && k in value) {
+        value = value[k];
+      } else {
+        return key;
+      }
+    }
+    
+    if (typeof value === 'string' && params.length > 0) {
+      return params.reduce((acc, param, index) => acc.replace(`{${index}}`, param), value);
+    }
+    
+    return value || key;
+  }
+
   export let data;
   let activeTab: "users" | "products" = "users";
   let selectedUser: any = null;
@@ -11,8 +166,7 @@
     password: '',
     role: 'consumer'
   };
-  
-  // Pagination
+
   const currentPage = data.currentPage || 1;
   const totalUserPages = data.totalPages || 1;
   const totalProductPages = data.productTotalPages || 1;
@@ -23,7 +177,7 @@
     selectedUser = user;
     editFormData = {
       username: user.username,
-      password: '', // Password field will be empty by default
+      password: '',
       role: user.role
     };
     showUserModal = true;
@@ -35,60 +189,71 @@
   }
 
   function viewFarmerProducts(userId: number) {
+    data.products = [];
     goto(`/admin/farmer-products/${userId}`);
   }
 
   async function handleUpdateUser(event: any) {
     const formData = new FormData(event.target);
     const response = await event.submit();
-    
     if (response.ok) {
       const result = await response.json();
       if (result.success) {
-        // Update the selected user data
         selectedUser.username = formData.get('username') as string;
         selectedUser.role = formData.get('role') as string;
-        // Keep the form data populated
         editFormData.username = selectedUser.username;
         editFormData.role = selectedUser.role;
+        closeModal();
+      }
+    }
+  }
+
+  $: {
+    if (typeof localStorage !== 'undefined') {
+      const lang = localStorage.getItem('selectedLanguage') || 'sq';
+      if (lang !== currentLang && translations[lang]) {
+        currentLang = lang;
       }
     }
   }
 </script>
 
 <div class="admin-panel">
-  <h1>Paneli i Administratorit</h1>
+  <div class="header">
+    <h1>{t('title')}</h1>
+    <LanguageSwitcher />
+  </div>
 
   <div class="tabs">
     <button class:active={activeTab === "users"} on:click={() => activeTab = "users"}>
-      Përdoruesit
+      {t('tabs.users')}
     </button>
     <button class:active={activeTab === "products"} on:click={() => activeTab = "products"}>
-      Produktet
+      {t('tabs.products')}
     </button>
   </div>
 
   {#if activeTab === "users"}
     {#if !hasUsers}
-      <div class="message error">Nuk ka përdorues</div>
+      <div class="message error">{t('messages.noUsers')}</div>
       <div class="pagination">
         <a href="?page=1" class:disabled={currentPage === 1}>
-          &laquo; Para
+          {t('buttons.prev')}
         </a>
-        <span>Faqja {currentPage} nga {totalUserPages}</span>
+        <span>{t('pagination', currentPage, totalUserPages)}</span>
         <a href="?page={currentPage + 1}" class:disabled={currentPage === totalUserPages || !hasUsers}>
-          Pas &raquo;
+          {t('buttons.next')}
         </a>
       </div>
     {:else}
       <table>
         <thead>
           <tr>
-            <th>ID</th>
-            <th>Emri</th>
-            <th>Email</th>
-            <th>Roli</th>
-            <th>Veprime</th>
+            <th>{t('tableHeaders.id')}</th>
+            <th>{t('tableHeaders.name')}</th>
+            <th>{t('tableHeaders.email')}</th>
+            <th>{t('tableHeaders.role')}</th>
+            <th>{t('tableHeaders.actions')}</th>
           </tr>
         </thead>
         <tbody>
@@ -97,13 +262,13 @@
               <td>{user.id}</td>
               <td>{user.username}</td>
               <td>{user.email}</td>
-              <td>{user.role}</td>
+              <td>{t('roles.' + user.role)}</td>
               <td class="actions">
                 <form method="POST" action="?/deleteUser" use:enhance>
                   <input type="hidden" name="userId" value={user.id} />
-                  <button type="submit" class="danger">Fshi</button>
+                  <button type="submit" class="danger">{t('buttons.delete')}</button>
                 </form>
-                <button on:click={() => openUserDetails(user)}>Të dhënat</button>
+                <button on:click={() => openUserDetails(user)}>{t('buttons.details')}</button>
               </td>
             </tr>
           {/each}
@@ -112,11 +277,11 @@
 
       <div class="pagination">
         <a href="?page={currentPage - 1}" class:disabled={currentPage === 1}>
-          &laquo; Para
+          {t('buttons.prev')}
         </a>
-        <span>Faqja {currentPage} nga {totalUserPages}</span>
+        <span>{t('pagination', currentPage, totalUserPages)}</span>
         <a href="?page={currentPage + 1}" class:disabled={currentPage === totalUserPages || data.users.length < 6}>
-          Pas &raquo;
+          {t('buttons.next')}
         </a>
       </div>
     {/if}
@@ -124,24 +289,24 @@
 
   {#if activeTab === "products"}
     {#if !hasProducts}
-      <div class="message error">Nuk ka produkte</div>
+      <div class="message error">{t('messages.noProducts')}</div>
       <div class="pagination">
         <a href="?page=1" class:disabled={currentPage === 1}>
-          &laquo; Para
+          {t('buttons.prev')}
         </a>
-        <span>Faqja {currentPage} nga {totalProductPages}</span>
+        <span>{t('pagination', currentPage, totalProductPages)}</span>
         <a href="?page={currentPage + 1}" class:disabled={currentPage === totalProductPages || !hasProducts}>
-          Pas &raquo;
+          {t('buttons.next')}
         </a>
       </div>
     {:else}
       <table>
         <thead>
           <tr>
-            <th>ID</th>
-            <th>Emri</th>
-            <th>Çmimi</th>
-            <th>Veprime</th>
+            <th>{t('tableHeaders.id')}</th>
+            <th>{t('tableHeaders.name')}</th>
+            <th>{t('tableHeaders.price')}</th>
+            <th>{t('tableHeaders.actions')}</th>
           </tr>
         </thead>
         <tbody>
@@ -153,7 +318,7 @@
               <td class="actions">
                 <form method="POST" action="?/deleteProduct" use:enhance>
                   <input type="hidden" name="productId" value={product.id} />
-                  <button type="submit" class="danger">Fshi</button>
+                  <button type="submit" class="danger">{t('buttons.delete')}</button>
                 </form>
               </td>
             </tr>
@@ -163,11 +328,11 @@
 
       <div class="pagination">
         <a href="?page={currentPage - 1}" class:disabled={currentPage === 1}>
-          &laquo; Para
+          {t('buttons.prev')}
         </a>
-        <span>Faqja {currentPage} nga {totalProductPages}</span>
+        <span>{t('pagination', currentPage, totalProductPages)}</span>
         <a href="?page={currentPage + 1}" class:disabled={currentPage === totalProductPages || data.products.length < 6}>
-          Pas &raquo;
+          {t('buttons.next')}
         </a>
       </div>
     {/if}
@@ -177,40 +342,40 @@
 {#if showUserModal && selectedUser}
   <div class="modal">
     <div class="modal-content">
-      <h2>Të dhënat e përdoruesit</h2>
+      <h2>{t('userModal.title')}</h2>
       <form method="POST" action="?/updateUser" use:enhance on:submit={handleUpdateUser}>
         <input type="hidden" name="id" value={selectedUser.id} />
         
         <div class="form-group">
-          <label>Emri:</label>
-          <input name="username" bind:value={editFormData.username} />
+          <label for="username">{t('userModal.username')}</label>
+          <input id="username" name="username" bind:value={editFormData.username} />
         </div>
         
         <div class="form-group">
-          <label>Fjalëkalimi i ri (lëreni bosh për të mos ndryshuar):</label>
-          <input type="password" name="password" bind:value={editFormData.password} />
+          <label for="password">{t('userModal.password')}</label>
+          <input id="password" type="password" name="password" bind:value={editFormData.password} />
         </div>
         
         <div class="form-group">
-          <label>Email:</label>
-          <input name="email" value={selectedUser.email} readonly class="readonly-field" />
+          <label for="email">{t('userModal.email')}</label>
+          <input id="email" name="email" value={selectedUser.email} readonly class="readonly-field" />
         </div>
         
         <div class="form-group">
-          <label>Roli:</label>
-          <select name="role" bind:value={editFormData.role}>
-            <option value="admin">admin</option>
-            <option value="farmer">farmer</option>
-            <option value="consumer">consumer</option>
+          <label for="role">{t('userModal.role')}</label>
+          <select id="role" name="role" bind:value={editFormData.role}>
+            <option value="admin">{t('roles.admin')}</option>
+            <option value="farmer">{t('roles.farmer')}</option>
+            <option value="consumer">{t('roles.consumer')}</option>
           </select>
         </div>
 
         <div class="actions">
-          <button type="submit" class="primary">Ruaj ndryshimet</button>
-          <button type="button" on:click={closeModal}>Mbyll</button>
+          <button type="submit" class="primary">{t('buttons.save')}</button>
+          <button type="button" on:click={closeModal}>{t('buttons.close')}</button>
           {#if selectedUser.role === 'farmer'}
             <button type="button" on:click={() => viewFarmerProducts(selectedUser.id)} class="products-btn">
-              Produktet e fermerit
+              {t('buttons.farmerProducts')}
             </button>
           {/if}
         </div>
@@ -221,144 +386,170 @@
 
 <style>
   :root {
-    --green: #4CAF50;
-    --dark: #333;
-    --gray: #f5f5f5;
-    --light-gray: #e0e0e0;
-    --danger: #f44336;
-    --border: #ddd;
-    --text: #333;
-    --text-light: #666;
-    --blue: #2196F3;
+    --primary-green: #2E7D32;
+    --secondary-green: #4CAF50;
+    --light-green: #8BC34A;
+    --lighter-green: #C8E6C9;
+    --dark: #2E2E2E;
+    --light-gray: #F5F5F5;
+    --medium-gray: #E0E0E0;
+    --danger: #D32F2F;
+    --warning: #FFA000;
+    --white: #FFFFFF;
+    --text-light: #757575;
+    --shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   }
 
   .admin-panel {
-    padding: 1rem;
+    padding: 1.5rem;
     max-width: 1200px;
     margin: 0 auto;
-    font-family: Arial, sans-serif;
-    color: var(--text);
+    font-family: 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    color: var(--dark);
+    background-color: var(--white);
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+  }
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--medium-gray);
   }
 
   h1 {
-    color: var(--green);
-    text-align: center;
-    margin-bottom: 1.5rem;
-    font-size: 1.8rem;
+    color: var(--primary-green);
+    margin: 0;
+    font-size: 2rem;
+    font-weight: 600;
   }
 
   .tabs {
     display: flex;
     gap: 0.5rem;
-    margin-bottom: 1.5rem;
-    border-bottom: 1px solid var(--border);
-    padding-bottom: 0.5rem;
+    margin-bottom: 2rem;
   }
 
   .tabs button {
     padding: 0.75rem 1.5rem;
-    background: var(--gray);
     border: none;
-    border-radius: 4px 4px 0 0;
-    cursor: pointer;
-    transition: all 0.2s;
+    background-color: transparent;
+    color: var(--text-light);
     font-weight: 500;
-    color: var(--text);
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    position: relative;
   }
 
   .tabs button.active {
-    background: var(--green);
-    color: white;
+    color: var(--primary-green);
+    background-color: var(--lighter-green);
+    font-weight: 600;
+  }
+
+  .tabs button.active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background-color: var(--primary-green);
+    border-radius: 3px 3px 0 0;
+  }
+
+  .tabs button:hover:not(.active) {
+    background-color: rgba(139, 195, 74, 0.1);
+    color: var(--primary-green);
   }
 
   table {
     width: 100%;
     border-collapse: collapse;
-    margin: 1.5rem 0;
-    background: white;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    margin-bottom: 1.5rem;
+    background-color: var(--white);
+    box-shadow: var(--shadow);
+    border-radius: 8px;
+    overflow: hidden;
   }
 
   th, td {
     padding: 1rem;
-    border-bottom: 1px solid var(--border);
     text-align: left;
-    color: var(--text);
+    border-bottom: 1px solid var(--medium-gray);
   }
 
   th {
-    background: var(--green);
-    color: white;
+    background-color: var(--primary-green);
+    color: var(--white);
     font-weight: 500;
   }
 
+  tr:nth-child(even) {
+    background-color: var(--light-gray);
+  }
+
   tr:hover {
-    background-color: rgba(76, 175, 80, 0.05);
+    background-color: var(--lighter-green);
   }
 
   .actions {
     display: flex;
-    gap: 0.75rem;
+    gap: 0.5rem;
     flex-wrap: wrap;
   }
 
   button {
-    padding: 0.75rem 1.25rem;
+    padding: 0.5rem 1rem;
     border: none;
     border-radius: 4px;
     cursor: pointer;
     font-weight: 500;
-    transition: all 0.2s;
+    transition: all 0.2s ease;
   }
 
-  .primary {
-    background: var(--green);
-    color: white;
+  button.primary {
+    background-color: var(--primary-green);
+    color: var(--white);
   }
 
-  .primary:hover {
-    background: #3d8b40;
+  button.primary:hover {
+    background-color: #1B5E20;
   }
 
-  .danger {
-    background: var(--danger);
-    color: white;
+  button.danger {
+    background-color: var(--danger);
+    color: var(--white);
   }
 
-  .danger:hover {
-    background: #d32f2f;
+  button.danger:hover {
+    background-color: #B71C1C;
   }
 
-  .products-btn {
-    background: var(--blue);
-    color: white;
+  button.products-btn {
+    background-color: var(--warning);
+    color: var(--white);
   }
 
-  .products-btn:hover {
-    background: #1976D2;
-  }
-
-  button:not(.primary):not(.danger):not(.products-btn) {
-    background: var(--gray);
-    color: var(--text);
-  }
-
-  button:not(.primary):not(.danger):not(.products-btn):hover {
-    background: #e0e0e0;
+  button.products-btn:hover {
+    background-color: #E65100;
   }
 
   .message {
-    padding: 1.25rem;
-    text-align: center;
-    margin: 1.5rem 0;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
     border-radius: 4px;
     font-weight: 500;
   }
 
-  .error {
-    background: #FFEBEE;
+  .message.error {
+    background-color: #FFEBEE;
     color: var(--danger);
-    border: 1px solid #EF9A9A;
+    border-left: 4px solid var(--danger);
   }
 
   .pagination {
@@ -366,42 +557,40 @@
     justify-content: center;
     align-items: center;
     gap: 1rem;
-    margin: 2rem 0;
+    margin-top: 2rem;
   }
 
   .pagination a {
-    padding: 0.75rem 1.25rem;
+    padding: 0.5rem 1rem;
     text-decoration: none;
-    color: var(--text);
-    border: 1px solid var(--border);
+    color: var(--primary-green);
+    border: 1px solid var(--medium-gray);
     border-radius: 4px;
-    transition: all 0.2s;
+    transition: all 0.2s ease;
   }
 
   .pagination a:hover:not(.disabled) {
-    background: var(--green);
-    color: white;
-    border-color: var(--green);
+    background-color: var(--lighter-green);
+    border-color: var(--primary-green);
   }
 
   .pagination a.disabled {
-    opacity: 0.5;
-    pointer-events: none;
+    color: var(--text-light);
+    cursor: not-allowed;
+    opacity: 0.6;
   }
 
   .pagination span {
-    padding: 0 1rem;
     color: var(--text-light);
   }
 
-  /* Modal Styles */
   .modal {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0,0,0,0.5);
+    background-color: rgba(0, 0, 0, 0.5);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -409,18 +598,18 @@
   }
 
   .modal-content {
-    background: white;
+    background-color: var(--white);
     padding: 2rem;
     border-radius: 8px;
     width: 90%;
     max-width: 500px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
   }
 
-  .modal-content h2 {
-    color: var(--green);
+  .modal h2 {
+    color: var(--primary-green);
+    margin-top: 0;
     margin-bottom: 1.5rem;
-    font-size: 1.5rem;
   }
 
   .form-group {
@@ -430,58 +619,46 @@
   .form-group label {
     display: block;
     margin-bottom: 0.5rem;
+    color: var(--dark);
     font-weight: 500;
-    color: var(--text);
   }
 
-  .form-group input, 
+  .form-group input,
   .form-group select {
     width: 100%;
     padding: 0.75rem;
-    border: 1px solid var(--border);
+    border: 1px solid var(--medium-gray);
     border-radius: 4px;
-    background: white;
-    color: var(--text);
     font-size: 1rem;
   }
 
-  .form-group input:focus, 
-  .form-group select:focus {
-    outline: none;
-    border-color: var(--green);
-    box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
-  }
-
-  .readonly-field {
+  .form-group input.readonly-field {
     background-color: var(--light-gray);
     color: var(--text-light);
-    cursor: not-allowed;
+  }
+
+  .modal .actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    margin-top: 2rem;
   }
 
   @media (max-width: 768px) {
     .admin-panel {
-      padding: 0.75rem;
+      padding: 1rem;
     }
     
-    table {
-      font-size: 0.9rem;
-    }
-    
-    th, td {
-      padding: 0.75rem;
+    .tabs {
+      flex-direction: column;
     }
     
     .actions {
       flex-direction: column;
-      gap: 0.5rem;
     }
     
-    button {
-      width: 100%;
-    }
-    
-    .modal-content {
-      padding: 1.5rem;
+    th, td {
+      padding: 0.75rem 0.5rem;
     }
   }
 </style>

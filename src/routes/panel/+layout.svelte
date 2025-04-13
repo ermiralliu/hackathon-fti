@@ -1,62 +1,79 @@
-<script>
-// @ts-nocheck
-
+<script lang="ts">
+  // @ts-nocheck
   import { page } from '$app/state';
   
-
-  
-  const tabs = [
-    { id: 'add', label: 'Add Product', route: "/panel/add" },
-    { id: 'view', label: 'View Products', route: "/panel/view" },
-    { id: 'notifications', label: 'Notifications', route: "/panel/notifications" },
-    { id: 'messages', label: 'Messages', route: "/panel/messages" }
-  ];
-    let activeTab = $state('add');
-    let mobileMenuOpen = $state(false);
-    let { children } = $props();
-    // Toggle mobile menu
-  function toggleMobileMenu() {
-    mobileMenuOpen = !mobileMenuOpen;
+  // Përkthimet për panelin
+  const translations = {
+      en: {
+          add: "Add Product",
+          view: "View Products",
+          notifications: "Notifications",
+          messages: "Messages"
+      },
+      sq: {
+          add: "Shto Produkt",
+          view: "Shiko Produktet",
+          notifications: "Njoftime",
+          messages: "Mesazhe"
+      }
   };
-
-  $effect(() =>{
-    const url = page.url.pathname.split("/");
-    const temp = url[url.length-1];
-    activeTab = temp;
-    return () =>{
-        mobileMenuOpen = false;
-    }
-  });
   
-</script>
-<div class="container">
-    
-    <!-- Mobile Menu Button -->
-    <button class="mobile-menu-button" onclick={toggleMobileMenu}>
-        ☰
-    </button>
-    <!-- Vertical Navigation Bar -->
-    <nav class:open={mobileMenuOpen} class="sidebar">
-        <ul>
-        {#each tabs as tab}
-            <li class:active={activeTab === tab.id}>
-            <!-- <button onclick={() => {
-                activeTab = tab.id;
-                mobileMenuOpen = false;
-
-            }}>
-                {tab.label}
-            </button> -->
-            <a href={tab.route} onclick={() => mobileMenuOpen = false}>{tab.label}</a>
-            </li>
-        {/each}
-        </ul>
-    </nav>
-    <main class="content">
-        {@render children()}
-    </main>
-</div>
-
+  type LanguageCode = keyof typeof translations;
+  let currentLang: LanguageCode = 'en';
+  
+  if (typeof localStorage !== 'undefined') {
+      const savedLang = localStorage.getItem('selectedLanguage') as LanguageCode;
+      if (savedLang && translations[savedLang]) {
+          currentLang = savedLang;
+      }
+  }
+  
+  // Krijimi i tabs me përkthime dinamike
+  let tabs = [
+      { id: 'add', label: translations[currentLang].add, route: "/panel/add" },
+      { id: 'view', label: translations[currentLang].view, route: "/panel/view" },
+      { id: 'notifications', label: translations[currentLang].notifications, route: "/panel/notifications" },
+      { id: 'messages', label: translations[currentLang].messages, route: "/panel/messages" }
+  ];
+  
+  let activeTab = $state('add');
+  let mobileMenuOpen = $state(false);
+  let { children } = $props();
+  
+  // Toggle për menunë mobile
+  function toggleMobileMenu() {
+      mobileMenuOpen = !mobileMenuOpen;
+  }
+  
+  // Vendos tab-in aktiv sipas URL-së
+  $effect(() => {
+      const url = page.url.pathname.split("/");
+      const temp = url[url.length - 1];
+      activeTab = temp;
+      return () => {
+          mobileMenuOpen = false;
+      }
+  });
+  </script>
+  
+  <!-- HTML + Styles që nuk kanë ndryshuar -->
+  <div class="container">
+      <button class="mobile-menu-button" onclick={toggleMobileMenu}>
+          ☰
+      </button>
+      <nav class:open={mobileMenuOpen} class="sidebar">
+          <ul>
+          {#each tabs as tab}
+              <li class:active={activeTab === tab.id}>
+                  <a href={tab.route} onclick={() => mobileMenuOpen = false}>{tab.label}</a>
+              </li>
+          {/each}
+          </ul>
+      </nav>
+      <main class="content">
+          {@render children()}
+      </main>
+  </div>
 
   
   <style>

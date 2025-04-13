@@ -85,15 +85,24 @@ export async function getAllProducts(page: number = 1, pageSize: number = 6) {
         skip,
         take,
         orderBy: { id: "asc" },
-        include: {
+        select: {
+          id: true,
+          name: true,
+          description: true,
+          price: true,
+          type: true,
+          availability: true,
+          imagePath: true,
           farmer: {
             select: {
+              id: true,
               name: true,
-            },
-          },
-        },
+              email: true
+            }
+          }
+        }
       }),
-      prisma.product.count(), // Numëron gjithsej produktet
+      prisma.product.count(),
     ]);
 
     const totalPages = Math.ceil(totalCount / pageSize);
@@ -109,7 +118,6 @@ export async function getAllProducts(page: number = 1, pageSize: number = 6) {
     throw new Error("Failed to fetch products");
   }
 }
-
 /**
  * Fshin një produkt nga baza e të dhënave me id të dhënë.
  */
@@ -129,7 +137,13 @@ export async function deleteProductById(id: number) {
  */
 export async function updateProductById(
   id: number,
-  data: { name: string; description: string; price: number }
+  data: { 
+    name: string; 
+    description: string; 
+    price: number;
+    type: ProductType;
+    availability: boolean;
+  }
 ) {
   try {
     return await prisma.product.update({

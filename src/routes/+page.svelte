@@ -1,42 +1,76 @@
-<script>
+<script lang="ts">
   import NavBar from "../lib/components/NavBar.svelte";
+  import { onMount } from "svelte";
+
+  let selectedLanguage: 'en' | 'sq' = 'en';
+
+  onMount(() => {
+    if (typeof localStorage !== 'undefined') {
+      const lang = localStorage.getItem('selectedLanguage') as 'en' | 'sq';
+      if (lang === 'sq' || lang === 'en') {
+        selectedLanguage = lang;
+      }
+    }
+  });
 </script>
 
 <section class="hero-section">
-  <h1 class="hero-title">Mirë se vini në MerrBio 🌿</h1>
-  <p class="hero-description">Lidh konsumatorët me fermerët vendas për ushqim të freskët dhe organik.</p>
-  <a class="explore-button" href="/products">Shfleto Produktet</a>
+  <h1 class="hero-title">
+    {selectedLanguage === 'sq' ? 'Mirë se vini në MerrBio 🌿' : 'Welcome to MerrBio 🌿'}
+  </h1>
+  <p class="hero-description">
+    {selectedLanguage === 'sq'
+      ? 'Lidh konsumatorët me fermerët vendas për ushqim të freskët dhe organik.'
+      : 'Connecting consumers with local farmers for fresh and organic food.'}
+  </p>
+  <a class="explore-button" href="/products">
+    {selectedLanguage === 'sq' ? 'Shfleto Produktet' : 'Browse Products'}
+  </a>
 </section>
 
 <section class="about-section">
-  <h2 class="about-title">Çfarë është MerrBio?</h2>
+  <h2 class="about-title">
+    {selectedLanguage === 'sq' ? 'Çfarë është MerrBio?' : 'What is MerrBio?'}
+  </h2>
   <p class="about-description">
-    MerrBio është një platformë që ndihmon fermerët vendas të shesin drejtpërdrejt tek konsumatorët që kërkojnë cilësi, freski dhe produkte organike. Misioni ynë është të forcojmë ekonominë lokale dhe të promovojmë qëndrueshmërinë.
+    {selectedLanguage === 'sq'
+      ? 'MerrBio është një platformë që ndihmon fermerët vendas të shesin drejtpërdrejt tek konsumatorët që kërkojnë cilësi, freski dhe produkte organike. Misioni ynë është të forcojmë ekonominë lokale dhe të promovojmë qëndrueshmërinë.'
+      : 'MerrBio is a platform that helps local farmers sell directly to consumers who seek quality, freshness, and organic products. Our mission is to strengthen the local economy and promote sustainability.'}
   </p>
 </section>
 
 <section class="how-it-works-section">
-  <h2 class="section-title">Si funksionon?</h2>
+  <h2 class="section-title">
+    {selectedLanguage === 'sq' ? 'Si funksionon?' : 'How does it work?'}
+  </h2>
   <div class="steps">
     <div class="step">
-      <h3 class="step-title">1. Regjistrohu</h3>
-      <p>Krijo një llogari si fermer ose konsumator.</p>
+      <h3 class="step-title">{selectedLanguage === 'sq' ? '1. Regjistrohu' : '1. Sign Up'}</h3>
+      <p>{selectedLanguage === 'sq' ? 'Krijo një llogari si fermer ose konsumator.' : 'Create an account as a farmer or consumer.'}</p>
     </div>
     <div class="step">
-      <h3 class="step-title">2. Publiko ose shfleto</h3>
-      <p>Fermerët publikojnë produkte, konsumatorët i shfletojnë.</p>
+      <h3 class="step-title">{selectedLanguage === 'sq' ? '2. Publiko ose shfleto' : '2. Post or Browse'}</h3>
+      <p>{selectedLanguage === 'sq' ? 'Fermerët publikojnë produkte, konsumatorët i shfletojnë.' : 'Farmers post products, consumers browse them.'}</p>
     </div>
     <div class="step">
-      <h3 class="step-title">3. Bëj kërkesë</h3>
-      <p>Bli direkt nga fermeri – pa ndërmjetës!</p>
+      <h3 class="step-title">{selectedLanguage === 'sq' ? '3. Bëj kërkesë' : '3. Make a Request'}</h3>
+      <p>{selectedLanguage === 'sq' ? 'Bli direkt nga fermeri – pa ndërmjetës!' : 'Buy directly from the farmer – no middlemen!'}</p>
     </div>
   </div>
 </section>
 
 <section class="cta-section">
-  <h2 class="cta-title">Gati për të filluar?</h2>
-  <p class="cta-description">Bashkohu me qindra përdorues që besojnë tek produktet lokale dhe të freskëta.</p>
-  <a href="/register" class="cta-button">Regjistrohu Tani</a>
+  <h2 class="cta-title">
+    {selectedLanguage === 'sq' ? 'Gati për të filluar?' : 'Ready to get started?'}
+  </h2>
+  <p class="cta-description">
+    {selectedLanguage === 'sq'
+      ? 'Bashkohu me qindra përdorues që besojnë tek produktet lokale dhe të freskëta.'
+      : 'Join hundreds of users who trust in local and fresh products.'}
+  </p>
+  <a href="/register" class="cta-button">
+    {selectedLanguage === 'sq' ? 'Regjistrohu Tani' : 'Sign Up Now'}
+  </a>
 </section>
 
 <style>

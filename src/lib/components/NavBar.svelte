@@ -12,7 +12,7 @@
         sq: {
             home: "Kryefaqja",
             browseProducts: "Shfletoni Produktet",
-            bookmarks: "Faqerojtësit",
+            bookmarks: "Faqet e ruajtura",
             panel: "Paneli"
         }
     };
