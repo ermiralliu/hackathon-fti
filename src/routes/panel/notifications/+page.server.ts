@@ -31,29 +31,20 @@ export const actions: Actions = {
         const id = Number(formData.get("requestId"));
         const status = formData.get("status");
 
-        // 1. Verify authentication
-        const session = await locals.auth.validate();
-        if (!session) {
-            return fail(401, { 
-                success: false, 
-                message: 'Unauthorized' 
-            });
-        }
-
         try {
             
 
-            const existingRequest = await prisma.purchaseRequest.findUnique({
-                where: { id: parseInt(requestId) },
-                include: { product: true }
-            });
+            // const existingRequest = await prisma.purchaseRequest.findUnique({
+            //     where: { id: parseInt(requestId) },
+            //     include: { product: true }
+            // });
 
-            if (!existingRequest || existingRequest.product.farmerId !== session.user.userId) {
-                return fail(403, {
-                    success: false,
-                    message: 'Not authorized to modify this request'
-                });
-            }
+            // if (!existingRequest || existingRequest.product.farmerId !== session.user.userId) {
+            //     return fail(403, {
+            //         success: false,
+            //         message: 'Not authorized to modify this request'
+            //     });
+            // }
 
             const updatedRequest = await updateRequestStatus(id, status);
 
