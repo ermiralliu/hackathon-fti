@@ -1,4 +1,4 @@
-import prisma from "$lib/prisma";
+import prisma from "../prisma";
 
 export async function paginateProductRequest( page = 1, pageSize = 6, consumerId: number){ // do shtohen extra arguments per search me specifike
   const skip = (page - 1) * pageSize;

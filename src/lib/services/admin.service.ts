@@ -1,5 +1,5 @@
-import prisma from "$lib/prisma";
-import type { Role, ProductType } from "@prisma/client";// USERS
+import prisma from "../prisma";
+import type { Role, ProductType } from "@prisma-types";// USERS
 
 /**
  * Merr përdoruesit me pagination.

@@ -1,28 +1,37 @@
 
-import type { ProductType, PurchaseRequest } from "@prisma/client";
+import { Prisma, type ProductType, type PurchaseRequest } from "@prisma-types";
 import prisma from "../prisma";
 
 
-export async function paginate(page = 1, pageSize = 6, searchString?: string, typeFilter?: string) { // do shtohen extra arguments per search me specifike
+export async function paginate(page = 1, pageSize = 6, searchString?: string, typeFilter?: ProductType) { // do shtohen extra arguments per search me specifike
   const skip = (page - 1) * pageSize;
   const take = pageSize;
 
-  const where = {
-    AND: [
-      searchString ? {
-        name: {
-          contains: searchString,
-          mode: 'insensitive',
-        }
-      } : {},
-      typeFilter ? {
-        type: {
-          equals: typeFilter as ProductType
-          // No need for mode: 'insensitive' since enum values are case-sensitive
-        }
-      } : {}
-    ].filter(condition => Object.keys(condition).length > 0) // Remove empty conditions
-  };
+  const conditions = [];
+
+  if(searchString){
+    conditions.push({
+      name: {
+        contains: searchString,
+        mode: Prisma.QueryMode.insensitive, // it's just a 'insensitive' string, but we do it this way to make ts feel good
+      }
+    });
+  }
+  if(typeFilter){
+    conditions.push({
+      type: {
+        equals: typeFilter
+        // No need for mode: 'insensitive' since enum values are case-sensitive
+      }
+    });
+  }
+  
+  let where: { AND: Prisma.ProductWhereInput[] } | Prisma.ProductWhereInput | undefined;
+  if(conditions.length === 1){
+    where = conditions[0];
+  } else if(conditions.length === 2){
+    where = { AND: conditions };
+  }
 
   const [products, totalCount] = await prisma.$transaction([
 
@@ -41,9 +50,7 @@ export async function paginate(page = 1, pageSize = 6, searchString?: string, ty
         }
       },
     }),
-    prisma.product.count({
-      where: Object.keys(where.AND).length > 0 ? where : undefined
-    })
+    prisma.product.count({ where })
   ]);
 
   const totalPages = Math.ceil(totalCount / pageSize);
