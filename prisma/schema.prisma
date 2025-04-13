@@ -24,6 +24,8 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+    isValid Boolean @default(true)
+
   sessions  Session[]
   products  Product[]         // nëse është fermer
   requests  PurchaseRequest[] // nëse është konsumator
