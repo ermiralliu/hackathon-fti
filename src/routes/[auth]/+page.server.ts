@@ -24,10 +24,15 @@ export const actions = {
     }
     const sessionId = await createSession(user.id);
     setSessionCookie(cookies, sessionId);
-    return redirect(302, '/');
+    if (user.role === 'admin')
+      return redirect(302, '/admin');
+    else if (user.role === 'farmer')
+      return redirect(302, '/panel');
+    else
+      return redirect(302, '/consumer/purchases/1');
 
   },
-  register: async ({ request, cookies }) => {
+  register: async ({ request }) => {
     const formData = await request.formData();
     const username = formData.get('username')?.toString();
     const password = formData.get('password')?.toString();
@@ -35,10 +40,10 @@ export const actions = {
     const name = formData.get('name')?.toString();
     const role = formData.get('role')?.toString();
 
-    if (!email || !password || ! username) {
+    if (!email || !password || !username) {
       return error(400, 'Email, username and password are required');
     }
-    if( role !== 'consumer' && role !== 'farmer'){
+    if (role !== 'consumer' && role !== 'farmer') {
       return error(400, 'Role has been given a false role');
     }
 
@@ -46,12 +51,12 @@ export const actions = {
     const user = await createUser(email, username, role, password, name);
 
     if (!user) {
-      return error( 409, 'Email already exists');
+      return error(409, 'Email already exists');
     }
+    // const sessionId = await createSession(user.id);
+    // setSessionCookie(cookies, sessionId);
 
-    const sessionId = await createSession(user.id);
-    setSessionCookie(cookies, sessionId);
-
-    throw redirect(302, '/'); // Redirect to home or dashboard
+    throw redirect(302, '/login'); // Redirect to home or dashboard
+    // te ky redirect do kalonim ndonje variable urlencoded per te treguar mesazh suksesi per perdoruesin
   }
 }
