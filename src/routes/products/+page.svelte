@@ -26,7 +26,9 @@
     
 
     function changePage(page) {
-        goto(`/products?page=${page}`, {noScroll:true});
+        const urlParams = new URLSearchParams(window.location.search);
+        urlParams.set('page', page);
+        goto(`/products?${urlParams.toString()}`, { noScroll: true });
     }
 
     let showModal = $state(false);
@@ -48,12 +50,11 @@
 
     let search = $state('');
 
-    // Add this to your existing script section
     let selectedType = $state('');
     let availableTypes = [
         'fruit',
         'vegetable',
-        'alcoholicBeverages',
+        'alcoholicBeverage',
         'juice',
         'dairy',
         'other'
@@ -63,7 +64,7 @@
 <main class="products-container">
     <h1>Produktet tona organike 🌱</h1>
 
-    <form method="get" action="?/">
+    <form method="get" action="?/" class="search-form">
         <input type="text" name="searchString" placeholder="Search products..." bind:value={search} />
         <select name="type" bind:value={selectedType}>
             <option value="">All Types</option>
@@ -152,11 +153,6 @@
             <button onclick={closeModal}>&times;</button>
           </div>
           <div class="modal-body">
-            <img 
-                src={"../../.."+selectedProduct.imagePath || '/placeholder-product.jpg'} 
-                alt={selectedProduct.name}
-                loading="lazy"
-            />
             <form use:enhance method="POST" action="?/addProdRequest" enctype="multipart/form-data">
                 <label for="description">Description:</label>
                 <p>{selectedProduct?.description}</p>
@@ -184,77 +180,151 @@
 
 dialog {
   border: none;
-  border-radius: 8px;
-  padding: 20px;
+  border-radius: 12px;
+  padding: 0;
   width: 90%;
   max-width: 500px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
 }
 
 dialog::backdrop {
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(2px);
+}
+
+.modal {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 .modal-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid #ddd;
-  padding-bottom: 10px;
-  margin-bottom: 10px;
+  padding: 1.5rem;
+  background-color: #2b6e30;
+  color: white;
+}
+
+.modal-header h2 {
+  margin: 0;
+  font-size: 1.5rem;
 }
 
 .modal-header button {
   background: none;
   border: none;
-  font-size: 18px;
+  color: white;
+  font-size: 1.5rem;
   cursor: pointer;
-  width: 30px;
-  height: 30px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-  margin-left: auto;
+  padding: 0.25rem;
+  line-height: 1;
 }
 
 .modal-body {
-  margin-bottom: 15px;
+  padding: 1.5rem;
+  flex-grow: 1;
+  overflow-y: auto;
 }
 
 .modal-body form {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 1rem;
 }
 
 .modal-body label {
-  font-weight: bold;
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: #333;
 }
 
-.modal-body input {
-  padding: 8px;
-  border: 1px solid #ccc;
+.modal-body input[type="text"] {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #ddd;
   border-radius: 4px;
+  font-size: 0.9rem; 
+  margin-bottom: 0.5rem;
+  height: 36px;
+  box-sizing: border-box;
+}
+
+.modal-body p {
+  margin: 0 0 1rem 0;
+  color: #555;
+  line-height: 1.5;
 }
 
 .modal-footer {
   display: flex;
   justify-content: flex-end;
-  gap: 10px;
+  gap: 1rem;
+  padding: 1.5rem;
+  border-top: 1px solid #eee;
 }
 
 .modal-footer button {
-  padding: 8px 16px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  font-weight: 600;
   cursor: pointer;
+  transition: all 0.2s ease;
+  width: auto;
+  min-width: 100px;
+  border: 1px solid transparent;
+}
+
+.modal-footer button:first-child {
+  background-color: #f0f0f0;
+  color: #333;
+  border: 1px solid #ddd !important;
 }
 
 .modal-footer button.primary {
-  background-color: #007bff;
-  color: white;
-  border-color: #007bff;
+  background-color: #2b6e30 !important;
+  color: white !important;
+  border: 1px solid #2b6e30 !important;
+}
+
+/* Për të parandaluar override nga stilet globale */
+.modal button,
+.modal-footer button,
+.modal-header button {
+  background: initial;
+  color: initial;
+  width: auto;
+  margin: initial;
+  border: initial;
+}
+
+@media (max-width: 600px) {
+  dialog {
+    width: 95%;
+    max-width: none;
+    margin: 0.5rem;
+  }
+  
+  .modal-header,
+  .modal-body,
+  .modal-footer {
+    padding: 1rem;
+  }
+  
+  .modal-body img {
+    max-height: 150px;
+  }
+  
+  .modal-footer {
+    flex-direction: column;
+  }
+  
+  .modal-footer button {
+    width: 100%;
+  }
 }
     .products-container {
         max-width: 1200px;
@@ -476,5 +546,62 @@ dialog::backdrop {
             width: 100%;
         }
     }
+    .search-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.search-form input[type="text"] {
+  flex: 1 1 200px;
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.search-form select {
+  flex: 1 1 200px;
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+  background-color: white;
+  cursor: pointer;
+}
+
+.search-form button[type="submit"] {
+  flex: 0 1 150px;
+  padding: 0.75rem;
+  background: #2b6e30;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.search-form button[type="submit"]:hover {
+  background: #1e5a23;
+}
+
+@media (max-width: 600px) {
+  .search-form {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .search-form input[type="text"],
+  .search-form select,
+  .search-form button[type="submit"] {
+    width: 100%;
+    flex: 1 1 auto;
+  }
+}
 </style>
 
