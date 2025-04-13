@@ -1,7 +1,3 @@
-<script>
-  import NavBar from "../lib/components/NavBar.svelte";
-</script>
-
 <section class="hero-section">
   <h1 class="hero-title">Mirë se vini në MerrBio 🌿</h1>
   <p class="hero-description">Lidh konsumatorët me fermerët vendas për ushqim të freskët dhe organik.</p>

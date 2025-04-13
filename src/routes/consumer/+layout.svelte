@@ -3,7 +3,7 @@
 
   import { page } from '$app/state';
   
-  const tabs = [
+  const tabs = [  // kete thjesht mund ta bejme prop qe ta bejme layoutin reusable, nderkohe css duhet te kalohet ne css module
     { id: 'purchases', label: 'Purchases', route: "/consumer/purchases" },
     { id: 'messages', label: 'Messages', route: "/consumer/messages" }
   ];

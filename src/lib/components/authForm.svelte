@@ -11,7 +11,7 @@
   let confirmPassword = $state("");
 
   let passwordsMatch = $derived(
-    isRegisterPage ? password === confirmPassword : true,
+    isRegisterPage ? password === confirmPassword : true
   );
 </script>
 
