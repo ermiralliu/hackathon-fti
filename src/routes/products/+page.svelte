@@ -1,9 +1,10 @@
 <!-- src/routes/products/+page.svelte -->
 <script>
 // @ts-nocheck
-
     import { goto } from '$app/navigation';
     import { fade, fly } from 'svelte/transition';
+    import {enhance} from '$app/forms';
+
     let {data} = $props();
     
     let products = $derived(data.products.products || []);
@@ -11,33 +12,29 @@
     let error = $derived(false);
     let currentPage = $derived(data.products.currentPage);
     let totalPages = $derived(data.products.totalPages);
-    
-    async function reloadProducts() {
-        window.location.reload();
-    }
 
-    function changePage(page) {
-        goto(`/products?page=${page}`, {noScroll:true});
-    }
+    // let searchStr = $derived(url.searchParams.get('searchString') || null);
+    // $effect(()=>console.log(searchStr));
 
-    function getPageNumbers() {
+    let pageNumbers = $derived((()=>{
         let pages = [];
         for (let i = 1; i <= totalPages; i++) {
             pages.push(i);
         }
         return pages;
+    })());
+    
+
+    function changePage(page) {
+        goto(`/products?page=${page}`, {noScroll:true});
     }
+
     let showModal = $state(false);
     let quantity = $state('');
     let messageProdRequest = $state('');
     let selectedProduct = $state(null);
 
     let modal;
-
-    // $effect(() => {
-    //     if(showModal)
-    //         modal.showModal();
-    // });
   
     function openModal() {
         modal.showModal();
@@ -50,13 +47,30 @@
     }
 
     let search = $state('');
+
+    // Add this to your existing script section
+    let selectedType = $state('');
+    let availableTypes = [
+        'fruit',
+        'vegetable',
+        'alcoholicBeverages',
+        'juice',
+        'dairy',
+        'other'
+    ];
 </script>
 
 <main class="products-container">
     <h1>Produktet tona organike 🌱</h1>
 
-    <form use:enhance method="get" action="?/">
+    <form method="get" action="?/">
         <input type="text" name="searchString" placeholder="Search products..." bind:value={search} />
+        <select name="type" bind:value={selectedType}>
+            <option value="">All Types</option>
+            {#each availableTypes as type}
+                <option value={type}>{type}</option>
+            {/each}
+        </select>
         <button type="submit">Search</button>
     </form>
     
@@ -79,7 +93,7 @@
             {#each products as product (product.id)}
                 <article class="product-card">
                     <div  in:fade={{ duration: 700 }} out:fade>
-                        {console.log(product.imagePath)}
+                        {console.log("dddff",product.imagePath)}
                     <div class="product-image">
                         <img 
                             src={"../../.."+product.imagePath} 
@@ -113,7 +127,7 @@
                 <button onclick={() => changePage(currentPage - 1)}>Previous</button>
             {/if}
 
-            {#each getPageNumbers() as pageNumber}
+            {#each pageNumbers as pageNumber}
                 <button
                     class:active={pageNumber === currentPage}
                     onclick={() => changePage(pageNumber)}
@@ -429,6 +443,38 @@ dialog::backdrop {
 
     .pagination button:hover {
         background-color: #f0f0f0;
+    }
+
+    .filters {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+        flex-wrap: wrap;
+    }
+
+    .filters input, 
+    .filters select {
+        padding: 0.5rem;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        min-width: 200px;
+    }
+
+    .filters button {
+        padding: 0.5rem 1rem;
+        width: auto;
+    }
+
+    @media (max-width: 768px) {
+        .filters {
+            flex-direction: column;
+        }
+        
+        .filters input,
+        .filters select,
+        .filters button {
+            width: 100%;
+        }
     }
 </style>
 

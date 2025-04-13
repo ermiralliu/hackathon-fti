@@ -2,22 +2,38 @@
 // src/routes/products/+page.server.js
 import { paginate, addProdRequest } from '$lib/services/productCatalog.service';
 import {error} from '@sveltejs/kit';
+import { ProductType } from '@prisma/client';
 //import { depends}  from '$app/navigation';
 
-export async function load({params, url, request }) {
-  const page = url.searchParams.get('page') || 1;
-  let searchString = url.searchParams.get("searchString")?.toString();
-  if(searchString) {
-    const products = await paginate(page, 6, searchString);
-    return{
-      products: products
-    }
-  }
+// export async function load({params, url, request }) {
+//   const page = Number(url.searchParams.get('page')) || 1;
+//   let searchString = url.searchParams.get("searchString")?.toString();
+//   console.log("searchString: ",searchString);
+//   if(searchString) {
+//     const products = await paginate(page, 6, searchString);
+//     return{
+//       products: products
+//     }
+//   }
 
-  const products = await paginate(page);
-  console.log(page);
-  return{
-      products: products
+//   const products = await paginate(page);
+//   console.log("page: ",page);
+//   return{
+//       products: products
+//   }
+// }
+
+export async function load({params, url, request }) {
+  const page = Number(url.searchParams.get('page')) || 1;
+  const searchString = url.searchParams.get("searchString")?.toString();
+  const typeParam = url.searchParams.get("type")?.toString();
+  const typeFilter = typeParam && Object.values(ProductType).includes(typeParam) ? typeParam : undefined;
+
+  const products = await paginate(page, 6, searchString, typeFilter);
+  
+  return {
+    products: products,
+    allTypes: Object.values(ProductType),
   }
 }
 
@@ -49,6 +65,6 @@ export const actions = {
                 err: 'Server Error',
                 message: error.message || 'Failed to add product'
             });
-        }
+      }
     }
 };
