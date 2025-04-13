@@ -18,13 +18,14 @@ export const handle: Handle = async ({ event, resolve }) => {
     // console.log(JSON.stringify(user));
   }
   // Check if the requested path is a protected top-level route
-  const isTopRouteOfCurrentUrl  = (route: string) => event.url.pathname.startsWith(route) 
-    ||  (event.url.pathname === route);
   console.log(event.url.pathname);
+  
   const isPublic = allAllowed.some((e)=> event.url.pathname.startsWith(e)) || event.url.pathname === '/';
-
   if(isPublic)
     return await resolve(event);
+
+  const isTopRouteOfCurrentUrl  = (route: string) => event.url.pathname.startsWith(route) 
+    ||  (event.url.pathname === route);
 
   if (!user) {
     if (!allAllowed.includes(event.url.pathname))
