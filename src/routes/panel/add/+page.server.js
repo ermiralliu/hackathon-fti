@@ -10,10 +10,11 @@ export function load(){
 export const actions = {
     create: async ({ request, locals }) => {
         const form = await request.formData();
-        const farmerId = locals.user?.id;
-        
-        
+        const user = locals.user
+        console.log(user);
+        const farmerId = locals.user?.id ?? 1;
 
+        
         const name = form.get("name");
         const type = form.get("type");
         const price = Number(form.get("price"));
