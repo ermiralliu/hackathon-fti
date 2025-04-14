@@ -18,7 +18,7 @@ export const handle: Handle = async ({ event, resolve }) => {
     // console.log(JSON.stringify(user));
   }
   // Check if the requested path is a protected top-level route
-  console.log(event.url.pathname);
+  // console.log(event.url.pathname);
   
   const isPublic = allAllowed.some((e)=> event.url.pathname.startsWith(e)) || event.url.pathname === '/';
   if(isPublic)
