@@ -1,5 +1,7 @@
 // See https://svelte.dev/docs/kit/types#app.d.ts
 // for information about these interfaces
+import User from '@prisma-types';
+
 declare global {
 	namespace App {
 		// interface Error {}

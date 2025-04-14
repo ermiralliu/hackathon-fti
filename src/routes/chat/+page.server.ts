@@ -1,7 +1,8 @@
-import type { User } from "@prisma/client";
-import { redirect } from "@sveltejs/kit";
+import { redirect, type Actions } from "@sveltejs/kit";
+import type { PageServerLoad } from "./$types";
+import type { User } from "@prisma-types";
 
-export function load({params, locals}){
+export const load: PageServerLoad = ({locals}) => {
   const user = locals.user as User;
   console.log(JSON.stringify(user));
   // room -> do perdoret per te marre mesazhet me kete person specifik nga params ndoshta
@@ -11,8 +12,8 @@ export function load({params, locals}){
 }
 
 export const actions = {
-  sendMessage : async ({request, url})=>{
+  sendMessage : async ({url})=>{
     // funksioni qe mesazhi kalohet ne databaze
     return redirect(303, url.pathname);
   }
-}
+} satisfies Actions;

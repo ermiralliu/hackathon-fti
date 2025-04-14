@@ -6,10 +6,12 @@ import {
   deleteProductById,
   updateProductById
 } from "$lib/services/admin.service";
-import { fail, type Actions } from "@sveltejs/kit";
-import { Role, ProductType } from "@prisma/client";
 
-export async function load({ url }) {
+import { fail, type Actions } from "@sveltejs/kit";
+import { Role, ProductType } from "@prisma-types";
+import type { PageServerLoad } from "./$types";
+
+export const load: PageServerLoad = async ({ url }) => {
   const page = Number(url.searchParams.get('page')) || 1;
   const pageSize = 6;
 

@@ -1,14 +1,16 @@
-// @ts-nocheck
 // src/routes/products/+page.server.js
 import { paginateUserRequests } from '$lib/services/productCatalog.service';
-import { fail, redirect, type Actions } from "@sveltejs/kit"; 
-import { deleteProduct, updateProduct } from "$lib/services/farmer.service";
+import { fail, type Actions } from "@sveltejs/kit";
 import { updateRequestStatus } from '$lib/services/request.service.js';
+import type { PageServerLoad } from '../$types';
+import { Status } from '@prisma-types';
 
-//import { depends}  from '$app/navigation';
+function isValidStatus(value: string): value is Status {  
+  return Object.values(Status).includes(value as Status);
+} // si ky duhet te perdor dhe ne vende tjera
 
-export async function load({params, url, locals }) {
-  const page = url.searchParams.get('page') || 1;
+export const load: PageServerLoad = async ({url, locals }) => {
+  const page = Number(url.searchParams.get('page')) || 1;
  // depends(`url:page=${page}`);
 
   const requestsData = await paginateUserRequests(locals.user ? locals.user.id : 1, page) //params.limit, params.sort, params.search, params.category);
@@ -23,28 +25,23 @@ export async function load({params, url, locals }) {
   }
 }
 
-
-export const actions: Actions = {
-
-    updateRequestStatus: async ({ request, locals }) => {
+export const actions = {
+    updateRequestStatus: async ({ request }) => {
         const formData = await request.formData();
-        const id = Number(formData.get("requestId"));
-        const status = formData.get("status");
+        const idStr = formData.get("requestId")?.toString();
+        if( !idStr ){
+        }
+        let id;
+        if(!idStr || (id = Number.parseInt(idStr)) <= 0){
+          return fail(400, {message: 'Id has been given an invalid value'});
+        }
+
+        const status = formData.get("status")?.toString();
+        if(!status || !isValidStatus(status)){
+          return fail(400, {message: 'Status has been given an invalid value'});  // 400 esht bad request
+        }
 
         try {
-            
-
-            // const existingRequest = await prisma.purchaseRequest.findUnique({
-            //     where: { id: parseInt(requestId) },
-            //     include: { product: true }
-            // });
-
-            // if (!existingRequest || existingRequest.product.farmerId !== session.user.userId) {
-            //     return fail(403, {
-            //         success: false,
-            //         message: 'Not authorized to modify this request'
-            //     });
-            // }
 
             const updatedRequest = await updateRequestStatus(id, status);
 
@@ -64,4 +61,4 @@ export const actions: Actions = {
         }
     },
     
-};
+} satisfies Actions; 

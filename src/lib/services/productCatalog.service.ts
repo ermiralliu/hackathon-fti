@@ -63,7 +63,7 @@ export async function paginate(page = 1, pageSize = 6, searchString?: string, ty
   };
 }
 
-export async function addProdRequest(consumerId: number, productId: number, entry: Omit<PurchaseRequest, 'id' | 'consumerId' | 'consumer' | 'createdAt' | 'product' | 'productId' | 'finished'>) {
+export async function addProdRequest(consumerId: number, productId: number, entry: Omit<PurchaseRequest, 'id' | 'consumerId' | 'consumer' | 'createdAt' | 'product' | 'productId' | 'finished' | 'status'>) {
   try {
     const purchaseRequest = await prisma.purchaseRequest.create({
       data: {

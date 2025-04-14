@@ -1,7 +1,8 @@
 import { paginateProductsForFarmer } from '$lib/services/adminOnFarmer.service.js';
 import { redirect } from '@sveltejs/kit';
+import type { PageServerLoad } from '../$types';
 
-export async function load({params, locals}){
+export const load: PageServerLoad = async ({params}) => {
   const farmerId = Number(params.farmerId);
   let page = Number(params.pageNr);
   // ne rastin e perdorimit te stringave te pavlefshme ne url, do kemi redirect ne faqen e pare (me baze)

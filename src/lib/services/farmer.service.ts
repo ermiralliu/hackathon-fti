@@ -2,7 +2,10 @@
 import type { Product } from "@prisma-types";
 import prisma from "../prisma";
 
-export async function addProduct(farmerId: number, entry: Omit<Product, 'id' | 'farmer' | 'farmerId'>) {
+export async function addProduct(
+  farmerId: number, 
+  entry: Omit<Product, 'id' | 'farmer' | 'farmerId'| "createdAt"| 'availability'>
+) {
   try {
       await prisma.product.create({
           data: {
