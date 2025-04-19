@@ -1,5 +1,5 @@
 
-import type { Product } from "@prisma-types";
+import type { Product } from "$prisma-client";
 import prisma from "../prisma";
 
 export async function addProduct(

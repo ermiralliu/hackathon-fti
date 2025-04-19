@@ -15,7 +15,7 @@
   
   let selectedRequest = $state(null);
   let showViewModal = $state(false);
-  let modalView;
+  let modalView = $state(null); // I'll need to check, cause I think there's probably a better way, but just to remove the error for now
 
   // Pagination functions
   function changePage(page) {

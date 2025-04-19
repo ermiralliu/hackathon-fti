@@ -8,7 +8,7 @@ import {
 } from "$lib/services/admin.service";
 
 import { fail, type Actions } from "@sveltejs/kit";
-import { Role, ProductType } from "@prisma-types";
+import { Role, ProductType } from "$prisma-client";
 import type { PageServerLoad } from "./$types";
 
 export const load: PageServerLoad = async ({ url }) => {

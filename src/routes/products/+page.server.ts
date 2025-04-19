@@ -1,6 +1,6 @@
 // src/routes/products/+page.server.js
 import { paginate, addProdRequest } from '$lib/services/productCatalog.service';
-import { ProductType } from '@prisma-types';
+import { ProductType } from '$prisma-client';
 import { error, type Actions } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 

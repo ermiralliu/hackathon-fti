@@ -49,5 +49,7 @@ node_modules
 build
 package
 **/.env
+certs
+Caddyfile
 
-src/generated
+generated

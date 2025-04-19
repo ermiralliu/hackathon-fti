@@ -1,5 +1,5 @@
 
-import { Prisma, type ProductType, type PurchaseRequest } from "@prisma-types";
+import { Prisma, type ProductType, type PurchaseRequest } from "$prisma-client";
 import prisma from "../prisma";
 
 

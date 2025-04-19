@@ -1,5 +1,5 @@
 import prisma from "../prisma";
-import type { Status } from "@prisma-types";
+import type { Status } from "$prisma-client";
 
 
 export async function updateRequestStatus(requestId: number, status: Status){

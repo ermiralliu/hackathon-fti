@@ -3,7 +3,7 @@ import { paginateUserRequests } from '$lib/services/productCatalog.service';
 import { fail, type Actions } from "@sveltejs/kit";
 import { updateRequestStatus } from '$lib/services/request.service.js';
 import type { PageServerLoad } from '../$types';
-import { Status } from '@prisma-types';
+import { Status } from '$prisma-client';
 
 function isValidStatus(value: string): value is Status {  
   return Object.values(Status).includes(value as Status);

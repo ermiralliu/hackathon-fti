@@ -1,6 +1,6 @@
 import { redirect, type Actions } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
-import type { User } from "@prisma-types";
+import type { User } from "$prisma-client";
 
 export const load: PageServerLoad = ({locals}) => {
   const user = locals.user as User;

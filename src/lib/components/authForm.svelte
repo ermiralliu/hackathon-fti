@@ -1,5 +1,4 @@
-<script>
-  // @ts-nocheck
+<script lang="ts">
   import { enhance } from "$app/forms";
   import { fade, fly } from "svelte/transition";
 
@@ -16,7 +15,7 @@
 </script>
 
 <!-- Making a snippet so we can apply files within here -->
-{#snippet Input(name, labelText, type = "text")}
+{#snippet Input(name = '', labelText = '', type = "text")}
   <label in:fly={{ x: -20 }} out:fade>
     {labelText}
     <input {type} {name} required/>
@@ -120,12 +119,6 @@
     text-align: center;
     display: block;
     color: #007bff;
-  }
-
-  p[style="color:red"] {
-    margin-top: 10px;
-    text-align: center;
-    color: red; 
   }
 
   @media (max-width: 600px) {

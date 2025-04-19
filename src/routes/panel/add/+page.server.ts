@@ -1,7 +1,7 @@
 import { addProduct } from "$lib/services/farmer.service";
 import { saveImageToStaticFolder } from "$lib/helpers/saveImage.helper";
 import { error, fail, type Actions } from '@sveltejs/kit';
-import { ProductType, type User } from "@prisma-types";
+import { ProductType, type User } from "$prisma-client";
 
 export const actions = {
     create: async ({ request, locals }) => {

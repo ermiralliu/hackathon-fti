@@ -314,10 +314,6 @@
         padding: 1rem;
       }
       
-      .modal-body img {
-        max-height: 150px;
-      }
-      
       .modal-footer {
         flex-direction: column;
       }
@@ -404,6 +400,7 @@
             margin-bottom: 1rem;
             display: -webkit-box;
             -webkit-line-clamp: 3;
+            line-clamp: 3;
             -webkit-box-orient: vertical;
             overflow: hidden;
         }
@@ -514,38 +511,7 @@
         .pagination button:hover {
             background-color: #f0f0f0;
         }
-    
-        .filters {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-            flex-wrap: wrap;
-        }
-    
-        .filters input, 
-        .filters select {
-            padding: 0.5rem;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            min-width: 200px;
-        }
-    
-        .filters button {
-            padding: 0.5rem 1rem;
-            width: auto;
-        }
-    
-        @media (max-width: 768px) {
-            .filters {
-                flex-direction: column;
-            }
-            
-            .filters input,
-            .filters select,
-            .filters button {
-                width: 100%;
-            }
-        }
+  
         .search-form {
       display: flex;
       flex-wrap: wrap;

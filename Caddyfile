@@ -1,0 +1,15 @@
+# Listen on HTTPS for localhost on port 8443
+# You can use 443 if it's free, but 8443 is common for local HTTPS dev
+localhost:8443 {
+    # Specify the paths to your mkcert generated certificate and key
+    tls ./certs/localhost+1.pem ./certs/localhost+1-key.pem
+
+    # Reverse proxy all requests to your SvelteKit build running on HTTP port 3000
+    reverse_proxy localhost:3000
+}
+
+# Optional: If you created certs for a custom domain like myapp.local
+myapp.local:443 { # Use standard HTTPS port 443
+    tls ./certs/myapp.local.pem ./certs/myapp.local-key.pem
+    reverse_proxy localhost:3000
+}
