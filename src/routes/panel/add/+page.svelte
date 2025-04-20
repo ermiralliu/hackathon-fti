@@ -37,7 +37,7 @@
               <option value="" selected disabled>-- Select type --</option>
               <option value="fruit">Fruit</option>
               <option value="vegetable">Vegetable</option>
-              <option value="alcoholic beverages">Alcoholic Beverage</option>
+              <option value="alcoholicBeverage">Alcoholic Beverage</option>
               <option value="juice">Juice</option>
               <option value="dairy">Dairy</option>
               <option value="other">Other</option>

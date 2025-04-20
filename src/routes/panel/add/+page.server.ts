@@ -15,7 +15,7 @@ export const actions = {
         
         const name = form.get("name")?.toString();
         const type = form.get("type")?.toString();
-        if(!type || Object.keys(ProductType).includes(type))
+        if(!type || !Object.keys(ProductType).includes(type))
           return fail(400, {message: 'Invalid type'});
 
         const price = Number(form.get("price"));

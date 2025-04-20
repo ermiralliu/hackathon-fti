@@ -27,3 +27,6 @@ vite.config.ts.timestamp-*
 
 # prisma
 /generated
+
+# certs for docker production
+certs
