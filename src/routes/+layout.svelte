@@ -3,10 +3,9 @@
   import { type Snippet } from "svelte";
   import '../app.css';
 
-  let { children } : { children : Snippet} = $props();
+  let { children, data } : { children : Snippet; data: {isLogged: boolean}} = $props();
+  let isLogged = $derived(data.isLogged);
 </script>
 
-<NavBar/>
-<!-- <main> -->
-  {@render children()}
-<!-- </main> -->
+<NavBar {isLogged}/>
+{@render children()}

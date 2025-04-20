@@ -92,6 +92,11 @@
   }
 </script>
 
+<svelte:head>
+  <title>View Your Products</title>
+  <meta name="description" content="Here you can view the products you are selling" />
+</svelte:head>
+
 <main class="products-container">
   <h1>Your Products 🌱</h1>
 

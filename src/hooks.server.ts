@@ -2,7 +2,7 @@ import { redirect, type Handle } from '@sveltejs/kit';
 import { getUserBySessionId } from '$lib/services/auth.service';
 import { getSessionIdFromCookie } from '$lib/helpers/session.helper';
 
-const allAllowed = ['/products', '/login', '/register']; // top level routes
+const allAllowed = ['/products', '/login', '/register', '/logout']; // top level routes
 
 export const handle: Handle = async ({ event, resolve }) => {
   let user = null;

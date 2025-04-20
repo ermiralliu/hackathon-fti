@@ -1,9 +1,28 @@
-<script>
+<script lang="ts">
+  import { enhance } from "$app/forms";
+  import { goto } from "$app/navigation";
+  import type { SubmitFunction, ActionResult } from "@sveltejs/kit";
+
   let tabs = [
     { name: "Home", link: "/" },
     { name: "Browse Products", link: "/products" },
     { name: "Panel", link: "/panel" },
   ];
+
+  let { isLogged } = $props();
+
+  const handleLogout: SubmitFunction = () => {
+    console.log("Form Called");
+    return async ({ result }: { result: ActionResult }) => {
+      console.log(JSON.stringify(result));
+
+      console.log("Form result received");
+      const res = result as ActionResult & { success: boolean };
+      if (res.success) {
+        goto("/", { invalidateAll: true });
+      }
+    };
+  };
 </script>
 
 <nav>
@@ -14,16 +33,21 @@
       {/each}
     </ul>
   </div>
-  <a href="/login" class="login-btn">Login</a>
+  {#if !isLogged}
+    <a href="/login" class="login-btn">Log In</a>
+  {:else}
+    <form method="POST" action="/logout" use:enhance={handleLogout}>
+      <button type="submit" aria-label="Log Out" class="login-btn"></button>
+    </form>
+  {/if}
 </nav>
 
 <style>
   nav {
     background-color: #213555;
     padding: 1rem;
-    /* position: fixed; */
     position: sticky;
-    top: 0; 
+    top: 0;
     width: 100%;
     z-index: 1;
     display: flex;
@@ -47,7 +71,8 @@
     margin: 0 1rem;
   }
 
-  a {
+  a,
+  form > button {
     color: white;
     text-decoration: none;
     font-weight: bold;

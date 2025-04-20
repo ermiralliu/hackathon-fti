@@ -22,7 +22,7 @@
   </label>
 {/snippet}
 
-<form method="post" action="?/{auth}" use:enhance>
+<form method="post" action="?/{auth}" use:enhance class:register={isRegisterPage}>
   <h1>{isRegisterPage ? "Register" : "Login"}</h1>
   {@render Input("username", "Username:", "text")}
 
@@ -64,14 +64,19 @@
   form {
     display: flex;
     flex-direction: column;
-    max-width: 400px;
-    margin: 20px auto;
-    padding: 20px;
+    max-width: 450px;
+    margin: 35px auto;
+    padding: min(30px, 5%);
     background-color: white;
     border: 1px solid #ddd;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     color: black;
+  }
+
+  .register{
+    margin-top: 0;
+    padding-top: 0;
   }
 
   h1 {

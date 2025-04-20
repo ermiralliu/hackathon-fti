@@ -1,10 +1,29 @@
 <script lang="ts">
+  import { page } from "$app/state";
   import PanelAside, { type Tab } from "$lib/components/panelAside.svelte";
   import type { Snippet } from "svelte";
-  let { data, children } : {data: {tabs: Tab[], activeTab: string}, children : Snippet} = $props();
+
+  let {children}: {children: Snippet} = $props();
+
+  const tabs = [
+    { id: "add", label: "Add Product", route: "/panel/add" },
+    { id: "view", label: "View Products", route: "/panel/view" },
+    {
+      id: "notifications",
+      label: "Notifications",
+      route: "/panel/notifications",
+    },
+    { id: "messages", label: "Messages", route: "/panel/messages" },
+  ];
+  
+  let activeTab = $derived((() => {
+    const paths = page.url.pathname.split("/");
+    const temp = paths[paths.length - 1];
+    return temp;
+  })());
 
 </script>
 
-<PanelAside tabs={data.tabs} activeTab={data.activeTab}>
- {@render children()}
+<PanelAside {tabs} {activeTab}>
+  {@render children()}
 </PanelAside>

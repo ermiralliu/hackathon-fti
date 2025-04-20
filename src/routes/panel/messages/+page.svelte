@@ -15,6 +15,12 @@
     }
   }
 </script>
+
+<svelte:head>
+  <title>Messages</title>
+  <meta name="description" content="Chat Room" />
+</svelte:head>
+
 <div class="tab-content">
     <h2>Messages</h2>
     {#if activeChat}

@@ -2,7 +2,8 @@
 import type { Cookies } from '@sveltejs/kit';
 import type { SerializeOptions } from 'cookie';
 
-const SESSION_COOKIE_NAME = 'sessionid';
+export const SESSION_COOKIE_NAME = 'sessionid';
+
 const SESSION_COOKIE_OPTIONS: SerializeOptions & { path: string } = {
 	httpOnly: true,
 	secure: process.env.NODE_ENV === 'production',

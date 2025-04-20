@@ -36,6 +36,11 @@
   }
 </script>
 
+<svelte:head>
+  <title>Notifications</title>
+  <meta name="description" content="Notifications from buyers" />
+</svelte:head>
+
 <main class="requests-container">
   <h1>Purchase Requests 📋</h1>
 

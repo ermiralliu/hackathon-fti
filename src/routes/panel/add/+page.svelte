@@ -1,18 +1,26 @@
-<script>
-  // @ts-nocheck
+<script lang="ts">
   import { enhance } from "$app/forms";
   
-  let currentImage = $state(null);
+  let currentImage: null| File = $state(null);
   let imagePreview = $state("");
   
-  function handleImageUpload(event) {
-    const file = event.target.files[0];
+  function handleImageUpload(event: Event){
+    const inputElement = event.target as HTMLInputElement
+    const fileList = inputElement.files;
+    if(!fileList)
+     return;
+    const file = fileList[0];
     if (file) {
       currentImage = file;
       imagePreview = URL.createObjectURL(file);
     }
   }
 </script>
+
+<svelte:head>
+  <title>Add Product</title>
+  <meta name="description" content="Add Products to sell" />
+</svelte:head>
 
 <div class="tab-content">
   <h2>Add New Product</h2>
