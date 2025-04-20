@@ -3,10 +3,17 @@
   import { enhance } from "$app/forms";
   import { goto } from "$app/navigation";
   import InfoRow from "$lib/components/infoRow.svelte";
-  import type { Product, PurchaseRequest, Status } from "$prisma-client";
+  import ModalDialog from "$lib/components/modalDialog.svelte";
+  import type { Status } from "$prisma-client";
   import { fade } from "svelte/transition";
 
   let { data } = $props();
+
+  let show = $state(false);
+  function closeModal(){
+    show = false;
+  }
+  $inspect(show);
 
   let purchaseRequests = $derived(data.purchaseRequests.requests || []);
   let currentPage = $derived(data.purchaseRequests.currentPage);
@@ -26,20 +33,6 @@
       pages.push(i);
     }
     return pages;
-  }
-
-  function openViewModal() {
-    modalView.showModal();
-    // setTimeout(() => {
-    modalView.classList.add("openedDialog");
-    // }, 50);
-  }
-
-  function closeModal() {
-    modalView.classList.remove("openedDialog");
-    setTimeout(() => {
-      modalView.close();
-    }, 300);
   }
 </script>
 
@@ -87,7 +80,7 @@
             <button
               onclick={() => {
                 selectedRequest = request;
-                openViewModal();
+                show = true;
               }}
             >
               View Details
@@ -119,123 +112,61 @@
   {/if}
 </main>
 
-{#snippet modalInfo(label = "Data:", data = "data")}
-  <dl class="info-row">
-    <dd class="label">{label}</dd>
-    <dt class="value">{data}</dt>
-  </dl>
-{/snippet}
-
 <!-- View Modal -->
-<dialog
-  bind:this={modalView}
-  onclick={e => {
-    if (e.target === modalView) closeModal(); // For some reason you should click the part associated with dialog reference
-  }}
->
-  {#if selectedRequest}
-    <div class="modal">
-      <header class="modal-header">
-        <h2>Request #{selectedRequest.id}</h2>
-        <button onclick={closeModal}>&times;</button>
-      </header>
+<ModalDialog {show} {closeModal}>
+  {#snippet header()}
+    <h2>Request #{selectedRequest?.id ?? "bad"}</h2>
+  {/snippet}
 
-      <div class="modal-body">
-        <div class="request-info">
-          <InfoRow label="Product:" data={selectedRequest.product.name} />
-          <InfoRow
-            label="From:"
-            data={selectedRequest.consumer.name ?? "unnamed?"}
-          />
-          <InfoRow label="Email:" data={selectedRequest.consumer.email} />
-          <InfoRow
-            label="Date:"
-            data={selectedRequest.createdAt.toDateString()}
-          />
-          {#if selectedRequest.quantity}
-            <InfoRow label="Quantity:" data={selectedRequest.quantity}/>
-          {/if}
-
-          {#if selectedRequest.message}
-            <InfoRow label="Message:" data={selectedRequest.message}/>
-          {/if}
-          <InfoRow label="Status:" data={selectedRequest.status}/>
-        </div>
-
+  {#snippet body()}
+    {#if selectedRequest}
+      <div class="request-info">
+        <InfoRow label="Product:" data={selectedRequest.product.name} />
+        <InfoRow
+          label="From:"
+          data={selectedRequest.consumer.name ?? "unnamed?"}
+        />
+        <InfoRow label="Email:" data={selectedRequest.consumer.email} />
+        <InfoRow
+          label="Date:"
+          data={selectedRequest.createdAt.toDateString()}
+        />
+        <InfoRow
+          label="Quantity:"
+          data={selectedRequest.quantity ?? "Quantity unknown"}
+        />
+        <InfoRow
+          label="Message:"
+          data={selectedRequest.message ?? "No message provided"}
+        />
+        <InfoRow label="Status:" data={selectedRequest.status} />
       </div>
-      
-      <footer class="status-actions">
-        {#if selectedRequest.status !== "accepted"}
-          <form method="POST" action="?/updateRequestStatus" use:enhance>
-            <input
-              type="hidden"
-              value={selectedRequest.id}
-              name="requestId"
-            />
-            <input type="hidden" value="accepted" name="status" />
-            <button class="accept-btn"> Accept </button>
-          </form>
-        {/if}
+    {/if}
+  {/snippet}
 
-        {#if selectedRequest.status !== ("rejected" as Status)}
-          <form method="POST" action="?/updateRequestStatus" use:enhance>
-            <input
-              type="hidden"
-              value={selectedRequest.id}
-              name="requestId"
-            />
-            <input type="hidden" value="declined" name="status" />
+  {#snippet footer()}
+    {#if selectedRequest}
+      {#if selectedRequest.status !== "accepted"}
+        <form method="POST" action="?/updateRequestStatus" use:enhance>
+          <input type="hidden" value={selectedRequest.id} name="requestId" />
+          <input type="hidden" value="accepted" name="status" />
+          <button class="accept-btn footer-button"> Accept </button>
+        </form>
+      {/if}
 
-            <button type="submit" class="reject-btn"> Reject </button>
-          </form>
-        {/if}
-      </footer>
-    </div>
-  {/if}
-</dialog>
+      {#if selectedRequest.status !== ("rejected" as Status)}
+        <form method="POST" action="?/updateRequestStatus" use:enhance>
+          <input type="hidden" value={selectedRequest.id} name="requestId" />
+          <input type="hidden" value="declined" name="status" />
+
+          <button type="submit" class="reject-btn footer-button"> Reject </button>
+        </form>
+      {/if}
+    {/if}
+  {/snippet}
+</ModalDialog>
 
 <style>
-  /* Would've preferred to use dialog::backdrop, however transitions there are not compatible with Firefox */
-  /* So ::before is the best option */
-  dialog::before {
-    content: "";
-    position: fixed;
-    z-index: -1; /* This places it behind the dialog content */
-    inset: 0;
-    background-color: rgba(0, 0, 0, 0.7);
-    pointer-events: none;
-  }
-
-  dialog {
-    z-index: 1;
-  }
-
-  /* hide default backdrop */
-  dialog::backdrop {
-    opacity: 0;
-  }
-
-  :root {
-    --transition-delay: 0s;
-    --transition-duration: 0.3s;
-  }
-
-  /* add transitions */
-  dialog,
-  dialog::before {
-    display: block;
-    transition: var(--transition-duration) var(--transition-delay) opacity;
-    opacity: 0;
-  }
-
-  .openedDialog,
-  .openedDialog::before {
-    opacity: 1;
-  }
-  .openedDialog {
-    visibility: visible;
-  }
-
   .requests-container {
     max-width: 1200px;
     margin: 0 auto;
@@ -316,58 +247,6 @@
     background: #1e5a23;
   }
 
-  /* Modal styles */
-  dialog {
-    border: none;
-    border-radius: 8px;
-    padding: 0;
-    width: 90%;
-    max-width: 500px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  }
-
-  .modal {
-    padding: 1.5rem;
-    /* position: relative; */
-    /* z-index: 1; */
-    background-color: white;
-  }
-
-  .modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1rem;
-    border-bottom: 1px solid #eee;
-    padding-bottom: 1rem;
-  }
-
-  .modal-header h2 {
-    margin: 0;
-  }
-
-  .modal-header button {
-    background: none;
-    border: none;
-    font-size: 1.5rem;
-    cursor: pointer;
-  }
-
-  .status-actions {
-    display: flex;
-    gap: 0.5rem;
-    margin-top: 1.5rem;
-    flex-wrap: wrap;
-  }
-
-  .status-actions button {
-    padding: 0.5rem 1rem;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-weight: 600;
-  }
-
   .accept-btn {
     background-color: #28a745;
     color: white;
@@ -413,5 +292,13 @@
     text-align: center;
     padding: 2rem;
     color: #666;
+  }
+/* Dialog footer buttons */
+    button.footer-button {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 600;
   }
 </style>
