@@ -2,7 +2,7 @@
 <script lang="ts">
   import { enhance } from "$app/forms";
   import { goto } from "$app/navigation";
-    import InfoRow from "$lib/components/infoRow.svelte";
+  import InfoRow from "$lib/components/infoRow.svelte";
   import type { Product, PurchaseRequest, Status } from "$prisma-client";
   import { fade } from "svelte/transition";
 
@@ -142,60 +142,59 @@
 
       <div class="modal-body">
         <div class="request-info">
+          <InfoRow label="Product:" data={selectedRequest.product.name} />
           <InfoRow
-            label='Product:'
-            data={selectedRequest.product.name}
+            label="From:"
+            data={selectedRequest.consumer.name ?? "unnamed?"}
           />
-          {@render modalInfo("Product:", selectedRequest.product.name)}
-          {@render modalInfo(
-            "From:",
-            selectedRequest.consumer.name ?? "unnamed?",
-          )}
-          {@render modalInfo("Email:", selectedRequest.consumer.email)}
-          {@render modalInfo("Date:", selectedRequest.createdAt.toDateString())}
+          <InfoRow label="Email:" data={selectedRequest.consumer.email} />
+          <InfoRow
+            label="Date:"
+            data={selectedRequest.createdAt.toDateString()}
+          />
           {#if selectedRequest.quantity}
-            {@render modalInfo("Quantity:", selectedRequest.quantity)}
+            <InfoRow label="Quantity:" data={selectedRequest.quantity}/>
           {/if}
 
           {#if selectedRequest.message}
-            {@render modalInfo("Message:", selectedRequest.message)}
+            <InfoRow label="Message:" data={selectedRequest.message}/>
           {/if}
-          {@render modalInfo("Status:", selectedRequest.status)}
+          <InfoRow label="Status:" data={selectedRequest.status}/>
         </div>
 
-        <footer class="status-actions">
-          {#if selectedRequest.status !== "accepted"}
-            <form method="POST" action="?/updateRequestStatus" use:enhance>
-              <input
-                type="hidden"
-                value={selectedRequest.id}
-                name="requestId"
-              />
-              <input type="hidden" value="accepted" name="status" />
-              <button class="accept-btn"> Accept </button>
-            </form>
-          {/if}
-
-          {#if selectedRequest.status !== ("rejected" as Status)}
-            <form method="POST" action="?/updateRequestStatus" use:enhance>
-              <input
-                type="hidden"
-                value={selectedRequest.id}
-                name="requestId"
-              />
-              <input type="hidden" value="declined" name="status" />
-
-              <button type="submit" class="reject-btn"> Reject </button>
-            </form>
-          {/if}
-        </footer>
       </div>
+      
+      <footer class="status-actions">
+        {#if selectedRequest.status !== "accepted"}
+          <form method="POST" action="?/updateRequestStatus" use:enhance>
+            <input
+              type="hidden"
+              value={selectedRequest.id}
+              name="requestId"
+            />
+            <input type="hidden" value="accepted" name="status" />
+            <button class="accept-btn"> Accept </button>
+          </form>
+        {/if}
+
+        {#if selectedRequest.status !== ("rejected" as Status)}
+          <form method="POST" action="?/updateRequestStatus" use:enhance>
+            <input
+              type="hidden"
+              value={selectedRequest.id}
+              name="requestId"
+            />
+            <input type="hidden" value="declined" name="status" />
+
+            <button type="submit" class="reject-btn"> Reject </button>
+          </form>
+        {/if}
+      </footer>
     </div>
   {/if}
 </dialog>
 
 <style>
-
   /* Would've preferred to use dialog::backdrop, however transitions there are not compatible with Firefox */
   /* So ::before is the best option */
   dialog::before {
@@ -207,7 +206,7 @@
     pointer-events: none;
   }
 
-  dialog{
+  dialog {
     z-index: 1;
   }
 
