@@ -1,3 +1,8 @@
+<svelte:head>
+  <title>MerrBio</title>
+  <meta name="description" content="Welcome to MerrBio" />
+</svelte:head>
+
 <section class="hero-section">
   <h1 class="hero-title">Mirë se vini në MerrBio 🌿</h1>
   <p class="hero-description">Lidh konsumatorët me fermerët vendas për ushqim të freskët dhe organik.</p>
@@ -36,14 +41,6 @@
 </section>
 
 <style>
-  /* Base Mobile-First Styles */
-  :global(body) {
-    margin: 0;
-    padding: 0;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-    line-height: 1.5;
-    font-size: 16px;
-  }
 
   section {
     padding: 2.5rem 0;
@@ -53,10 +50,8 @@
   /* Hero Section */
   .hero-section {
     text-align: center;
-    padding: 3rem 1rem;
     background-color: #d1f7e1;
     border-radius: 15px;
-    margin: 1rem 0;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   }
 
@@ -64,6 +59,7 @@
     font-size: clamp(1.75rem, 5vw, 2.5rem);
     font-weight: bold;
     color: #2b6e30;
+    margin-top: 0.2rem;
     margin-bottom: 1rem;
     line-height: 1.3;
   }
@@ -71,11 +67,13 @@
   .hero-description {
     font-size: clamp(1.1rem, 2.5vw, 1.375rem);
     color: #4c4c4c;
+    margin: auto;
     margin-bottom: 1.75rem;
     max-width: 800px;
-    margin-left: auto;
-    margin-right: auto;
     padding: 0 0.5rem;
+  }
+  .cta-section{
+    margin: auto 1rem;
   }
 
   .explore-button, .cta-button {

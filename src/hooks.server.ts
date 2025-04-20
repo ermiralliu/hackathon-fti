@@ -3,9 +3,6 @@ import { getUserBySessionId } from '$lib/services/auth.service';
 import { getSessionIdFromCookie } from '$lib/helpers/session.helper';
 
 const allAllowed = ['/products', '/login', '/register']; // top level routes
-// const consumerDefault = '/consumer';
-// const farmerDefault = '/farmer';
-// const adminDefault = '/admin';
 
 export const handle: Handle = async ({ event, resolve }) => {
   let user = null;
@@ -15,10 +12,7 @@ export const handle: Handle = async ({ event, resolve }) => {
     if (user) {
       event.locals.user = user; // Make user data available in load functions and API routes
     }
-    // console.log(JSON.stringify(user));
   }
-  // Check if the requested path is a protected top-level route
-  // console.log(event.url.pathname);
   
   const isPublic = allAllowed.some((e)=> event.url.pathname.startsWith(e)) || event.url.pathname === '/';
   if(isPublic)

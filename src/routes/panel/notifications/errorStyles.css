@@ -34,6 +34,7 @@
   max-width: 500px;
   margin: 0 auto;
 }
+
 /* Dialog backdrop animation, that you can use for browsers other than firefox */
 dialog::backdrop {
   opacity: 0;

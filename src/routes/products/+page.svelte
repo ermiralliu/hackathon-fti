@@ -2,9 +2,17 @@
   import { goto, invalidateAll } from "$app/navigation";
   import { fade } from "svelte/transition";
   import { enhance } from "$app/forms";
-  import type { Product, ProductType } from "$prisma-client";
+  import { type ProductType, type Product } from "$prisma-client";
+
+  import ModalDialog from "$lib/components/modalDialog.svelte";
 
   let { data } = $props();
+
+  let show = $state(false);
+
+  function closeModal() {
+    show = false;
+  }
 
   let products = $derived(data.products.products || []);
   let currentPage = $derived(data.products.currentPage);
@@ -29,12 +37,6 @@
     goto(`/products?${urlParams.toString()}`, { noScroll: true });
   }
 
-  let modal: HTMLDialogElement;
-  
-  function closeModal(){
-    modal.close();
-  }
-
   let quantity = $state("");
   let messageProdRequest = $state("");
   let selectedProduct: Product | null = $state(null);
@@ -42,19 +44,12 @@
   let search = $state("");
   let selectedType: ProductType | null = $state(null);
 
-  const availableTypes = [
-    "fruit",
-    "vegetable",
-    "alcoholicBeverage",
-    "juice",
-    "dairy",
-    "other",
-  ];
+  const availableTypes = $derived(data.allTypes);
 </script>
 
 <svelte:head>
-    <title>Store</title>
-    <meta name="description" content="Here you can buy our products">
+  <title>Store</title>
+  <meta name="description" content="Here you can buy our products" />
 </svelte:head>
 
 <main class="products-container">
@@ -78,6 +73,7 @@
 
   {#if !products}
     <div class="loading-spinner">
+      <!-- I hoqa keto loading spinner but who cares -->
       <div class="spinner"></div>
       <p>Loading fresh products...</p>
       <p>If it's not loading properly:</p>
@@ -113,7 +109,7 @@
               <button
                 onclick={() => {
                   selectedProduct = product;
-                  modal.showModal();
+                  show = true;
                 }}
               >
                 Me shume
@@ -145,122 +141,69 @@
   {/if}
 </main>
 
-<dialog bind:this={modal}>
-  {#if selectedProduct}
-    <div class="modal">
-      <div class="modal-header">
-        <h2>{selectedProduct.name}</h2>
-        <button type="button" onclick={closeModal}>&times;</button>
-      </div>
-      <div class="modal-body">
-        <form
-          use:enhance
-          method="post"
-          action="?/addProdRequest"
-          enctype="multipart/form-data"
-        >
-          <label for="description">Description:</label>
-          <p>{selectedProduct?.description}</p>
-          <label for="price">Price:</label>
-          <p>{selectedProduct?.price}</p>
+<ModalDialog {show} {closeModal}>
+  {#snippet header()}
+    <h2>{selectedProduct?.name ?? "Product name not found"}</h2>
+  {/snippet}
 
-          <label for="quantity">Quantity:</label>
-          <input
-            type="text"
-            id="quantity"
-            name="quantity"
-            bind:value={quantity}
-            required
-          />
-          <label for="message">Message:</label>
-          <input
-            type="text"
-            name="message"
-            bind:value={messageProdRequest}
-            required
-          />
-          <input
-            type="hidden"
-            name="productId"
-            bind:value={selectedProduct.id}
-            required
-          />
-          <div class="modal-footer">
-            <button class="primary" type="submit">Confirm</button>
-            <button type="button" onclick={closeModal}>Cancel</button>
-          </div>
-        </form>
-      </div>
-    </div>
-  {/if}
-</dialog>
+  {#snippet body()}
+    <form
+      class="modal-form"
+      use:enhance
+      method="post"
+      action="?/addProdRequest"
+      enctype="multipart/form-data"
+    >
+      <label for="description">Description:</label>
+      <p>{selectedProduct?.description}</p>
+      <label for="price">Price:</label>
+      <p>{selectedProduct?.price}</p>
+
+      <label for="quantity">Quantity:</label>
+      <input
+        type="text"
+        id="quantity"
+        name="quantity"
+        bind:value={quantity}
+        required
+      />
+      <label for="message">Message:</label>
+      <input
+        type="text"
+        name="message"
+        bind:value={messageProdRequest}
+        required
+      />
+      <input
+        type="hidden"
+        name="productId"
+        value={selectedProduct?.id ?? -1}
+        required
+      />
+      <footer class="modal-footer">
+        <button class="primary" type="submit">Confirm</button>
+        <button type="button" style:background-color='darkred' onclick={closeModal}>Cancel</button>
+      </footer>
+    </form>
+  {/snippet}
+</ModalDialog>
 
 <style>
-  dialog {
-    border: none;
-    border-radius: 12px;
-    padding: 0;
-    width: 90%;
-    max-width: 500px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
-    overflow: hidden;
-  }
 
-  dialog::backdrop {
-    background-color: rgba(0, 0, 0, 0.7);
-    backdrop-filter: blur(2px);
-  }
-
-  .modal {
+  form.modal-form {
     display: flex;
     flex-direction: column;
-    height: 100%;
+    gap: 0.8rem;
   }
 
-  .modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1.5rem;
-    background-color: #2b6e30;
-    color: white;
-  }
-
-  .modal-header h2 {
-    margin: 0;
-    font-size: 1.5rem;
-  }
-
-  .modal-header button {
-    background: none;
-    border: none;
-    color: white;
-    font-size: 1.5rem;
-    cursor: pointer;
-    padding: 0.25rem;
-    line-height: 1;
-  }
-
-  .modal-body {
-    padding: 1.5rem;
-    flex-grow: 1;
-    overflow-y: auto;
-  }
-
-  .modal-body form {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-  }
-
-  .modal-body label {
+  form.modal-form label {
     display: block;
     margin-bottom: 0.5rem;
     font-weight: 600;
     color: #333;
   }
 
-  .modal-body input[type="text"] {
+  form.modal-form input[type="text"] {
     width: 100%;
     padding: 0.5rem 0.75rem;
     border: 1px solid #ddd;
@@ -271,7 +214,7 @@
     box-sizing: border-box;
   }
 
-  .modal-body p {
+  form.modal-form p {
     margin: 0 0 1rem 0;
     color: #555;
     line-height: 1.5;
@@ -308,26 +251,7 @@
     border: 1px solid #2b6e30 !important;
   }
 
-  /* Për të parandaluar override nga stilet globale */
-  .modal button,
-  .modal-footer button,
-  .modal-header button {
-    background: initial;
-    color: initial;
-    width: auto;
-    margin: initial;
-    border: initial;
-  }
-
   @media (max-width: 600px) {
-    dialog {
-      width: 95%;
-      max-width: none;
-      margin: 0.5rem;
-    }
-
-    .modal-header,
-    .modal-body,
     .modal-footer {
       padding: 1rem;
     }
@@ -457,38 +381,6 @@
 
   button:hover {
     background: #1e5a23;
-  }
-
-  .loading-spinner {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1rem;
-    padding: 2rem;
-  }
-
-  .spinner {
-    width: 50px;
-    height: 50px;
-    border: 5px solid #f3f3f3;
-    border-top: 5px solid #2b6e30;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-  }
-
-  @keyframes spin {
-    0% {
-      transform: rotate(0deg);
-    }
-    100% {
-      transform: rotate(360deg);
-    }
-  }
-
-  .empty-state {
-    text-align: center;
-    padding: 2rem;
-    color: #666;
   }
 
   @media (max-width: 768px) {

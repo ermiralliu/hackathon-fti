@@ -12,7 +12,7 @@
     closeModal: () => void;
     header: Snippet;
     body: Snippet;
-    footer: Snippet;
+    footer?: Snippet;
   } = $props();
 
   let dialogReference: HTMLDialogElement;
@@ -56,7 +56,7 @@
     </div>
 
     <footer class="status-actions">
-      {@render footer()}
+      {@render footer?.()}
     </footer>
   </div>
 </dialog>
