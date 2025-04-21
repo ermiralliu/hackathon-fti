@@ -13,6 +13,11 @@
   let passwordsMatch = $derived(
     isRegisterPage ? password === confirmPassword : true,
   );
+
+  let usernameInput: HTMLInputElement;
+  $effect(()=>{
+    usernameInput.focus();
+  })
 </script>
 
 <!-- Making a snippet so we can apply files within here -->
@@ -30,7 +35,10 @@
   class:register={isRegisterPage}
 >
   <h1>{isRegisterPage ? "Register" : "Login"}</h1>
-  {@render Input("username", "Username:", "text")}
+  <label in:fly={{ x: -20 }}>
+    Username:
+    <input bind:this={usernameInput} type="text" name="username" required/>
+  </label>
 
   {#if isRegisterPage}
     {@render Input("email", "Email:", "email")}
