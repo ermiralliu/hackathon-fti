@@ -1,5 +1,6 @@
 <script lang="ts">
   import { enhance } from "$app/forms";
+    import { fade } from "svelte/transition";
   
   let currentImage: null| File = $state(null);
   let imagePreview = $state("");
@@ -22,7 +23,7 @@
   <meta name="description" content="Add Products to sell" />
 </svelte:head>
 
-<div class="tab-content">
+<div class="tab-content" transition:fade={{duration: 200}}>
   <h2>Add New Product</h2>
   <!-- Add enctype attribute here -->
   <form use:enhance method="POST" action="?/create" enctype="multipart/form-data">

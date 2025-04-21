@@ -21,7 +21,7 @@
   <meta name="description" content="Chat Room" />
 </svelte:head>
 
-<div class="tab-content">
+<div class="tab-content"  transition:fade={{duration: 200}}>
     <h2>Messages</h2>
     {#if activeChat}
       <div class="chat-container">

@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { Snippet } from "svelte";
+    import { fade, fly } from "svelte/transition";
 
   export type Tab = { id: string; label: string; route: string };
 
@@ -27,7 +28,9 @@
       class:open={mobileMenuOpen}
       class="sidebar"
       aria-label="Panel Navigation Sidebar"
+      in:fly={{x:"-200px", duration: 1000}}
     >
+    <!-- You gotta love the way to sidebar flies in -->
       <ul>
         {#each tabs as tab}
           <li class:active={activeTab === tab.id}>
@@ -59,7 +62,7 @@
   .mobile-menu-button {
     display: none;
     position: fixed;
-    top: 10.5vh;
+    top: 9%;
     left: 10px;
     z-index: 1000;
     background: #2c3e50;
@@ -92,11 +95,13 @@
 
   .sidebar li {
     padding: 0;
+    margin: auto 5px;
+    border-radius: 18px;
     cursor: pointer;
     transition: background-color 0.3s;
   }
 
-  .sidebar li:hover a {
+  .sidebar li:hover {
     background-color: #34495e;
   }
 
@@ -104,7 +109,7 @@
     background-color: #3498db;
   }
 
-  .sidebar li.active:hover a{
+  .sidebar li.active:hover {
     background-color: #65a9d6;
   }
 
@@ -138,7 +143,8 @@
     .content {
       margin-left: 0 !important; /* Remove margin completely on mobile */
       width: 100%; /* Take full width */
-      padding:5%;
+      padding:6%;
+      padding-left: 8%;
     }
     .mobile-menu-button {
       display: block;

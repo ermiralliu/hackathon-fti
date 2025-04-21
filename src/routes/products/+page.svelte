@@ -52,7 +52,7 @@
   <meta name="description" content="Here you can buy our products" />
 </svelte:head>
 
-<main class="products-container">
+<main class="products-container" transition:fade={{duration:200}}>
   <h1>Produktet tona organike 🌱</h1>
 
   <form method="get" action="?/" class="search-form">

@@ -41,7 +41,7 @@
   <meta name="description" content="Notifications from buyers" />
 </svelte:head>
 
-<main class="requests-container">
+<main class="requests-container"  transition:fade={{duration: 200}}>
   <h1>Purchase Requests 📋</h1>
 
   {#if !purchaseRequests}

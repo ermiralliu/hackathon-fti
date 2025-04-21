@@ -1,44 +1,51 @@
+<script>
+
+    import { fade } from "svelte/transition";
+
+</script>
 <svelte:head>
   <title>MerrBio</title>
   <meta name="description" content="Welcome to MerrBio" />
 </svelte:head>
 
-<section class="hero-section">
-  <h1 class="hero-title">Mirë se vini në MerrBio 🌿</h1>
-  <p class="hero-description">Lidh konsumatorët me fermerët vendas për ushqim të freskët dhe organik.</p>
-  <a class="explore-button" href="/products">Shfleto Produktet</a>
-</section>
-
-<section class="about-section">
-  <h2 class="about-title">Çfarë është MerrBio?</h2>
-  <p class="about-description">
-    MerrBio është një platformë që ndihmon fermerët vendas të shesin drejtpërdrejt tek konsumatorët që kërkojnë cilësi, freski dhe produkte organike. Misioni ynë është të forcojmë ekonominë lokale dhe të promovojmë qëndrueshmërinë.
-  </p>
-</section>
-
-<section class="how-it-works-section">
-  <h2 class="section-title">Si funksionon?</h2>
-  <div class="steps">
-    <div class="step">
-      <h3 class="step-title">1. Regjistrohu</h3>
-      <p>Krijo një llogari si fermer ose konsumator.</p>
+<main transition:fade={{duration:200}}>
+  <section class="hero-section">
+    <h1 class="hero-title">Mirë se vini në MerrBio 🌿</h1>
+    <p class="hero-description">Lidh konsumatorët me fermerët vendas për ushqim të freskët dhe organik.</p>
+    <a class="explore-button" href="/products">Shfleto Produktet</a>
+  </section>
+  
+  <section class="about-section">
+    <h2 class="about-title">Çfarë është MerrBio?</h2>
+    <p class="about-description">
+      MerrBio është një platformë që ndihmon fermerët vendas të shesin drejtpërdrejt tek konsumatorët që kërkojnë cilësi, freski dhe produkte organike. Misioni ynë është të forcojmë ekonominë lokale dhe të promovojmë qëndrueshmërinë.
+    </p>
+  </section>
+  
+  <section class="how-it-works-section">
+    <h2 class="section-title">Si funksionon?</h2>
+    <div class="steps">
+      <div class="step">
+        <h3 class="step-title">1. Regjistrohu</h3>
+        <p>Krijo një llogari si fermer ose konsumator.</p>
+      </div>
+      <div class="step">
+        <h3 class="step-title">2. Publiko ose shfleto</h3>
+        <p>Fermerët publikojnë produkte, konsumatorët i shfletojnë.</p>
+      </div>
+      <div class="step">
+        <h3 class="step-title">3. Bëj kërkesë</h3>
+        <p>Bli direkt nga fermeri – pa ndërmjetës!</p>
+      </div>
     </div>
-    <div class="step">
-      <h3 class="step-title">2. Publiko ose shfleto</h3>
-      <p>Fermerët publikojnë produkte, konsumatorët i shfletojnë.</p>
-    </div>
-    <div class="step">
-      <h3 class="step-title">3. Bëj kërkesë</h3>
-      <p>Bli direkt nga fermeri – pa ndërmjetës!</p>
-    </div>
-  </div>
-</section>
-
-<section class="cta-section">
-  <h2 class="cta-title">Gati për të filluar?</h2>
-  <p class="cta-description">Bashkohu me qindra përdorues që besojnë tek produktet lokale dhe të freskëta.</p>
-  <a href="/register" class="cta-button">Regjistrohu Tani</a>
-</section>
+  </section>
+  
+  <section class="cta-section">
+    <h2 class="cta-title">Gati për të filluar?</h2>
+    <p class="cta-description">Bashkohu me qindra përdorues që besojnë tek produktet lokale dhe të freskëta.</p>
+    <a href="/register" class="cta-button">Regjistrohu Tani</a>
+  </section>
+</main>
 
 <style>
 

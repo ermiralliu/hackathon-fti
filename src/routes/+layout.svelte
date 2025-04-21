@@ -8,4 +8,7 @@
 </script>
 
 <NavBar {isLogged}/>
+
 {@render children()}
+
+

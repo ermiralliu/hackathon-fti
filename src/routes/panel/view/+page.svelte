@@ -97,7 +97,7 @@
   <meta name="description" content="Here you can view the products you are selling" />
 </svelte:head>
 
-<main class="products-container">
+<main class="products-container"  transition:fade={{duration: 200}}>
   <h1>Your Products 🌱</h1>
 
   {#if isLoading}
