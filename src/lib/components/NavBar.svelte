@@ -37,7 +37,7 @@
     <a href="/login" class="login-btn">Log In</a>
   {:else}
     <form method="POST" action="/logout" use:enhance={handleLogout}>
-      <button type="submit" aria-label="Log Out" class="login-btn"></button>
+      <button type="submit" aria-label="Log Out" class="logout-btn">Log Out</button>
     </form>
   {/if}
 </nav>
@@ -49,6 +49,7 @@
     position: sticky;
     top: 0;
     width: 100%;
+    height: 60px;
     z-index: 1;
     display: flex;
     justify-content: space-between;
@@ -79,11 +80,35 @@
     padding: 0.5rem;
   }
 
+  .logout-btn {
+    padding:0;
+    width: 100%;
+    text-align: center;
+    background-color: rgba(156, 94, 94, 0.658);
+    border-radius: 4px;
+    border-style: none;
+    font-size: 0.9rem;
+  }
+  .logout-btn:hover{
+    background-color: rgba(155, 74, 74, 0.658);
+    cursor: pointer;
+  }
+
+  form {
+    height: 40px;
+    min-width: 80px;
+    width: 10%;
+    display: flex;
+    align-items: stretch;
+  }
+
   a:hover {
     text-decoration: underline;
   }
 
   .login-btn {
+    width: 10%;
+    text-align: center;
     background-color: #4f709c;
     color: white;
     border-radius: 4px;
