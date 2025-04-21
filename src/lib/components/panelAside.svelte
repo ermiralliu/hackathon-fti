@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { Snippet } from "svelte";
-    import { fade, fly } from "svelte/transition";
+  import { fly } from "svelte/transition";
 
   export type Tab = { id: string; label: string; route: string };
 
@@ -10,33 +10,36 @@
     children,
   }: { tabs: Tab[]; activeTab: string; children: Snippet } = $props();
 
-  let mobileMenuOpen = $state(false);
+  import sidebarButton, { toggleOpen } from "$lib/client/globalStates/sidebarButton.svelte";
 
-  // Toggle mobile menu
-  function toggleMobileMenu() {
-    mobileMenuOpen = !mobileMenuOpen;
-  }
+  // let mobileMenuOpen = $state(false);
 
+  // // Toggle mobile menu
+  // function toggleMobileMenu() {
+  //   mobileMenuOpen = !mobileMenuOpen;
+  // }
 </script>
 
 <div class="container">
   <!-- Mobile Menu Button -->
+  <!-- <button class="mobile-menu-button" onclick={toggleMobileMenu}> ☰ </button> -->
   <aside>
-    <button class="mobile-menu-button" onclick={toggleMobileMenu}> ☰ </button>
     <!-- Vertical Navigation Bar -->
     <nav
-      class:open={mobileMenuOpen}
+      class:open={sidebarButton.opened}
       class="sidebar"
       aria-label="Panel Navigation Sidebar"
-      in:fly={{x:"-200px", duration: 1000}}
+      in:fly={{ x: "-200px", duration: 1000 }}
     >
-    <!-- You gotta love the way to sidebar flies in -->
+      <h3>Actions</h3>
+      <!-- You gotta love the way to sidebar flies in -->
       <ul>
         {#each tabs as tab}
           <li class:active={activeTab === tab.id}>
-            <a href={tab.route} onclick={() => (mobileMenuOpen = false) }
-              >{tab.label}</a>
-              <!-- data-sveltekit-preload-data="eager" // this could be used for interesting preload effects -->
+            <a href={tab.route} onclick={toggleOpen}
+              >{tab.label}</a
+            >
+            <!-- data-sveltekit-preload-data="eager" // this could be used for interesting preload effects -->
           </li>
         {/each}
       </ul>
@@ -46,6 +49,30 @@
 </div>
 
 <style>
+  h3 {
+    position: relative; /* Needed for absolute positioning of the ::after element */
+    padding-bottom: 8px; /* Add space between text and where the line will sit */
+    margin-bottom: 15px;
+    margin-left: 20px;
+  }
+
+  h3::after {
+    content: ""; /* Required for pseudo-elements */
+    display: block; /* Make the pseudo-element a block */
+    position: absolute; /* Position it relative to the h3 */
+    bottom: 0; /* Align its bottom edge with the h3's padding edge */
+    left: -5%;
+    width: 95%; /* Make the line span the full width */
+    height: 1px; /* Example: Make the line 2px thick */
+    background-color: #8292ac; /* Example: Solid color before blur */
+    z-index: 1; /* Ensure it sits above content if needed */
+
+    /* --- Apply the blur filter --- */
+    filter: blur(
+      1px
+    ); /* Adjust the pixel value to control the amount of blur */
+  }
+
   aside {
     display: flex;
     flex-direction: column;
@@ -58,27 +85,12 @@
     min-width: 320px; /* Minimum supported width */
   }
 
-  /* Mobile Menu Button */
-  .mobile-menu-button {
-    display: none;
-    position: fixed;
-    top: 9%;
-    left: 10px;
-    z-index: 1000;
-    background: #2c3e50;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    padding: 10px;
-    font-size: 20px;
-  }
-
   /* Sidebar/Navigation */
   .sidebar {
+    margin-top: 0px;
     width: 250px;
     background-color: #2c3e50;
     color: white;
-    padding: 20px 0;
     transition: transform 0.3s ease;
     position: fixed;
     min-height: 100vh;
@@ -143,15 +155,12 @@
     .content {
       margin-left: 0 !important; /* Remove margin completely on mobile */
       width: 100%; /* Take full width */
-      padding:6%;
+      padding: 6%;
       padding-left: 8%;
-    }
-    .mobile-menu-button {
-      display: block;
     }
 
     .sidebar {
-      padding-top: 8vh;
+      /* padding-top: 8vh; */
       transform: translateX(-100%);
       width: 280px;
     }
@@ -161,24 +170,10 @@
     }
   }
 
-  @media (max-width: 576px) {
-    /* Ensure buttons don't overflow */
-    button {
-      white-space: normal;
-      word-wrap: break-word;
-    }
-  }
-
   /* Extra small devices (phones, 400px and down) */
   @media (max-width: 400px) {
     .sidebar {
       width: 85vw; /* Take most of screen but leave some space */
-    }
-
-    /* Adjust button sizes */
-    button {
-      padding: 8px 12px;
-      font-size: 14px;
     }
   }
 </style>

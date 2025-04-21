@@ -70,7 +70,8 @@
     position: fixed;
     z-index: -1; /* This places it behind the dialog content */
     inset: 0;
-    background-color: rgba(0, 0, 0, 0.7);
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(1px);
     /* pointer-events: all; */
   }
 
@@ -80,7 +81,8 @@
 
   /* hide default backdrop */
   dialog::backdrop {
-    display: none;
+    /* display: none; */
+    visibility: hidden;
     /* opacity: 0; */
   }
 
@@ -93,7 +95,8 @@
   dialog,
   dialog::before {
     /* display: block; */
-    transition: var(--transition-duration) var(--transition-delay) opacity;
+    transition: var(--transition-duration) var(--transition-delay) opacity, 
+    0.4s 0.2s backdrop-filter ease-out;
     opacity: 0;
   }
 
@@ -103,7 +106,8 @@
     visibility: visible;
   }
   dialog:global(.openedDialog)::before {
-    display: block;
+    /* display: block; */
+    backdrop-filter: blur(4px);
   }
 
   /* Modal styles */
