@@ -12,12 +12,6 @@
 
   import sidebarButton, { toggleOpen } from "$lib/client/globalStates/sidebarButton.svelte";
 
-  // let mobileMenuOpen = $state(false);
-
-  // // Toggle mobile menu
-  // function toggleMobileMenu() {
-  //   mobileMenuOpen = !mobileMenuOpen;
-  // }
 </script>
 
 <div class="container">
@@ -155,8 +149,7 @@
     .content {
       margin-left: 0 !important; /* Remove margin completely on mobile */
       width: 100%; /* Take full width */
-      padding: 6%;
-      padding-left: 8%;
+      padding: 2% 6%;
     }
 
     .sidebar {

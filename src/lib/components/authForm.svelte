@@ -1,6 +1,7 @@
 <script lang="ts">
   import { enhance } from "$app/forms";
-  import { fade, fly } from "svelte/transition";
+  import verticalTransition from "$lib/client/transitions/verticalTransition";
+  import { fly } from "svelte/transition";
 
   let { auth } = $props();
   let isRegisterPage = $derived(auth === "register");
@@ -10,19 +11,24 @@
   let confirmPassword = $state("");
 
   let passwordsMatch = $derived(
-    isRegisterPage ? password === confirmPassword : true
+    isRegisterPage ? password === confirmPassword : true,
   );
 </script>
 
 <!-- Making a snippet so we can apply files within here -->
-{#snippet Input(name = '', labelText = '', type = "text")}
-  <label in:fly={{ x: -20 }} out:fade>
+{#snippet Input(name = "", labelText = "", type = "text")}
+  <label in:fly={{ x: -20 }} out:verticalTransition>
     {labelText}
-    <input {type} {name} required/>
+    <input {type} {name} required />
   </label>
 {/snippet}
 
-<form method="post" action="?/{auth}" use:enhance class:register={isRegisterPage}>
+<form
+  method="post"
+  action="?/{auth}"
+  use:enhance
+  class:register={isRegisterPage}
+>
   <h1>{isRegisterPage ? "Register" : "Login"}</h1>
   {@render Input("username", "Username:", "text")}
 
@@ -30,7 +36,7 @@
     {@render Input("email", "Email:", "email")}
     {@render Input("name", "Name:", "text")}
 
-    <label in:fly={{ x: -20 }} out:fade>
+    <label in:fly={{ x: -20 }} out:verticalTransition>
       Role:
       <select name="role">
         <option value="consumer" selected> Bleres </option>
@@ -38,12 +44,12 @@
       </select>
     </label>
   {/if}
-  <label in:fly={{ x: -20 }} out:fade>
+  <label in:fly={{ x: -20 }} out:verticalTransition>
     Password:
     <input type="password" name="password" bind:value={password} />
   </label>
   {#if isRegisterPage}
-    <label in:fly={{ x: -20 }} out:fade>
+    <label in:fly={{ x: -20 }} out:verticalTransition>
       Confirm password:
       <input
         type="password"
@@ -75,7 +81,7 @@
     color: black;
   }
 
-  .register{
+  .register {
     margin-top: 0;
     padding-top: 0;
   }
@@ -87,10 +93,16 @@
   }
 
   label {
+    height: 100%;
+    /* transition: height 0.2s ease-in-out; */
     margin-bottom: 10px;
     display: block;
     color: black;
   }
+
+  /* .zooming-label {
+    height: 0;
+  } */
 
   input,
   select {
@@ -101,7 +113,7 @@
     border-radius: 4px;
     box-sizing: border-box;
     background-color: #f9f9f9;
-    color: black; 
+    color: black;
   }
 
   button {
@@ -116,7 +128,7 @@
 
   button:disabled {
     background-color: #e0e0e0;
-    color: #333; 
+    color: #333;
     cursor: not-allowed;
   }
 

@@ -4,7 +4,9 @@
   import type { SubmitFunction, ActionResult } from "@sveltejs/kit";
   import type { MouseEventHandler } from "svelte/elements";
 
-  import sidebarButton, {toggleOpen} from "$lib/client/globalStates/sidebarButton.svelte";
+  import sidebarButton, {
+    toggleOpen,
+  } from "$lib/client/globalStates/sidebarButton.svelte";
 
   let tabs = [
     { name: "Home", link: "/" },
@@ -15,8 +17,8 @@
   let { isLogged }: { isLogged: boolean } = $props();
 
   let dropdownOpen = $state(false);
-
   let dropdownVisibility = $state(false);
+  let dropdownRef: HTMLMenuElement;
 
   const handleLogout: SubmitFunction = () => {
     console.log("Form Called");
@@ -34,17 +36,17 @@
 
   let closeTimeoutId: NodeJS.Timeout | undefined;
 
-  function toggleDropdown() {
+  function toggleDropdown(e?: MouseEvent) {
+    e?.stopPropagation(); // this was key. It stops document from immediately closing it
+
     const nextDropdownOpen = !dropdownOpen;
 
     clearTimeout(closeTimeoutId);
     closeTimeoutId = undefined; // Reset the ID
 
     if (nextDropdownOpen) {
-      // When opening, set visibility to true immediately
       dropdownVisibility = true;
     } else {
-      // When closing, schedule the visibility update after a delay
       closeTimeoutId = setTimeout(() => {
         dropdownVisibility = false;
       }, 200);
@@ -53,7 +55,6 @@
     // Update the primary state immediately
     dropdownOpen = nextDropdownOpen;
   }
-  $inspect(sidebarButton.opened);
 
   const softNavigation: MouseEventHandler<HTMLAnchorElement> = e => {
     e.preventDefault();
@@ -69,7 +70,8 @@
     <div class="nav-left">
       <button
         class="mobile-menu-button"
-        aria-hidden={sidebarButton.opened}
+        class:hidden={!sidebarButton.isPanelPage}
+        aria-hidden={!sidebarButton.isPanelPage}
         aria-label="Toggle Sidebar"
         onclick={toggleOpen}
       >
@@ -96,6 +98,7 @@
       class="dropdown-menu"
       class:is-open={dropdownOpen}
       style:visibility={dropdownVisibility ? "visible" : "hidden"}
+      bind:this={dropdownRef}
     >
       {#if isLogged}
         <li role="none">
@@ -120,6 +123,18 @@
     </menu>
   </div>
 </header>
+
+<svelte:document
+  onclick={e => {
+    console.log(dropdownOpen);
+    if (dropdownOpen) {
+      const clickedInsideMenu = dropdownRef.contains(e.target as Node);
+      if (!clickedInsideMenu ) {
+        toggleDropdown();
+      }
+    }
+  }}
+/>
 
 <style>
   .nav {
@@ -147,7 +162,7 @@
     margin-bottom: 3px;
   }
 
-  .nav-left ul li{
+  .nav-left ul li {
     display: flex;
     align-items: center;
   }
@@ -222,16 +237,17 @@
   /* Minimal styling for menu items to ensure they are block elements */
   .dropdown-menu li {
     min-height: 40px;
-    /* display: block; */
+    display: flex;
+    align-items: center;
     margin: 0 5px;
     text-align: center;
     border-radius: 12px;
   }
 
-  .logout-li {
+  /* .logout-li {
     display: flex;
     align-items: stretch;
-  }
+  } */
   .logout-li form {
     width: 100%;
     display: flex;
@@ -277,6 +293,11 @@
     color: white;
     border: none;
     font-size: 20px;
+  }
+
+  .mobile-menu-button.hidden {
+    visibility: hidden;
+    width: 0;
   }
 
   @media (max-width: 768px) {

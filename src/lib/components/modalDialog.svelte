@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount, type Snippet } from "svelte";
+  import { type Snippet } from "svelte";
 
   let {
     show, // let's hope I'm not fucking anything up

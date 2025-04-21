@@ -1,5 +1,6 @@
 <script lang="ts">
   import { page } from "$app/state";
+    import sidebarButton from "$lib/client/globalStates/sidebarButton.svelte";
   import PanelAside, { type Tab } from "$lib/components/panelAside.svelte";
   import type { Snippet } from "svelte";
 
@@ -21,6 +22,13 @@
     const temp = paths[paths.length - 1];
     return temp;
   })());
+
+  $effect(()=>{
+    sidebarButton.isPanelPage = true;
+    return ()=>{
+      sidebarButton.isPanelPage = false;
+    }
+  });
 
 </script>
 
