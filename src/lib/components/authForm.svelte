@@ -66,6 +66,7 @@
     flex-direction: column;
     max-width: 450px;
     margin: 35px auto;
+    transition: margin 0.25s ease-in-out;
     padding: min(30px, 5%);
     background-color: white;
     border: 1px solid #ddd;
