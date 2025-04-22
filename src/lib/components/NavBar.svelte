@@ -9,6 +9,7 @@
   } from "$lib/client/globalStates/sidebarButton.svelte";
   import InputSwitch from "./inputSwitch.svelte";
   import { onMount } from "svelte";
+  import { browser } from "$app/environment";
 
   let tabs = [
     { name: "Home", link: "/" },
@@ -66,46 +67,38 @@
     goto(target.href);
   };
 
+  // The section here is all about dark mode toggle
   let isDarkMode = $state(false);
 
-  // we use bindable within the inner object,
-  // instead of const object states
-  $inspect(isDarkMode);
-
   onMount(() => {
-    const localStorageKey = "theme-preference";
+    if (!browser || !window.localStorage) return;
+    // we're breaking the abstraction a bit, but introducing conditionals within the child would be even worse
+    const id = "theme-switch";
+    if (localStorage.getItem(`toggle-switch-${id}-preference`)) return;
 
     function applyTheme(isDark: boolean) {
       isDarkMode = isDark;
     }
 
-    const savedPreference = localStorage.getItem(localStorageKey);
-
-    if (savedPreference === "dark") {
+    if (
+      window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches
+    ) {
       applyTheme(true);
-    } else if (savedPreference === "light") {
-      applyTheme(false);
     } else {
-      if (
-        window.matchMedia &&
-        window.matchMedia("(prefers-color-scheme: dark)").matches
-      ) {
-        applyTheme(true);
-      } else {
-        applyTheme(false);
-      }
+      applyTheme(false);
     }
   });
 
   $effect(() => {
-    const localStorageKey = "theme-preference";
     if (isDarkMode) document.body.classList.add("dark-mode");
     else document.body.classList.remove("dark-mode");
-    localStorage.setItem(localStorageKey, isDarkMode ? "dark" : "light");
   });
+
+  // The section in here will be all about sq, en language toggle
+  let isEnglish = $state(true);
 </script>
 
-<svelte:body class:dark-mode={isDarkMode} />
 
 <header>
   <nav class="nav">
@@ -148,6 +141,14 @@
           bind:isOn={isDarkMode}
           labelText="Theme Toggle"
           ariaLabel="Toggle light or dark mode"
+        />
+      </li>
+      <li role="none" class="theme-switch-li">
+        <InputSwitch
+          id="language-switch"
+          bind:isOn={isEnglish}
+          labelText={isEnglish ? "English" : "Shqip"}
+          ariaLabel="Toggle Albanian or English"
         />
       </li>
       {#if isLogged}

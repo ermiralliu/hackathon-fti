@@ -7,6 +7,7 @@ declare global {
 		// interface Error {}
 		interface Locals {
 			user: User | null | undefined; // Define the 'user' property and its type
+      theme?: string;
 		}
 		// interface PageData {}
 		// interface PageState {}

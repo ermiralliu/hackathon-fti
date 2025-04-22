@@ -1,4 +1,7 @@
 <script lang="ts">
+  import { browser } from "$app/environment";
+  import { onMount } from "svelte";
+
   let {
     isOn = $bindable(),
     id,
@@ -10,6 +13,22 @@
     labelText: string;
     ariaLabel: string;
   } = $props();
+
+  const localStorageKey = `toggle-switch-${id}-preference`;
+
+  onMount(() => {
+    if (!browser || !window.localStorage) return;
+    const item = localStorage.getItem(localStorageKey);
+    if (!item) return;
+    isOn = item == "on" ? true : false;
+  });
+
+  $effect(() => {
+    if (!browser || !window.localStorage) return;
+    console.log(`Saving ${id} preference: ${isOn}`);
+    localStorage.setItem(localStorageKey, isOn ? "on" : "off");
+  });
+  
 </script>
 
 <label class="toggle-switch-container" for={id}>
