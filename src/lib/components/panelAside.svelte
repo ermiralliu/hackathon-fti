@@ -58,7 +58,7 @@
   }
 
   /* @media (prefers-color-scheme: dark) { */
-  :global(body.dark-mode) {
+  :global(.dark-mode) {
     --color-sidebar-bg: #2a2a2a;
     --color-content-bg: #1a1a1a;
     --color-content-inside-bg: var(--color-sidebar-bg);

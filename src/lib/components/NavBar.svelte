@@ -72,7 +72,6 @@
 
   onMount(() => {
     if (!browser || !window.localStorage) return;
-    // we're breaking the abstraction a bit, but introducing conditionals within the child would be even worse
     const id = "theme-switch";
     if (localStorage.getItem(`toggle-switch-${id}-preference`)) return;
 
@@ -90,15 +89,35 @@
     }
   });
 
+  function setDarkModeCookieForever(days = 365 * 10) {
+    const date = new Date();
+    date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
+    const expires = "; expires=" + date.toUTCString();
+    document.cookie =
+      "darkMode=true" + expires + "; path=/; SameSite=Lax; Secure";
+    console.log("Dark mode cookie set to 'true' lasting for", days, "days.");
+  }
+
+  function unsetDarkModeCookie() {
+    document.cookie =
+      "darkMode=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT; SameSite=Lax; Secure";
+    console.log("Dark mode cookie unset.");
+  }
+
   $effect(() => {
-    if (isDarkMode) document.body.classList.add("dark-mode");
-    else document.body.classList.remove("dark-mode");
+    const mainDiv = document.getElementById("main-div") as HTMLDivElement;
+    if (isDarkMode && !mainDiv.classList.contains("dark-mode")) {
+      setDarkModeCookieForever();
+      mainDiv.classList.add("dark-mode");
+    } else if (!isDarkMode && mainDiv.classList.contains("dark-mode")) {
+      unsetDarkModeCookie();
+      mainDiv.classList.remove("dark-mode");
+    }
   });
 
   // The section in here will be all about sq, en language toggle
   let isEnglish = $state(true);
 </script>
-
 
 <header>
   <nav class="nav">
@@ -205,7 +224,7 @@
 
   /* @media (prefers-color-scheme: dark) { */
   /* :root{ */
-  :global(body.dark-mode) {
+  :global(.dark-mode) {
     --header-bg: #030303;
     --header-link-hover-color: #90b0ff;
     --header-shadow: rgba(0, 0, 0, 0.4);

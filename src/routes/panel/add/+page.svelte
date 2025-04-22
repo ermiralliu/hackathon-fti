@@ -126,7 +126,7 @@
     --card-shadow: rgba(0, 0, 0, 0.1);
   }
   /* @media (prefers-color-scheme: dark) { */
-  :global(body.dark-mode) {
+  :global(.dark-mode) {
     --form-border-color: #555;
     --form-bg-color-subtle: #3a3a3a;
     --form-text-color: #e0e0e0;

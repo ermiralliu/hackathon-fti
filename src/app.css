@@ -36,7 +36,7 @@ body {
 }
 
 
-body.dark-mode{
+.dark-mode{
   --text-color: #f0f0f0;
   --page-bg: #1a1a1a;
 }
