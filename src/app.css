@@ -15,16 +15,38 @@ body {
   /* Ensure body takes full viewport height */
 }
 
+
 body {
   font-family: "Inter", sans-serif, system-ui;
-  color: #333;
-  background-color: #f4f7f6;
-  /* Light background */
   line-height: 1.6;
   width: 100%;
   min-width: 320px;
   font-size: 16px;
+
+  /* Use variables for colors that change in dark mode */
+  color: var(--text-color);
+  background-color: var(--page-bg);
+
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
+
+:root {
+  --text-color: #333;
+  --page-bg: #f4f7f6;
+}
+
+
+body.dark-mode{
+  --text-color: #f0f0f0;
+  --page-bg: #1a1a1a;
+}
+
+/* @media (prefers-color-scheme: dark) {
+  :root {
+    --text-color: #f0f0f0;
+    --page-bg: #1a1a1a;
+  }
+} */
 
 /* min-width: 320px;  */
 /* Prevents horizontal scrolling on very narrow screens */

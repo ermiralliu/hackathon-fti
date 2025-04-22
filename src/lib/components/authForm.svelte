@@ -1,6 +1,7 @@
 <script lang="ts">
   import { enhance } from "$app/forms";
   import verticalTransition from "$lib/client/transitions/verticalTransition";
+  import { onMount } from "svelte";
   import { fade, fly } from "svelte/transition";
 
   let { auth } = $props();
@@ -16,8 +17,8 @@
 
   // svelte-ignore non_reactive_update
   let usernameInput: HTMLInputElement;
-  
-  $effect(() => {
+
+  onMount(() => {
     setTimeout(() => {
       usernameInput.focus();
     }, 400);
@@ -40,7 +41,7 @@
   in:fade
 >
   {#key "sidebar"}
-  <!-- The key successfully stops the animation when navigating pages. Nice. -->
+    <!-- The key successfully stops the animation when navigating pages. Nice. -->
     <h1>{isRegisterPage ? "Register" : "Login"}</h1>
     <label in:fly={{ x: -20 }}>
       Username:

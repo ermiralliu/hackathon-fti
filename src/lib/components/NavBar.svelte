@@ -7,6 +7,8 @@
   import sidebarButton, {
     toggleOpen,
   } from "$lib/client/globalStates/sidebarButton.svelte";
+  import InputSwitch from "./inputSwitch.svelte";
+  import { onMount } from "svelte";
 
   let tabs = [
     { name: "Home", link: "/" },
@@ -63,7 +65,47 @@
     console.log(target.href);
     goto(target.href);
   };
+
+  let isDarkMode = $state(false);
+
+  // we use bindable within the inner object,
+  // instead of const object states
+  $inspect(isDarkMode);
+
+  onMount(() => {
+    const localStorageKey = "theme-preference";
+
+    function applyTheme(isDark: boolean) {
+      isDarkMode = isDark;
+    }
+
+    const savedPreference = localStorage.getItem(localStorageKey);
+
+    if (savedPreference === "dark") {
+      applyTheme(true);
+    } else if (savedPreference === "light") {
+      applyTheme(false);
+    } else {
+      if (
+        window.matchMedia &&
+        window.matchMedia("(prefers-color-scheme: dark)").matches
+      ) {
+        applyTheme(true);
+      } else {
+        applyTheme(false);
+      }
+    }
+  });
+
+  $effect(() => {
+    const localStorageKey = "theme-preference";
+    if (isDarkMode) document.body.classList.add("dark-mode");
+    else document.body.classList.remove("dark-mode");
+    localStorage.setItem(localStorageKey, isDarkMode ? "dark" : "light");
+  });
 </script>
+
+<svelte:body class:dark-mode={isDarkMode} />
 
 <header>
   <nav class="nav">
@@ -100,6 +142,14 @@
       style:visibility={dropdownVisibility ? "visible" : "hidden"}
       bind:this={dropdownRef}
     >
+      <li role="none" class="theme-switch-li">
+        <InputSwitch
+          id="theme-switch"
+          bind:isOn={isDarkMode}
+          labelText="Theme Toggle"
+          ariaLabel="Toggle light or dark mode"
+        />
+      </li>
       {#if isLogged}
         <li role="none">
           <a href="/profile" role="menuitem" onclick={softNavigation}>Profile</a
@@ -151,6 +201,21 @@
     --trigger-color: var(--header-link-color);
     --trigger-hover-bg: rgba(255, 255, 255, 0.1);
   }
+
+  /* @media (prefers-color-scheme: dark) { */
+  /* :root{ */
+  :global(body.dark-mode) {
+    --header-bg: #030303;
+    --header-link-hover-color: #90b0ff;
+    --header-shadow: rgba(0, 0, 0, 0.4);
+    --dropdown-bg: #2a2a2a;
+    --dropdown-border-color: #404040;
+    --dropdown-text-color: #e0e0e0;
+    --dropdown-item-hover-bg: #3a3a3a;
+    --trigger-bg: transparent;
+    --trigger-color: #e0e0e0;
+  }
+  /* } */
 
   .nav {
     width: 100%;
@@ -229,10 +294,9 @@
     display: flex; /* Use flex to center icon/text */
     justify-content: center;
     align-items: center;
-    font-size: 1.2em; /* Adjust font size for icon/initials */
-    margin-right: 0; /* Adjust margin - padding on header handles space */
-    transition: background-color 0.2s ease-in-out; /* Smooth hover */
-    /* Remove min-width: 42px; and max-height: 42px; as height/width are set */
+    font-size: 1.2em;
+    margin-right: 0;
+    transition: background-color 0.2s ease-in-out;
   }
   .user-dropdown-trigger:hover {
     background-color: var(--trigger-hover-bg); /* Subtle hover background */
@@ -241,6 +305,7 @@
   /* --- Dropdown Menu --- */
   .dropdown-menu {
     position: absolute;
+    visibility: hidden;
     top: 100%;
     right: 0;
     list-style: none;
@@ -249,11 +314,10 @@
     z-index: 1000;
     transition:
       opacity 0.2s ease-in-out,
-      visibility 0.2s ease-in-out; /* Transition both */
-    transition-delay: 0ms; /* Remove delay or adjust */
+      visibility 0.2s;
+    transition-delay: 0ms;
     opacity: 0;
-    width: 150px; /* Give it a fixed width */
-    /* Remove min-width: 120px; if width is fixed */
+    width: 150px;
 
     background-color: var(--dropdown-bg); /* Use variable for background */
     border: 1px solid var(--dropdown-border-color); /* Add subtle border */
@@ -269,16 +333,12 @@
 
   /* --- Dropdown Menu Items --- */
   .dropdown-menu li {
-    /* min-height: 40px; */ /* Keep min-height or use padding on content */
-    display: flex; /* Keep flex */
-    align-items: center; /* Keep center alignment */
-    /* Remove horizontal margin inside li */
+    display: flex;
+    align-items: center;
     margin: 0;
-    /* Remove text-align: center; - flex + justify/align is better for centering content */
-    text-align: left; /* Default text alignment */
-    /* Remove border-radius: 12px; - Apply padding/hover background to the link/button inside */
-    border-radius: 0; /* Ensure no rounding on the list item itself */
-    transition: background-color 0.2s ease-in-out; /* Smooth hover background */
+    text-align: left;
+    border-radius: 0;
+    transition: background-color 0.2s ease-in-out;
   }
 
   /* --- Dropdown Menu Links/Buttons --- */
@@ -287,7 +347,7 @@
     text-decoration: none;
     display: block;
     width: 100%;
-    padding: 10px 15px; /* Add padding to the interactive element */
+    padding: 10px 15px;
     color: var(--dropdown-text-color); /* Use variable for text color */
     font-weight: normal; /* Regular font weight */
     text-align: left; /* Align text to the left */
@@ -340,7 +400,7 @@
     align-items: center;
     justify-content: center;
     height: 60px;
-/* I wish I knew a way to remove this redundancy */
+    /* I wish I knew a way to remove this redundancy */
     visibility: hidden;
     width: 0;
     opacity: 0;
@@ -363,7 +423,7 @@
       visibility: visible;
       opacity: 1;
       width: 50px;
-      padding: 0 4px
+      padding: 0 4px;
     }
 
     header {
@@ -372,5 +432,13 @@
     .user-dropdown-trigger {
       margin-right: 0; /* Remove margin on mobile */
     }
+  }
+
+  .theme-switch-li {
+    /* Apply this class to the li */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    min-height: 40px;
   }
 </style>

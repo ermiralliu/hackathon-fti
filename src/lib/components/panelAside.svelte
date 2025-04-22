@@ -44,28 +44,38 @@
   :root {
     --color-sidebar-bg: #fcfcfc;
     --color-content-bg: #f8f8f8;
-    --color-content-inside-bg: var(
-      --color-sidebar-bg
-    );
+    --color-content-inside-bg: var(--color-sidebar-bg);
     --color-sidebar-text: #444;
     --color-sidebar-text-light: #777;
     --color-sidebar-border: #e0e0e0;
     --color-sidebar-shadow: rgba(0, 0, 0, 0.08);
     --color-accent: #007bff;
-    --color-sidebar-active-indicator: var(
-      --color-accent
-    );
-    --color-sidebar-active-text: var(
-      --color-accent
-    );
+    --color-sidebar-active-indicator: var(--color-accent);
+    --color-sidebar-active-text: var(--color-accent);
     --color-sidebar-active-bg: #e9ecef;
     --sidebar-width: 250px;
     --header-height: 60px;
   }
 
+  /* @media (prefers-color-scheme: dark) { */
+  :global(body.dark-mode) {
+    --color-sidebar-bg: #2a2a2a;
+    --color-content-bg: #1a1a1a;
+    --color-content-inside-bg: var(--color-sidebar-bg);
+    --color-sidebar-text: #e0e0e0;
+    --color-sidebar-text-light: #a0a0a0;
+    --color-sidebar-border: #404040;
+    --color-sidebar-shadow: rgba(0, 0, 0, 0.3);
+    --color-accent: #90b0ff;
+    --color-sidebar-active-indicator: var(--color-accent);
+    --color-sidebar-active-text: var(--color-accent);
+    --color-sidebar-active-bg: #3a3a3a;
+  }
+  /* } */
+
   /* Layout Styles */
   .container {
-    background-color: var(--color-content-inside-bg);
+    /* background-color: var(--color-content-inside-bg); */
     display: flex;
     min-height: 100vh;
     min-width: 320px; /* Minimum supported width */
@@ -116,31 +126,29 @@
   }
 
   aside li:hover {
-    background-color: var(--color-sidebar-hover-bg); /* Use variable */
+    background-color: var(--color-sidebar-hover-bg);
   }
 
   /* Sidebar List Item Link */
   aside li a {
     display: block;
-    padding: 12px 20px; /* Padding on the link is correct */
-    color: var(--color-sidebar-text); /* Use variable */
+    padding: 12px 20px;
+    color: var(--color-sidebar-text);
     text-decoration: none;
   }
 
   /* Sidebar Active State */
   aside li.active {
-    background-color: var(--color-sidebar-active-bg); /* Use variable */
-    font-weight: bold; /* Make text bold */
+    background-color: var(--color-sidebar-active-bg);
+    font-weight: bold;
   }
 
   aside li.active a {
-    color: var(--color-sidebar-active-text); /* Use variable */
+    color: var(--color-sidebar-active-text);
   }
 
   aside li.active:hover {
-    background-color: var(
-      --color-sidebar-active-bg
-    ); /* Keep active background on hover */
+    background-color: var(--color-sidebar-active-bg);
   }
 
   /* Add the modern active indicator (left border) */
@@ -151,9 +159,9 @@
     top: 0;
     left: 0;
     bottom: 0;
-    width: 4px; /* Thickness of the indicator */
-    background-color: var(--color-sidebar-active-indicator); /* Use variable */
-    border-radius: 0 3px 3px 0; /* Optional: rounded ends for the line */
+    width: 4px;
+    background-color: var(--color-sidebar-active-indicator);
+    border-radius: 0 3px 3px 0;
   }
 
   /* Main Content */
@@ -163,15 +171,12 @@
     padding-top: 25px;
     background-color: var(--color-content-bg);
     min-height: 100vh;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    margin-left: 250px; /* Default for desktop */
+    margin-left: 250px;
     transition: margin-left 0.3s ease;
     position: relative;
     z-index: 1;
     overflow: visible;
   }
-
-  /* .content:not(aside){ overflow: auto; } */ /* Remove invalid rule */
 
   /* Mobile Styles */
   @media (max-width: 768px) {
