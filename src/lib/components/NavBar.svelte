@@ -140,21 +140,16 @@
   /* Use CSS Variables for better theming within the header */
   /* Define colors specific to the header, potentially linking to a global palette */
   :root {
-    --header-bg: #2c3e50; /* A refined dark blue/grey */
-    --header-link-color: #ecf0f1; /* Light text for links */
-    --header-link-hover-color: #3498db; /* Example highlight color */
-    --header-shadow: rgba(0, 0, 0, 0.1); /* Softer shadow */
-
-    --dropdown-bg: #ffffff; /* Lighter dropdown background */
-    --dropdown-border-color: #e0e0e0; /* Subtle border */
+    --header-bg: #2c3e50;
+    --header-link-hover-color: #3498db;
+    --header-shadow: rgba(0, 0, 0, 0.1);
+    --dropdown-bg: #ffffff;
+    --dropdown-border-color: #e0e0e0;
     --dropdown-text-color: #333;
-    --dropdown-item-hover-bg: #f8f9fa; /* Very subtle item hover */
-
-    --trigger-bg: transparent; /* Make trigger background transparent by default */
-    --trigger-color: var(
-      --header-link-color
-    ); /* Use link color for trigger icon/text */
-    --trigger-hover-bg: rgba(255, 255, 255, 0.1); /* Subtle hover on trigger */
+    --dropdown-item-hover-bg: #f8f9fa;
+    --trigger-bg: transparent;
+    --trigger-color: var(--header-link-color);
+    --trigger-hover-bg: rgba(255, 255, 255, 0.1);
   }
 
   .nav {
@@ -165,7 +160,9 @@
   /* --- Header (Core Flex Container) --- */
   header {
     position: sticky;
+    color: #dbdee4;
     top: 0;
+    z-index: 100;
     height: 60px;
     box-shadow: 0 2px 6px var(--header-shadow);
     background-color: var(--header-bg);
@@ -179,7 +176,7 @@
   .nav-left {
     display: flex;
     align-items: center;
-    margin-left: -20px; /* Compensate for header left padding */
+    margin-left: 0;
   }
 
   .nav-left ul {
@@ -333,46 +330,47 @@
 
   /* --- Mobile Menu Button --- */
   .mobile-menu-button {
-    /* Keep default hidden state for desktop */
-    visibility: hidden;
-    width: 0;
-    /* Adjust transition if needed */
     transition:
       width 0.3s ease-out,
+      opacity 0.3s ease-out,
+      padding 0.3s ease-out,
       visibility 0.3s ease-out;
 
     /* Basic styling */
-    background: none; /* Remove background color */
-    color: var(--header-link-color); /* Use variable for color */
+    background: none;
+    color: var(--header-link-color);
     border: none;
-    font-size: 1.5em; /* Larger icon size */
-    padding: 0 15px; /* Add horizontal padding */
-    margin-left: 0; /* Remove margin-left: 10px; - padding handles spacing */
+    font-size: 1.5em;
+    padding: 0 15px;
     cursor: pointer;
-    display: flex; /* Use flex to center icon */
+    display: flex;
     align-items: center;
     justify-content: center;
-    height: 60px; /* Match header height for click area */
+    height: 60px;
+/* I wish I knew a way to remove this redundancy */
+    visibility: hidden;
+    width: 0;
+    opacity: 0;
+    padding: 0;
   }
-
-  /* .mobile-menu-button.hidden { visibility: hidden; width: 0; } */ /* Redundant */
+  .mobile-menu-button.hidden {
+    visibility: hidden;
+    width: 0;
+    opacity: 0;
+    padding: 0;
+  }
 
   /* Mobile Media Query */
   @media (max-width: 768px) {
     .nav-left {
-      margin-left: 0; /* Remove negative margin on mobile */
-    }
-    .nav-left ul {
-      /* Hide the main navigation links on mobile */
-      display: none;
+      margin-left: 0;
     }
 
     .mobile-menu-button {
       visibility: visible;
-      width: auto; /* Let width be determined by padding/content */
-      transition:
-        width 0.3s ease-out,
-        visibility 0.3s ease-out; /* Keep transition */
+      opacity: 1;
+      width: 50px;
+      padding: 0 4px
     }
 
     header {
@@ -382,11 +380,4 @@
       margin-right: 0; /* Remove margin on mobile */
     }
   }
-
-  /* Optional: Adjust dropdown position if header padding changes */
-  /* @media (max-width: 768px) {
-    .dropdown-menu {
-        right: 10px; // Match header right padding
-    }
-} */
 </style>

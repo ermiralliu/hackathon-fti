@@ -1,27 +1,32 @@
 <script>
-
-    import { fade } from "svelte/transition";
-
+    import verticalTransition from "$lib/client/transitions/verticalTransition";
+  import { fade } from "svelte/transition";
 </script>
+
 <svelte:head>
   <title>MerrBio</title>
   <meta name="description" content="Welcome to MerrBio" />
 </svelte:head>
 
-<main transition:fade={{duration:200}}>
+<main in:fade={{duration: 400}} out:verticalTransition>
   <section class="hero-section">
     <h1 class="hero-title">Mirë se vini në MerrBio 🌿</h1>
-    <p class="hero-description">Lidh konsumatorët me fermerët vendas për ushqim të freskët dhe organik.</p>
+    <p class="hero-description">
+      Lidh konsumatorët me fermerët vendas për ushqim të freskët dhe organik.
+    </p>
     <a class="explore-button" href="/products">Shfleto Produktet</a>
   </section>
-  
+
   <section class="about-section">
     <h2 class="about-title">Çfarë është MerrBio?</h2>
     <p class="about-description">
-      MerrBio është një platformë që ndihmon fermerët vendas të shesin drejtpërdrejt tek konsumatorët që kërkojnë cilësi, freski dhe produkte organike. Misioni ynë është të forcojmë ekonominë lokale dhe të promovojmë qëndrueshmërinë.
+      MerrBio është një platformë që ndihmon fermerët vendas të shesin
+      drejtpërdrejt tek konsumatorët që kërkojnë cilësi, freski dhe produkte
+      organike. Misioni ynë është të forcojmë ekonominë lokale dhe të promovojmë
+      qëndrueshmërinë.
     </p>
   </section>
-  
+
   <section class="how-it-works-section">
     <h2 class="section-title">Si funksionon?</h2>
     <div class="steps">
@@ -39,15 +44,21 @@
       </div>
     </div>
   </section>
-  
+
   <section class="cta-section">
     <h2 class="cta-title">Gati për të filluar?</h2>
-    <p class="cta-description">Bashkohu me qindra përdorues që besojnë tek produktet lokale dhe të freskëta.</p>
+    <p class="cta-description">
+      Bashkohu me qindra përdorues që besojnë tek produktet lokale dhe të
+      freskëta.
+    </p>
     <a href="/register" class="cta-button">Regjistrohu Tani</a>
   </section>
 </main>
 
 <style>
+  :root{
+    --cool-background-url: url('https://images.unsplash.com/photo-1594771804886-a933bb2d609b?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTh8fGFncmljdWx0dXJlfGVufDB8fDB8fHww');
+  }
 
   section {
     padding: 2.5rem 0;
@@ -58,8 +69,11 @@
   .hero-section {
     text-align: center;
     background-color: #d1f7e1;
-    border-radius: 15px;
+    height: 60vh;
+    background-size: cover;
+
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    background-image: var(--cool-background-url);
   }
 
   .hero-title {
@@ -79,11 +93,12 @@
     max-width: 800px;
     padding: 0 0.5rem;
   }
-  .cta-section{
+  .cta-section {
     margin: auto 1rem;
   }
 
-  .explore-button, .cta-button {
+  .explore-button,
+  .cta-button {
     display: inline-block;
     background-color: #2b6e30;
     color: white;
@@ -96,7 +111,8 @@
     cursor: pointer;
   }
 
-  .explore-button:hover, .cta-button:hover {
+  .explore-button:hover,
+  .cta-button:hover {
     background-color: #276f2b;
     transform: translateY(-2px);
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
@@ -134,7 +150,8 @@
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   }
 
-  .section-title, .cta-title {
+  .section-title,
+  .cta-title {
     font-size: clamp(1.5rem, 4vw, 2rem);
     font-weight: bold;
     text-align: center;
@@ -200,6 +217,7 @@
 
     .hero-section {
       padding: 4rem 2rem;
+      height: 75vh;
     }
 
     .steps {
@@ -223,7 +241,6 @@
   }
 
   @media (min-width: 1024px) {
-    
     .how-it-works-section {
       padding: 3rem 2rem;
     }
@@ -234,6 +251,11 @@
 
     .step {
       padding: 2rem;
+    }
+  }
+  @media (min-width: 1280px) {
+    .hero-section {
+      height: 93vh;
     }
   }
 </style>

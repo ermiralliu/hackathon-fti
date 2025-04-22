@@ -1,7 +1,7 @@
 <script lang="ts">
   import { enhance } from "$app/forms";
   import verticalTransition from "$lib/client/transitions/verticalTransition";
-  import { fly } from "svelte/transition";
+  import { fade, fly } from "svelte/transition";
 
   let { auth } = $props();
   let isRegisterPage = $derived(auth === "register");
@@ -14,10 +14,14 @@
     isRegisterPage ? password === confirmPassword : true,
   );
 
+  // svelte-ignore non_reactive_update
   let usernameInput: HTMLInputElement;
-  $effect(()=>{
-    usernameInput.focus();
-  })
+  
+  $effect(() => {
+    setTimeout(() => {
+      usernameInput.focus();
+    }, 300);
+  });
 </script>
 
 <!-- Making a snippet so we can apply files within here -->
@@ -33,45 +37,49 @@
   action="?/{auth}"
   use:enhance
   class:register={isRegisterPage}
+  in:fade
 >
-  <h1>{isRegisterPage ? "Register" : "Login"}</h1>
-  <label in:fly={{ x: -20 }}>
-    Username:
-    <input bind:this={usernameInput} type="text" name="username" required/>
-  </label>
-
-  {#if isRegisterPage}
-    {@render Input("email", "Email:", "email")}
-    {@render Input("name", "Name:", "text")}
-
-    <label in:fly={{ x: -20 }} out:verticalTransition>
-      Role:
-      <select name="role">
-        <option value="consumer" selected> Bleres </option>
-        <option value="farmer"> Fermer </option>
-      </select>
+  {#key "sidebar"}
+  <!-- The key successfully stops the animation when navigating pages. Nice. -->
+    <h1>{isRegisterPage ? "Register" : "Login"}</h1>
+    <label in:fly={{ x: -20 }}>
+      Username:
+      <input bind:this={usernameInput} type="text" name="username" required />
     </label>
-  {/if}
-  <label in:fly={{ x: -20 }} out:verticalTransition>
-    Password:
-    <input type="password" name="password" bind:value={password} />
-  </label>
-  {#if isRegisterPage}
-    <label in:fly={{ x: -20 }} out:verticalTransition>
-      Confirm password:
-      <input
-        type="password"
-        name="confirm_password"
-        bind:value={confirmPassword}
-      />
-    </label>
-  {/if}
-  {#if !passwordsMatch}
-    <p style:color="red">Password mismatch</p>
-  {/if}
 
-  <button type="submit" disabled={!passwordsMatch}>Send</button>
-  <a href="/{otherPage}"> Go to {otherPage} </a>
+    {#if isRegisterPage}
+      {@render Input("email", "Email:", "email")}
+      {@render Input("name", "Name:", "text")}
+
+      <label in:fly={{ x: -20 }} out:verticalTransition>
+        Role:
+        <select name="role">
+          <option value="consumer" selected> Bleres </option>
+          <option value="farmer"> Fermer </option>
+        </select>
+      </label>
+    {/if}
+    <label in:fly={{ x: -20 }} out:verticalTransition>
+      Password:
+      <input type="password" name="password" bind:value={password} />
+    </label>
+    {#if isRegisterPage}
+      <label in:fly={{ x: -20 }} out:verticalTransition>
+        Confirm password:
+        <input
+          type="password"
+          name="confirm_password"
+          bind:value={confirmPassword}
+        />
+      </label>
+    {/if}
+    {#if !passwordsMatch}
+      <p style:color="red">Password mismatch</p>
+    {/if}
+
+    <button type="submit" disabled={!passwordsMatch}>Send</button>
+    <a href="/{otherPage}"> Go to {otherPage} </a>
+  {/key}
 </form>
 
 <style>
@@ -90,7 +98,7 @@
   }
 
   .register {
-    margin-top: 0;
+    margin-top: 12px;
     padding-top: 0;
   }
 
