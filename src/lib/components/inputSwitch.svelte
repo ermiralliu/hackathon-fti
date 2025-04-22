@@ -28,7 +28,7 @@
     console.log(`Saving ${id} preference: ${isOn}`);
     localStorage.setItem(localStorageKey, isOn ? "on" : "off");
   });
-  
+
 </script>
 
 <label class="toggle-switch-container" for={id}>
@@ -66,8 +66,23 @@
     z-index: -1;
   }
 
+  :root{
+    --toggle-switch-text-color: rgb(66, 66, 66);
+    --toggle-switch-color: rgb(214, 98, 98);
+    --toggle-switch-color-active: rgb(129, 129, 204);
+    --toggle-switch-thumb-color: #fff;
+  }
+
+  :global(.dark-mode){
+    --toggle-switch-text-color: rgb(212, 212, 212);
+    --toggle-switch-color:rgb(245, 245, 245);
+    --toggle-switch-color-active: black;
+    --toggle-switch-thumb-color: #616161;
+  }
+
   .toggle-switch-text {
     font-size: 14.5px;
+    color: var(--toggle-switch-text-color);
   }
 
   .toggle-switch-visual {
@@ -75,7 +90,7 @@
     position: relative;
     width: 46px;
     height: 26px;
-    background-color: #ccc;
+    background-color: var(--toggle-switch-color);
     border-radius: 26px;
     transition: background-color 0.2s ease-in-out;
     flex-shrink: 0;
@@ -89,14 +104,14 @@
     left: 2px;
     width: 22px;
     height: 22px;
-    background-color: #fff;
+    background-color: var(--toggle-switch-thumb-color);
     border-radius: 50%;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     transition: transform 0.2s ease-in-out;
   }
 
   .toggle-switch-checkbox:checked ~ .toggle-switch-visual {
-    background-color: var(--color-accent);
+    background-color: var(--toggle-switch-color-active);
   }
 
   /* Use the general sibling combinator (~) here too */
