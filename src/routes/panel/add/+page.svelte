@@ -107,7 +107,8 @@
   /* You might already have these defined at a higher level, but defining local ones provides fallbacks */
   :root {
     --form-border-color: #dcdcdc; /* Softer border */
-    --form-bg-color: #ffffff; /* White background for fields */
+    --form-bg-color: var(--color-sidebar-bg);
+    /* Kjo me siper eshte globale nga panel aside, probably needed to be passed somehow instead of this though */
     --form-bg-color-subtle: #f8f9fa; /* Very light background for container */
     --form-text-color: #333;
     --form-label-color: #555; /* Slightly softer label */

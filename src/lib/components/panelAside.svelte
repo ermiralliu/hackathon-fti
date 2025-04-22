@@ -19,12 +19,12 @@
 
 <div class="container">
   <!-- Mobile Menu Button -->
-  <aside class:open={sidebarButton.opened}>
+  <aside
+    class:open={sidebarButton.opened}
+    in:fly={{ x: "-200px", duration: 600 }}
+  >
     <!-- Vertical Navigation Bar -->
-    <nav
-      aria-label="Panel Navigation Sidebar"
-      in:fly={{ x: "-200px", duration: 1000 }}
-    >
+    <nav aria-label="Panel Navigation Sidebar">
       <h3>Actions</h3>
       <!-- You gotta love the way to sidebar flies in -->
       <ul>
@@ -42,28 +42,30 @@
 
 <style>
   :root {
-    --color-sidebar-bg: #ffffff; /* Lighter sidebar background */
-    --color-sidebar-text: #444; /* Softer text color */
-    --color-sidebar-text-light: #777; /* Lighter text for titles */
-    --color-sidebar-border: #e0e0e0; /* Subtle border color */
-    --color-sidebar-shadow: rgba(0, 0, 0, 0.08); /* Softer shadow */
-    --color-accent: #007bff; /* Example modern accent blue */
-    /* --color-accent: #28a745; /* Example modern accent green */
-    /* --color-accent: #6f42c1; /* Example modern accent purple */
-    --color-sidebar-hover-bg: #f8f9fa; /* Very subtle hover background */
+    --color-sidebar-bg: #fcfcfc;
+    --color-content-bg: #f8f8f8;
+    --color-content-inside-bg: var(
+      --color-sidebar-bg
+    );
+    --color-sidebar-text: #444;
+    --color-sidebar-text-light: #777;
+    --color-sidebar-border: #e0e0e0;
+    --color-sidebar-shadow: rgba(0, 0, 0, 0.08);
+    --color-accent: #007bff;
     --color-sidebar-active-indicator: var(
       --color-accent
-    ); /* Use accent for indicator */
+    );
     --color-sidebar-active-text: var(
       --color-accent
-    ); /* Accent color for active text */
-    --color-sidebar-active-bg: #e9ecef; /* Very light background for active */
-    --sidebar-width: 250px; /* Define sidebar width as a variable */
-    --header-height: 60px; /* Assuming a header height for padding below it */
+    );
+    --color-sidebar-active-bg: #e9ecef;
+    --sidebar-width: 250px;
+    --header-height: 60px;
   }
 
   /* Layout Styles */
   .container {
+    background-color: var(--color-content-inside-bg);
     display: flex;
     min-height: 100vh;
     min-width: 320px; /* Minimum supported width */
@@ -159,7 +161,7 @@
     flex: 1;
     padding: 20px;
     padding-top: 25px;
-    background-color: #ffffff;
+    background-color: var(--color-content-bg);
     min-height: 100vh;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     margin-left: 250px; /* Default for desktop */
