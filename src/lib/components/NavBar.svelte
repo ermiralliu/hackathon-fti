@@ -141,7 +141,7 @@
   /* Define colors specific to the header, potentially linking to a global palette */
   :root {
     --header-bg: #2c3e50;
-    --header-link-hover-color: #3498db;
+    --header-link-hover-color: #ffffff;
     --header-shadow: rgba(0, 0, 0, 0.1);
     --dropdown-bg: #ffffff;
     --dropdown-border-color: #e0e0e0;
@@ -202,13 +202,9 @@
   }
 
   /* --- Nav Link Hover --- */
-  /* Keep the hover rule but make it a color change */
   .nav-left a:hover {
-    text-decoration: none; /* Ensure no underline */
-    color: var(--header-link-hover-color); /* Change color on hover */
-    /* Optional: Subtle bottom border animation */
-    /* border-bottom: 2px solid var(--header-link-hover-color); */
-    /* padding-bottom: 3px; // Adjust padding to make space for border */
+    color: var(--header-link-hover-color);
+    text-shadow: 0 0 12px rgba(106, 166, 170, 0.904);
   }
 
   /* --- User Dropdown Container --- */
@@ -247,9 +243,6 @@
     position: absolute;
     top: 100%;
     right: 0;
-    /* Keep display, visibility, opacity for fade transition */
-    /* display: block; */ /* This will be block when visible */
-    /* visibility: hidden; */
     list-style: none;
     padding: 8px 0; /* Adjust vertical padding */
     margin: 0;

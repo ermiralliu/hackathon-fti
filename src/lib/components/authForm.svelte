@@ -20,7 +20,7 @@
   $effect(() => {
     setTimeout(() => {
       usernameInput.focus();
-    }, 300);
+    }, 400);
   });
 </script>
 
@@ -86,7 +86,7 @@
   form {
     display: flex;
     flex-direction: column;
-    max-width: 450px;
+    max-width: 420px;
     margin: 35px auto;
     transition: margin 0.25s ease-in-out;
     padding: min(30px, 5%);
@@ -158,8 +158,6 @@
   @media (max-width: 600px) {
     form {
       max-width: 90%;
-      margin: 10px auto;
-      padding: 10px;
     }
 
     input,

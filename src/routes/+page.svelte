@@ -1,5 +1,5 @@
 <script>
-    import verticalTransition from "$lib/client/transitions/verticalTransition";
+  import verticalTransition from "$lib/client/transitions/verticalTransition";
   import { fade } from "svelte/transition";
 </script>
 
@@ -8,7 +8,7 @@
   <meta name="description" content="Welcome to MerrBio" />
 </svelte:head>
 
-<main in:fade={{duration: 400}} out:verticalTransition>
+<main in:fade out:verticalTransition>
   <section class="hero-section">
     <h1 class="hero-title">Mirë se vini në MerrBio 🌿</h1>
     <p class="hero-description">
@@ -56,8 +56,8 @@
 </main>
 
 <style>
-  :root{
-    --cool-background-url: url('https://images.unsplash.com/photo-1594771804886-a933bb2d609b?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTh8fGFncmljdWx0dXJlfGVufDB8fDB8fHww');
+  :root {
+    --cool-background-url: url("https://images.unsplash.com/photo-1594771804886-a933bb2d609b?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTh8fGFncmljdWx0dXJlfGVufDB8fDB8fHww");
   }
 
   section {
