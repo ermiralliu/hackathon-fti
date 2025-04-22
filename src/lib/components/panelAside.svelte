@@ -75,7 +75,7 @@
 
   /* Layout Styles */
   .container {
-    /* background-color: var(--color-content-inside-bg); */
+    background-color: var(--color-content-inside-bg);
     display: flex;
     min-height: 100vh;
     min-width: 320px; /* Minimum supported width */

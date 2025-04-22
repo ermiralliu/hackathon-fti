@@ -89,29 +89,11 @@
     }
   });
 
-  function setDarkModeCookieForever(days = 365 * 10) {
-    const date = new Date();
-    date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
-    const expires = "; expires=" + date.toUTCString();
-    document.cookie =
-      "darkMode=true" + expires + "; path=/; SameSite=Lax; Secure";
-    console.log("Dark mode cookie set to 'true' lasting for", days, "days.");
-  }
-
-  function unsetDarkModeCookie() {
-    document.cookie =
-      "darkMode=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT; SameSite=Lax; Secure";
-    console.log("Dark mode cookie unset.");
-  }
-
   $effect(() => {
-    const mainDiv = document.getElementById("main-div") as HTMLDivElement;
-    if (isDarkMode && !mainDiv.classList.contains("dark-mode")) {
-      setDarkModeCookieForever();
-      mainDiv.classList.add("dark-mode");
-    } else if (!isDarkMode && mainDiv.classList.contains("dark-mode")) {
-      unsetDarkModeCookie();
-      mainDiv.classList.remove("dark-mode");
+    if (isDarkMode && !document.body.classList.contains("dark-mode")) {
+      document.body.classList.add("dark-mode");
+    } else if (!isDarkMode && document.body.classList.contains("dark-mode")) {
+      document.body.classList.remove("dark-mode");
     }
   });
 

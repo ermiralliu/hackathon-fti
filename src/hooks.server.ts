@@ -31,15 +31,5 @@ export const handle: Handle = async ({ event, resolve }) => {
     throw redirect(303, '/consumer/purchases/1');
   }
 
-  const darkMode = event.cookies.get('darkMode') === 'true';
-  event.locals.theme = darkMode ? 'darkMode' : '';
-
-  const response = await resolve(event, {
-    transformPageChunk: ({ html }) => {
-      // Replace placeholders in your HTML
-      return html.replace('%sveltekit.darkmode%', event.locals.theme as string);
-    }
-  });
-
-  return response;
+  return await resolve(event);
 }
