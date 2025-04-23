@@ -2,14 +2,12 @@
   import { type Snippet } from "svelte";
 
   let {
-    show, // let's hope I'm not fucking anything up
-    closeModal,
+    show = $bindable(), // let's hope I'm not fucking anything up
     header,
     body,
     footer,
   }: {
     show: boolean;
-    closeModal: () => void;
     header: Snippet;
     body: Snippet;
     footer?: Snippet;
@@ -37,9 +35,13 @@
     }, 200);
   }
 
+  function close(){
+    show = false;
+  }
+
   function dialogClickOutside(e: Event) {
     if (e.target === dialogReference) {
-      closeModal();
+      show = false;
     }
   }
 </script>
@@ -48,7 +50,7 @@
   <div class="modal">
     <header class="modal-header">
       {@render header()}
-      <button style:color="darkgray" onclick={closeModal}>&times;</button>
+      <button style:color="darkgray" onclick={close}>&times;</button>
     </header>
 
     <div class="modal-body">

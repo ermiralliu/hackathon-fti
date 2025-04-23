@@ -86,6 +86,7 @@ body {
   --color-bg-page: #1a1a1a;
   --color-bg-component: #2a2a2a;
   --color-bg-active: #3a3a3a;
+  /* I've used active for some cards, idk if that was the right thing to do */
   --color-bg-hover: #333333;
   /* Optional: Dark hover background */
 

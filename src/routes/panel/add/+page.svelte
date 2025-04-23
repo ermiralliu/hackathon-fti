@@ -123,8 +123,9 @@
   /* --- Tab Content Container (The Card) --- */
   .tab-content {
     max-width: 1200px;
-    padding: 30px;
+    padding: 30px 50px;
     margin: 20px auto;
+    margin-top:0;
     background-color: var(--tab-content-bg-color);
     border-radius: 8px;
     box-shadow: 0 4px 12px var(--card-shadow);
@@ -222,6 +223,15 @@
     font-weight: 600;
     margin-top: 15px; /* Space above button */
     box-sizing: border-box;
+  }
+
+  @media (max-width: 1000px) {
+    /* .content{
+      width: 100%;
+    } */
+    .tab-content{
+      width: 100%;
+    }
   }
 
   @media (max-width: 400px) {

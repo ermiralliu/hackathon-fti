@@ -3,6 +3,7 @@
   import { enhance } from "$app/forms";
 
   import { goto } from "$app/navigation";
+  import ModalDialog from "$lib/client/components/modalDialog.svelte";
   import type { Product, ProductType } from "$prisma-client";
   import { fade } from "svelte/transition";
   let { data } = $props();
@@ -29,37 +30,36 @@
   let showViewModal = $state(false);
   let showEditModal = $state(false);
   // Kto dy poshte duhet te shikohen gjithashtu, cause I think the usage of states here might be unnecessary
-  let modalView: null | HTMLDialogElement = $state(null);
+  // let modalView: null | HTMLDialogElement = $state(null);
   let modalEdit: null | HTMLDialogElement = $state(null);
 
-  $effect(() => {
-    // Only try to show modal if it exists and is supposed to be shown
-    if (showViewModal && modalView) {
-      modalView.showModal();
-    } else if (showViewModal && !modalView) {
-      console.error("View modal element not found");
-    }
+  // $effect(() => {
+  //   if (showViewModal && modalView) {
+  //     modalView.showModal();
+  //   } else if (showViewModal && !modalView) {
+  //     console.error("View modal element not found");
+  //   }
 
-    if (showEditModal && modalEdit) {
-      modalEdit.showModal();
-    } else if (showEditModal && !modalEdit) {
-      console.error("Edit modal element not found");
-    }
-  });
+  //   if (showEditModal && modalEdit) {
+  //     modalEdit.showModal();
+  //   } else if (showEditModal && !modalEdit) {
+  //     console.error("Edit modal element not found");
+  //   }
+  // });
 
   function openViewModal(product: Product) {
     selectedProduct = product;
     showViewModal = true;
     showEditModal = false;
   }
-  function closeModals() {
-    if (showViewModal && modalView) modalView.close();
-    if (showEditModal && modalEdit) modalEdit.close();
-    showViewModal = false;
-    showEditModal = false;
-    isEditing = false;
-    selectedProduct = null;
-  }
+  // function closeModals() {
+  //   if (showViewModal && modalView) modalView.close();
+  //   if (showEditModal && modalEdit) modalEdit.close();
+  //   showViewModal = false;
+  //   showEditModal = false;
+  //   isEditing = false;
+  //   selectedProduct = null;
+  // }
   async function reloadProducts() {
     const response = await fetch(`?page=${currentPage}`);
     const data = await response.json();
@@ -94,10 +94,13 @@
 
 <svelte:head>
   <title>View Your Products</title>
-  <meta name="description" content="Here you can view the products you are selling" />
+  <meta
+    name="description"
+    content="Here you can view the products you are selling"
+  />
 </svelte:head>
 
-<main class="products-container"  transition:fade={{duration: 200}}>
+<main class="products-container" transition:fade={{ duration: 200 }}>
   <h1>Your Products 🌱</h1>
 
   {#if isLoading}
@@ -149,29 +152,89 @@
         </article>
       {/each}
     </div>
-    <div class="pagination">
-      {#if currentPage > 1}
-        <button onclick={() => changePage(currentPage - 1)}>Previous</button>
-      {/if}
+    {#if totalPages > 1}
+      <div class="pagination">
+        {#if currentPage > 1}
+          <button onclick={() => changePage(currentPage - 1)}>Previous</button>
+        {/if}
 
-      {#each getPageNumbers() as pageNumber}
-        <button
-          class:active={pageNumber === currentPage}
-          onclick={() => changePage(pageNumber)}
-        >
-          {pageNumber}
-        </button>
-      {/each}
+        {#each getPageNumbers() as pageNumber}
+          <button
+            class:active={pageNumber === currentPage}
+            onclick={() => changePage(pageNumber)}
+          >
+            {pageNumber}
+          </button>
+        {/each}
 
-      {#if currentPage < totalPages}
-        <button onclick={() => changePage(Number(currentPage) + 1)}>Next</button
-        >
-      {/if}
-    </div>
+        {#if currentPage < totalPages}
+          <button onclick={() => changePage(Number(currentPage) + 1)}
+            >Next</button
+          >
+        {/if}
+      </div>
+    {/if}
   {/if}
 </main>
 
-<!-- View Modal -->
+<ModalDialog bind:show={showViewModal}>
+  {#snippet header()}
+    <h2>{selectedProduct?.name ?? "Invalid Product name"}</h2>
+  {/snippet}
+  {#snippet body()}
+    {#if selectedProduct}
+      <img
+        src={selectedProduct.imagePath || "/placeholder-product.jpg"}
+        alt={selectedProduct.name}
+        loading="lazy"
+        class="product-image"
+      />
+
+      <div class="product-details">
+        <div class="detail-row">
+          <span class="detail-label">Type:</span>
+          <span class="detail-value">{selectedProduct.type}</span>
+        </div>
+
+        <div class="detail-row">
+          <span class="detail-label">Price:</span>
+          <span class="detail-value">{selectedProduct.price}€</span>
+        </div>
+
+        <div class="detail-row">
+          <span class="detail-label">Status:</span>
+          <span class="detail-value"
+            >{selectedProduct.availability || "Available"}</span
+          >
+        </div>
+
+        <div class="detail-row full-width">
+          <span class="detail-label">Description:</span>
+          <p class="detail-value">
+            {selectedProduct.description || "No description provided"}
+          </p>
+        </div>
+      </div>
+    {/if}
+  {/snippet}
+  {#snippet footer()}
+    <form method="POST" action="?/deleteProduct" use:enhance>
+      <div class="modal-footer">
+        <input
+          type="hidden"
+          name="productId"
+          value={selectedProduct?.id ?? -1}
+        />
+        <button class="delete-btn" type="submit"> Delete Product </button>
+        <button class="edit-btn" type="button" onclick={openEditModal}>
+          Modify Product
+        </button>
+      </div>
+    </form>
+  {/snippet}
+</ModalDialog>
+
+<!-- 
 {#if showViewModal && selectedProduct}
   <dialog
     bind:this={modalView}
@@ -227,10 +290,10 @@
       </form>
     </div>
   </dialog>
-{/if}
+{/if} -->
 
 <!-- Edit Modal -->
-{#if showEditModal}
+<!-- {#if showEditModal}
   <dialog
     bind:this={modalEdit}
     onclick={e => e.target === modalEdit && closeModals()}
@@ -293,9 +356,9 @@
               bind:value={editValues.description}
               rows="3"
             ></textarea>
-          </div>
+          </div> -->
 
-          <!-- <div class="form-group">
+<!-- <div class="form-group">
                         <label for="editImage">Change Image</label>
                         <input 
                             id="editImage" 
@@ -304,7 +367,7 @@
                             accept="image/*"
                         />
                     </div> -->
-        </div>
+<!-- </div>
         <div class="modal-footer">
           <button
             class="secondary"
@@ -321,70 +384,15 @@
       </form>
     </div>
   </dialog>
-{/if}
+{/if} -->
 
 <style>
-  dialog {
-    border: none;
-    border-radius: 8px;
-    padding: 20px;
-    width: 90%;
-    max-width: 500px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  }
-
-  dialog::backdrop {
-    background-color: rgba(0, 0, 0, 0.5);
-  }
-
-  .modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid #ddd;
-    padding-bottom: 10px;
-    margin-bottom: 10px;
-  }
-
-  .modal-header button {
-    background: none;
-    border: none;
-    font-size: 18px;
-    cursor: pointer;
-    width: 30px;
-    height: 30px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0;
-    margin-left: auto;
-  }
-
-  .modal-body {
-    margin-bottom: 15px;
-  }
-
-  .modal-body label {
-    font-weight: bold;
-  }
-
-  .modal-body input {
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-  }
-
   .modal-footer {
     display: flex;
-    justify-content: flex-end;
-    gap: 10px;
   }
 
   .modal-footer button {
     padding: 8px 16px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    cursor: pointer;
   }
 
   .products-container {
@@ -395,7 +403,6 @@
 
   h1 {
     text-align: center;
-    color: #2b6e30;
     margin-bottom: 2rem;
     font-size: 2rem;
   }
@@ -408,10 +415,10 @@
   }
 
   .product-card {
-    background: white;
+    background: var(--color-bg-active);
     border-radius: 10px;
     overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
     transition:
       transform 0.3s ease,
       box-shadow 0.3s ease;
@@ -446,11 +453,11 @@
   .product-details h2 {
     margin: 0 0 0.5rem 0;
     font-size: 1.25rem;
-    color: #333;
+    /* color: #333; */
   }
 
   .product-description {
-    color: #666;
+    /* color: #666; */
     font-size: 0.9rem;
     margin-bottom: 1rem;
     display: -webkit-box;
@@ -469,7 +476,7 @@
 
   .price {
     font-weight: bold;
-    color: #2b6e30;
+    /* color: #2b6e30; */
     font-size: 1.1rem;
   }
 
@@ -479,36 +486,8 @@
   }
 
   button {
-    width: 100%;
     padding: 0.75rem;
-    background: #2b6e30;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
     font-weight: 600;
-    transition: background 0.2s ease;
-  }
-
-  button:hover {
-    background: #1e5a23;
-  }
-
-  .loading-spinner {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1rem;
-    padding: 2rem;
-  }
-
-  .spinner {
-    width: 50px;
-    height: 50px;
-    border: 5px solid #f3f3f3;
-    border-top: 5px solid #2b6e30;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
   }
 
   @keyframes spin {
@@ -518,21 +497,6 @@
     100% {
       transform: rotate(360deg);
     }
-  }
-
-  .error-message {
-    background: #ffecec;
-    color: #ff5252;
-    padding: 1.5rem;
-    border-radius: 8px;
-    text-align: center;
-    max-width: 500px;
-    margin: 0 auto;
-  }
-
-  .error-message button {
-    margin-top: 1rem;
-    background: #ff5252;
   }
 
   .empty-state {
@@ -546,6 +510,7 @@
       grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
     }
   }
+
   .pagination {
     display: flex;
     justify-content: center;
@@ -555,20 +520,10 @@
   .pagination button {
     padding: 0.5rem 1rem;
     margin: 0 0.25rem;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+  }
+
+  .pagination button:not(.active) {
     background-color: rgb(200, 19, 19);
-    cursor: pointer;
-  }
-
-  .pagination button.active {
-    background-color: #2b6e30;
-    color: white;
-    border-color: #2b6e30;
-  }
-
-  .pagination button:hover {
-    background-color: #f0f0f0;
   }
 
   .detail-row {
@@ -580,99 +535,8 @@
     flex-direction: column;
   }
 
-  .detail-label {
-    font-weight: bold;
-    min-width: 100px;
-    color: #555;
-  }
 
-  .detail-value {
-    flex: 1;
-  }
-
-  .form-group {
-    margin-bottom: 1rem;
-  }
-
-  .form-group label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-weight: 600;
-  }
-
-  .form-group input,
-  .form-group select,
-  .form-group textarea {
-    width: 100%;
-    padding: 0.5rem;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-  }
-
-  .form-group textarea {
-    min-height: 80px;
-    resize: vertical;
-  }
-
-  /* Button styles */
-  .modal-footer {
-    display: flex;
-    justify-content: space-between;
-    gap: 1rem;
-  }
-
-  .secondary {
-    background-color: #6c757d;
-    color: white;
-  }
-
-  .save-btn {
-    background-color: #28a745;
-    color: white;
-  }
-
-  .edit-btn {
-    background-color: #007bff;
-    color: white;
-  }
-
-  .delete-btn {
-    background-color: #dc3545;
-    color: white;
-  }
-
-  button {
-    flex: 1;
-    padding: 0.75rem;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-weight: 600;
-    transition: background-color 0.2s;
-  }
-
-  button:hover {
-    opacity: 0.9;
-  }
-
-  /* Modal styles */
-  dialog {
-    border: none;
-    border-radius: 8px;
-    padding: 0;
-    width: 90%;
-    max-width: 500px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  }
-
-  dialog::backdrop {
-    background-color: rgba(0, 0, 0, 0.5);
-  }
-
-  .modal {
-    padding: 1.5rem;
-  }
-
+/* 
   .modal-header {
     display: flex;
     justify-content: space-between;
@@ -691,7 +555,7 @@
     font-size: 1.5rem;
     cursor: pointer;
     padding: 0.5rem;
-  }
+  } */
 
   .product-image {
     width: 100%;
@@ -718,7 +582,7 @@
   .detail-label {
     font-weight: bold;
     min-width: 100px;
-    color: #555;
+    /* color: #555; */
   }
 
   .detail-value {
@@ -734,12 +598,7 @@
 
   /* Button styles */
   button {
-    padding: 0.75rem 1rem;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
     font-weight: 600;
-    transition: opacity 0.2s;
     flex: 1;
   }
 
@@ -749,15 +608,13 @@
 
   .delete-btn {
     background-color: #dc3545;
-    color: white;
   }
 
   .edit-btn {
     background-color: #007bff;
-    color: white;
   }
 
-  .secondary {
+  /* .secondary {
     background-color: #6c757d;
     color: white;
   }
@@ -768,7 +625,7 @@
   }
 
   /* Form styles */
-  .form-group {
+  /* .form-group {
     margin-bottom: 1rem;
   }
 
@@ -790,5 +647,5 @@
   .form-group textarea {
     min-height: 80px;
     resize: vertical;
-  }
+  } */
 </style>

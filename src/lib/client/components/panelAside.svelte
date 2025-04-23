@@ -153,7 +153,9 @@ aside li.active::before {
   .content {
     margin-left: 0 !important; /* Sidebar collapses */
     width: 100%;
-    padding: 2% 6%;
+    /* padding: 2% 6%; */
+    padding: 0;
+    margin-top: 0;
   }
 
   aside {

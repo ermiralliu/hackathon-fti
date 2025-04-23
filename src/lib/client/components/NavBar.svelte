@@ -417,6 +417,7 @@
 
   /* Mobile Media Query */
   @media (max-width: 768px) {
+
     .nav-left {
       margin-left: 0;
     }

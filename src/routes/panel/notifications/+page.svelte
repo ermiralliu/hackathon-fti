@@ -10,7 +10,7 @@
   let { data } = $props();
 
   let show = $state(false);
-  function closeModal(){
+  function closeModal() {
     show = false;
   }
   $inspect(show);
@@ -41,7 +41,7 @@
   <meta name="description" content="Notifications from buyers" />
 </svelte:head>
 
-<main class="requests-container"  transition:fade={{duration: 200}}>
+<main class="requests-container" transition:fade={{ duration: 200 }}>
   <h1>Purchase Requests 📋</h1>
 
   {#if !purchaseRequests}
@@ -94,31 +94,33 @@
         </article>
       {/each}
     </div>
+    {#if totalPages < 1}
+      <div class="pagination">
+        {#if currentPage > 1}
+          <button onclick={() => changePage(currentPage - 1)}>Previous</button>
+        {/if}
 
-    <div class="pagination">
-      {#if currentPage > 1}
-        <button onclick={() => changePage(currentPage - 1)}>Previous</button>
-      {/if}
+        {#each getPageNumbers() as pageNumber}
+          <button
+            class:active={pageNumber === currentPage}
+            onclick={() => changePage(pageNumber)}
+          >
+            {pageNumber}
+          </button>
+        {/each}
 
-      {#each getPageNumbers() as pageNumber}
-        <button
-          class:active={pageNumber === currentPage}
-          onclick={() => changePage(pageNumber)}
-        >
-          {pageNumber}
-        </button>
-      {/each}
-
-      {#if currentPage < totalPages}
-        <button onclick={() => changePage(Number(currentPage) + 1)}>Next</button
-        >
-      {/if}
-    </div>
+        {#if currentPage < totalPages}
+          <button onclick={() => changePage(Number(currentPage) + 1)}
+            >Next</button
+          >
+        {/if}
+      </div>
+    {/if}
   {/if}
 </main>
 
 <!-- View Modal -->
-<ModalDialog {show} {closeModal}>
+<ModalDialog bind:show>
   {#snippet header()}
     <h2>Request #{selectedRequest?.id ?? "bad"}</h2>
   {/snippet}
@@ -164,7 +166,9 @@
           <input type="hidden" value={selectedRequest.id} name="requestId" />
           <input type="hidden" value="declined" name="status" />
 
-          <button type="submit" class="reject-btn footer-button"> Reject </button>
+          <button type="submit" class="reject-btn footer-button">
+            Reject
+          </button>
         </form>
       {/if}
     {/if}
@@ -180,7 +184,6 @@
 
   h1 {
     text-align: center;
-    color: #2b6e30;
     margin-bottom: 2rem;
     font-size: 2rem;
   }
@@ -192,10 +195,10 @@
   }
 
   .request-card {
-    background: white;
+    background-color: var(--color-bg-active);
     border-radius: 8px;
     padding: 1.5rem;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
     transition: transform 0.3s ease;
   }
 
@@ -239,27 +242,11 @@
   .request-actions button {
     width: 100%;
     padding: 0.75rem;
-    background: #2b6e30;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
     font-weight: 600;
-    transition: background 0.2s ease;
-  }
-
-  .request-actions button:hover {
-    background: #1e5a23;
-  }
-
-  .accept-btn {
-    background-color: #28a745;
-    color: white;
   }
 
   .reject-btn {
     background-color: #dc3545;
-    color: white;
   }
 
   .pending-btn {
@@ -275,22 +262,9 @@
     gap: 0.5rem;
   }
 
-  .pagination button {
-    padding: 0.5rem 1rem;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    background-color: white;
-    cursor: pointer;
-  }
-
-  .pagination button.active {
-    background-color: #2b6e30;
-    color: white;
-    border-color: #2b6e30;
-  }
-
   .pagination button:hover:not(.active) {
     background-color: #f5f5f5;
+    color: black;
   }
 
   .empty-state {
@@ -298,8 +272,8 @@
     padding: 2rem;
     color: #666;
   }
-/* Dialog footer buttons */
-    button.footer-button {
+  /* Dialog footer buttons */
+  button.footer-button {
     padding: 0.5rem 1rem;
     border: none;
     border-radius: 4px;
