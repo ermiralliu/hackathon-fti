@@ -4,10 +4,10 @@
   import '../app.css';
 
   let { children, data } : { children : Snippet; data: {isLogged: boolean}} = $props();
-  let isLogged = $derived(data.isLogged);
+  
 </script>
 
-<NavBar {isLogged}/>
+<NavBar isLogged={data.isLogged}/>
 
 {@render children()}
 

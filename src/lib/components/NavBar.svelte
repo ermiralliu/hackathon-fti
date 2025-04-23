@@ -191,7 +191,7 @@
 <style>
   /* Use CSS Variables for better theming within the header */
   /* Define colors specific to the header, potentially linking to a global palette */
-  :root {
+  /* :root {
     --header-bg: #2c3e50;
     --header-link-hover-color: #ffffff;
     --header-shadow: rgba(0, 0, 0, 0.1);
@@ -202,26 +202,38 @@
     --trigger-bg: transparent;
     --trigger-color: var(--header-link-color);
     --trigger-hover-bg: rgba(255, 255, 255, 0.1);
-  }
+  } */
 
-  /* @media (prefers-color-scheme: dark) { */
-  /* :root{ */
-  :global(.dark-mode) {
-    --header-bg: #030303;
-    --header-link-hover-color: #90b0ff;
-    --header-shadow: rgba(0, 0, 0, 0.4);
-    --dropdown-bg: #2a2a2a;
-    --dropdown-border-color: #404040;
-    --dropdown-text-color: #e0e0e0;
-    --dropdown-item-hover-bg: #3a3a3a;
+  :root {
+    /* --- Navbar Color Variables (Modified) --- */
+    --header-bg: #2c3e50; 
+    --header-link-color: lightgray;
+    --header-link-hover-color: var(--color-accent);
+    --header-shadow: var(--color-shadow);
+
+    --dropdown-bg: var(--color-bg-component);
+    --dropdown-border-color: var(--color-border);
+    --dropdown-text-color: var(--color-text-primary);
+    --dropdown-item-hover-bg: var(--color-bg-hover);
+
     --trigger-bg: transparent;
-    --trigger-color: #e0e0e0;
+    --trigger-color: var(--header-link-color);
+    --trigger-hover-bg: rgba(0, 0, 0, 0.05);
   }
-  /* } */
 
-  .nav {
-    width: 100%;
-    z-index: 1000;
+  :global(.dark-mode) {
+    --header-bg: #030303; 
+    --header-link-color: var(--color-text-primary);
+    --header-link-hover-color: var(--color-accent);
+    --header-shadow: var(--color-shadow);
+
+    --dropdown-bg: var(--color-bg-component);
+    --dropdown-border-color: var(--color-border);
+    --dropdown-text-color: var(--color-text-primary);
+    --dropdown-item-hover-bg: var(--color-bg-hover);
+
+    --trigger-color: var(--header-link-color);
+    --trigger-hover-bg: rgba(255, 255, 255, 0.08);
   }
 
   /* --- Header (Core Flex Container) --- */
@@ -362,7 +374,6 @@
   }
   .logout-btn {
     /* Style the button inside the dropdown item */
-    /* background-color: inherit; Remove */
     background: none; /* No background */
     color: var(--dropdown-text-color); /* Use variable */
     font: inherit;

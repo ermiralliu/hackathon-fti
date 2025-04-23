@@ -111,42 +111,21 @@
 
 <style>
   :root {
-    --form-border-color: #dcdcdc;
-    --form-bg-color: var(--color-sidebar-bg);
-    /* Kjo me siper eshte globale nga panel aside, probably needed to be passed somehow instead of this though */
-    --form-bg-color-subtle: #f8f9fa;
-    --form-text-color: #333;
-    --form-label-color: #555;
-    --form-placeholder-color: #999;
-    --form-focus-color: #007bff;
-    --form-focus-shadow: rgba(0, 123, 255, 0.25);
-    --button-primary-bg: #28a745;
-    --button-primary-hover-bg: #218838;
-    --button-primary-active-bg: #1e7e34;
-    --card-shadow: rgba(0, 0, 0, 0.1);
+    --card-shadow: rgba(0, 0, 0, 0.25);
+    --tab-content-bg-color: var(--color-bg-component)
   }
-  /* @media (prefers-color-scheme: dark) { */
-  :global(.dark-mode) {
-    --form-border-color: #555;
-    --form-bg-color-subtle: #3a3a3a;
-    --form-text-color: #e0e0e0;
-    --form-label-color: #dadada;
-    --form-placeholder-color: #888;
-    --form-focus-color: #66b2ff;
-    --form-focus-shadow: rgba(102, 178, 255, 0.4);
-    --button-primary-bg: #1e7e34;
-    --button-primary-hover-bg: #1a6a2e;
-    --button-primary-active-bg: #155626;
-    --card-shadow: rgba(0, 0, 0, 0.4);
-  }
-  /* } */
 
+  :global(.dark-mode) {
+    --card-shadow: rgba(0, 0, 0, 0.4);
+    --tab-content-bg-color: var(--color-bg-hover);
+  }
+  
   /* --- Tab Content Container (The Card) --- */
   .tab-content {
     max-width: 1200px;
-    padding: 30px; /* Add internal padding */
-    margin: 20px auto; /* Add margin around the card and center it */
-    background-color: var(--form-bg-color);
+    padding: 30px;
+    margin: 20px auto;
+    background-color: var(--tab-content-bg-color);
     border-radius: 8px;
     box-shadow: 0 4px 12px var(--card-shadow);
   }
@@ -174,12 +153,13 @@
 
   /* --- Form Group (Spacing) --- */
   .form-group {
-    margin-bottom: 20px; /* Space between form groups */
+    margin-bottom: 20px;
   }
+  
   /* Adjust margin for smaller screens */
   @media (max-width: 400px) {
     .form-group {
-      margin-bottom: 15px; /* Slightly less space on extra small */
+      margin-bottom: 15px;
     }
   }
 
@@ -188,7 +168,7 @@
     display: block;
     margin-bottom: 8px; /* Space between label and input */
     font-weight: 500; /* Slightly less bold */
-    color: var(--form-label-color);
+    /* color: var(--form-label-color); */
     font-size: 0.95em; /* Slightly smaller than input text */
   }
 
@@ -201,17 +181,6 @@
   .form-group option {
     display: block;
     width: 100%;
-    padding: 10px 12px;
-    border: 1px solid var(--form-border-color);
-    border-radius: 4px;
-    font-size: 1em;
-    line-height: 1.5;
-    color: var(--form-text-color);
-    background-color: var(--form-bg-color);
-    transition:
-      border-color 0.2s ease-in-out,
-      box-shadow 0.2s ease-in-out;
-    box-sizing: border-box;
   }
 
   /* Adjust padding and font size for smaller screens */
@@ -240,54 +209,19 @@
     background-position: right 12px top 50%;
     background-size: 12px auto;
     padding-right: 30px;
-    color: var(--form-text-color);
-  }
-
-  /* --- Input Focus State (Apply to all relevant types) --- */
-  .form-group input[type="text"]:focus,
-  .form-group input[type="number"]:focus,
-  .form-group textarea:focus,
-  .form-group select:focus {
-    border-color: var(--form-focus-color); /* Highlight border */
-    outline: none; /* Remove default outline */
-    box-shadow: 0 0 0 0.2rem var(--form-focus-shadow); /* Subtle glow */
-    background-color: var(--form-bg-color); /* Ensure background stays white */
-  }
-
-  /* --- Placeholder Text Styling --- */
-  .form-group input::placeholder,
-  .form-group textarea::placeholder {
-    color: var(--form-placeholder-color);
-    opacity: 1; /* Ensure opacity is not reduced in Firefox */
   }
 
   /* --- Submit Button --- */
   .submit-btn {
-    display: inline-block; /* Or block if full width */
-    background-color: var(--button-primary-bg);
-    color: white;
+    display: inline-block;
     padding: 12px 25px; /* More padding */
     border: none;
     border-radius: 4px;
     cursor: pointer;
     font-size: 1em; /* Use relative size */
     font-weight: 600;
-    transition:
-      background-color 0.2s ease-in-out,
-      box-shadow 0.2s ease-in-out; /* Smooth transition */
     margin-top: 15px; /* Space above button */
-    /* Ensure box-sizing if padding/border are part of specific size calculation */
     box-sizing: border-box;
-  }
-
-  .submit-btn:hover {
-    background-color: var(--button-primary-hover-bg);
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  }
-
-  .submit-btn:active {
-    background-color: var(--button-primary-active-bg);
-    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
   }
 
   @media (max-width: 400px) {
@@ -315,24 +249,4 @@
     }
   }
 
-  /* --- Optional: Style for file input label (if you hide the default input) --- */
-  /* This is an example of styling a label that triggers the file input */
-  /* If you don't use this pattern, ignore this rule */
-
-  /*
-.file-upload-label {
-    display: inline-block;
-    background-color: #e9ecef; // Light background
-    color: var(--form-text-color);
-    padding: 8px 12px;
-    border: 1px solid var(--form-border-color);
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 1em;
-    transition: background-color 0.2s ease-in-out;
-}
-.file-upload-label:hover {
-    background-color: #d0d3d6;
-}
-*/
 </style>

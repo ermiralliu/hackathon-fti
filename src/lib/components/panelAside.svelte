@@ -41,192 +41,161 @@
 </div>
 
 <style>
-  :root {
-    --color-sidebar-bg: #fcfcfc;
-    --color-content-bg: #f8f8f8;
-    --color-content-inside-bg: var(--color-sidebar-bg);
-    --color-sidebar-text: #444;
-    --color-sidebar-text-light: #777;
-    --color-sidebar-border: #e0e0e0;
-    --color-sidebar-shadow: rgba(0, 0, 0, 0.08);
-    --color-accent: #007bff;
-    --color-sidebar-active-indicator: var(--color-accent);
-    --color-sidebar-active-text: var(--color-accent);
-    --color-sidebar-active-bg: #e9ecef;
-    --sidebar-width: 250px;
-    --header-height: 60px;
-  }
 
-  /* @media (prefers-color-scheme: dark) { */
-  :global(.dark-mode) {
-    --color-sidebar-bg: #2a2a2a;
-    --color-content-bg: #1a1a1a;
-    --color-content-inside-bg: var(--color-sidebar-bg);
-    --color-sidebar-text: #e0e0e0;
-    --color-sidebar-text-light: #a0a0a0;
-    --color-sidebar-border: #404040;
-    --color-sidebar-shadow: rgba(0, 0, 0, 0.3);
-    --color-accent: #90b0ff;
-    --color-sidebar-active-indicator: var(--color-accent);
-    --color-sidebar-active-text: var(--color-accent);
-    --color-sidebar-active-bg: #3a3a3a;
-  }
-  /* } */
+/* --- Apply variables to Layout Components --- */
 
-  /* Layout Styles */
-  .container {
-    background-color: var(--color-content-inside-bg);
-    display: flex;
-    min-height: 100vh;
-    min-width: 320px; /* Minimum supported width */
-  }
+/* Container holding sidebar + content */
+.container {
+  /* This container might not need its own background if html/body handles it,
+     or it might represent the main content block background */
+  background-color: var(--color-bg-component); /* Use component bg for content area inside page bg */
+  display: flex;
+  min-height: 100vh;
+  min-width: 320px;
+}
 
-  /* Sidebar/Navigation */
-  aside {
-    position: fixed;
-    top: var(--header-height);
-    bottom: 0;
-    margin-top: 0px;
-    width: var(--sidebar-width);
-    background-color: var(--color-sidebar-bg);
-    color: var(--color-sidebar-text);
-    box-shadow: 2px 0 5px var(--color-sidebar-shadow);
-    z-index: 100;
-    padding: 20px 0; /* Keep vertical padding */
-    overflow-y: auto; /* Use auto for scrolling */
-    transition: transform 0.3s ease;
-  }
+/* Sidebar/Navigation */
+aside {
+  position: fixed;
+  top: var(--header-height);
+  bottom: 0;
+  margin-top: 0px;
+  width: var(--sidebar-width);
+  box-shadow: 2px 0 5px var(--color-shadow);
+  /* This needs a background-color, otherwise it's transparent */
+  background-color: var(--color-bg-component);
+  z-index: 100;
+  padding: 20px 0;
+  overflow-y: auto;
+  transition: transform 0.3s ease;
+}
 
-  /* Sidebar Title */
-  aside h3 {
-    padding: 0 20px 15px;
-    margin-top: 0;
-    margin-bottom: 15px;
-    margin-left: 0;
-    color: var(--color-sidebar-text-light);
-    font-size: 0.9em;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    border-bottom: 1px solid var(--color-sidebar-border); /* Use variable */
-  }
+/* Sidebar Title */
+aside h3 {
+  padding: 0 20px 15px;
+  margin: 0 0 15px 0; /* Adjusted margin */
+  color: var(--color-text-secondary); /* Use secondary text color */
+  font-size: 0.9em;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid var(--color-border); /* Use border variable */
+}
 
-  aside ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
+aside ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
 
-  aside li {
-    padding: 0; /* Keep padding 0 here */
-    margin: 0; /* Remove auto 5px margin */
-    border-radius: 0; /* Remove large border radius */
-    cursor: pointer;
-    transition: background-color 0.2s ease-in-out; /* Smooth transition */
-    position: relative; /* Needed for active indicator */
-  }
+aside li {
+  padding: 0;
+  margin: 0;
+  border-radius: 0;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+  position: relative;
+}
 
-  aside li:hover {
-    background-color: var(--color-sidebar-hover-bg);
-  }
+aside li:hover {
+  background-color: var(--color-bg-hover);
+}
 
-  /* Sidebar List Item Link */
-  aside li a {
-    display: block;
-    padding: 12px 20px;
-    color: var(--color-sidebar-text);
-    text-decoration: none;
-  }
+/* Sidebar List Item Link */
+aside li a {
+  display: block;
+  padding: 12px 20px;
+  color: var(--color-text-primary);
+  text-decoration: none;
+}
 
-  /* Sidebar Active State */
-  aside li.active {
-    background-color: var(--color-sidebar-active-bg);
-    font-weight: bold;
-  }
+/* Sidebar Active State */
+aside li.active {
+  background-color: var(--color-bg-active);
+  font-weight: bold;
+}
 
-  aside li.active a {
-    color: var(--color-sidebar-active-text);
-  }
+aside li.active a {
+  color: var(--color-text-accent);
+}
 
-  aside li.active:hover {
-    background-color: var(--color-sidebar-active-bg);
-  }
+/* Keep active hover same as active */
+aside li.active:hover {
+  background-color: var(--color-bg-active);
+}
 
-  /* Add the modern active indicator (left border) */
-  aside li.active::before {
-    content: "";
-    display: block;
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    width: 4px;
-    background-color: var(--color-sidebar-active-indicator);
-    border-radius: 0 3px 3px 0;
-  }
+/* Active indicator */
+aside li.active::before {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 4px;
+  background-color: var(--color-indicator-active);
+  border-radius: 0 3px 3px 0;
+}
 
-  /* Main Content */
+/* Main Content Area */
+.content {
+  flex: 1;
+  padding: 20px 20px 20px;
+  margin-left: var(--sidebar-width);
+  transition: margin-left 0.3s ease;
+  position: relative;
+  z-index: 1;
+  overflow: visible;
+}
+
+
+/* --- Mobile Styles (Layout unchanged, colors inherit) --- */
+@media (max-width: 768px) {
   .content {
-    flex: 1;
-    padding: 20px;
-    padding-top: 25px;
-    background-color: var(--color-content-bg);
-    min-height: 100vh;
-    margin-left: 250px;
-    transition: margin-left 0.3s ease;
-    position: relative;
-    z-index: 1;
-    overflow: visible;
+    margin-left: 0 !important; /* Sidebar collapses */
+    width: 100%;
+    padding: 2% 6%;
   }
 
-  /* Mobile Styles */
-  @media (max-width: 768px) {
-    .content {
-      margin-left: 0 !important;
-      width: 100%;
-      padding: 2% 6%;
-    }
-
-    /* Mobile Sidebar Positioning & Sliding */
-    aside {
-      width: 250px;
-      z-index: 100;
-      transform: translateX(-100%);
-      transition: transform 0.3s ease-in-out;
-      box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
-    }
-
-    aside.open {
-      transform: translateX(0); /* Slide into view on mobile */
-    }
+  aside {
+    width: var(--sidebar-width); /* Use variable */
+    z-index: 100;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease-in-out;
+    box-shadow: 2px 0 5px var(--color-shadow); /* Use shadow variable */
   }
 
-  /* Extra small devices (phones, 400px and down) */
-  @media (max-width: 400px) {
-    aside {
-      width: 85vw; /* Adjust width */
-      transform: translateX(-85vw); /* Hide based on new width */
-    }
+  aside.open {
+    transform: translateX(0);
+  }
+}
 
-    aside.open {
-      transform: translateX(0);
-    }
+@media (max-width: 400px) {
+  aside {
+    width: 85vw;
+    transform: translateX(-85vw);
   }
 
-  /* Optional: Style the scrollbar (for webkit browsers like Chrome, Safari) */
-  aside::-webkit-scrollbar {
-    width: 8px;
+  aside.open {
+    transform: translateX(0);
   }
+}
 
-  aside::-webkit-scrollbar-track {
-    background: #f1f1f1;
-  }
 
-  aside::-webkit-scrollbar-thumb {
-    background: #888;
-    border-radius: 4px;
-  }
+/* Optional: Style the scrollbar using variables */
+aside::-webkit-scrollbar {
+  width: 8px;
+}
 
-  aside::-webkit-scrollbar-thumb:hover {
-    background: #555;
-  }
+aside::-webkit-scrollbar-track {
+  background: var(--color-bg-component); /* Match sidebar background */
+}
+
+aside::-webkit-scrollbar-thumb {
+  background: var(--color-text-secondary); /* Use secondary text color (or border) */
+  border-radius: 4px;
+}
+
+aside::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-primary); /* Use primary text color (or a darker gray) */
+}
 </style>
