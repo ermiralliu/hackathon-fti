@@ -14,7 +14,7 @@
     <p class="hero-description">
       Lidh konsumatorët me fermerët vendas për ushqim të freskët dhe organik.
     </p>
-    <a class="explore-button" href="/products">Shfleto Produktet</a>
+    <a class="main-btn" href="/products">Shfleto Produktet</a>
   </section>
 
   <section class="about-section">
@@ -51,7 +51,7 @@
       Bashkohu me qindra përdorues që besojnë tek produktet lokale dhe të
       freskëta.
     </p>
-    <a href="/register" class="cta-button">Regjistrohu Tani</a>
+    <a href="/register" class="main-btn">Regjistrohu Tani</a>
   </section>
 </main>
 
@@ -97,23 +97,18 @@
     margin: auto 1rem;
   }
 
-  .explore-button,
-  .cta-button {
+  .main-btn {
     display: inline-block;
-    background-color: #2b6e30;
-    color: white;
+    background-color: var(--button-primary-bg);
+    color: var(--button-text-color);
     padding: 0.9rem 2rem;
     font-size: clamp(1.1rem, 2.5vw, 1.25rem);
-    border: none;
     border-radius: 8px;
     text-decoration: none;
-    transition: all 0.3s ease;
-    cursor: pointer;
   }
 
-  .explore-button:hover,
-  .cta-button:hover {
-    background-color: #276f2b;
+  .main-btn:hover {
+    background-color: var(--button-primary-hover-bg);
     transform: translateY(-2px);
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
   }
@@ -127,13 +122,11 @@
   .about-title {
     font-size: clamp(1.5rem, 4vw, 2rem);
     font-weight: bold;
-    color: #2b6e30;
     margin-bottom: 1.5rem;
   }
 
   .about-description {
     font-size: clamp(1rem, 2.5vw, 1.125rem);
-    color: #4c4c4c;
     max-width: 800px;
     margin: 0 auto;
     line-height: 1.7;
@@ -144,7 +137,7 @@
   /* How it Works Section */
   .how-it-works-section {
     padding: 2.5rem 1rem;
-    background-color: #d1f7e1;
+    background-color: var(--color-bg-active);
     border-radius: 15px;
     margin: 2rem 0;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -156,7 +149,7 @@
     font-weight: bold;
     text-align: center;
     margin-bottom: 2rem;
-    color: #2b6e30;
+    /* color: #2b6e30; */
   }
 
   .steps {
@@ -167,7 +160,7 @@
   }
 
   .step {
-    background-color: white;
+    background-color: var(--color-bg-component);
     padding: 1.5rem;
     border-radius: 10px;
     box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
@@ -181,13 +174,11 @@
 
   .step-title {
     font-size: clamp(1.25rem, 3vw, 1.5rem);
-    font-weight: bold;
-    color: #2b6e30;
     margin-bottom: 0.75rem;
   }
 
   .step p {
-    color: #4c4c4c;
+    color: var(--color-text-secondary);
     margin: 0;
     font-size: clamp(1rem, 2.5vw, 1.1rem);
     line-height: 1.6;
@@ -201,7 +192,6 @@
 
   .cta-description {
     font-size: clamp(1rem, 2.5vw, 1.25rem);
-    color: #4c4c4c;
     margin-bottom: 2rem;
     max-width: 800px;
     margin-left: auto;

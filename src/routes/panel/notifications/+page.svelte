@@ -2,8 +2,8 @@
 <script lang="ts">
   import { enhance } from "$app/forms";
   import { goto } from "$app/navigation";
-  import InfoRow from "$lib/components/infoRow.svelte";
-  import ModalDialog from "$lib/components/modalDialog.svelte";
+  import InfoRow from "$lib/client/components/infoRow.svelte";
+  import ModalDialog from "$lib/client/components/modalDialog.svelte";
   import type { Status } from "$prisma-client";
   import { fade } from "svelte/transition";
 

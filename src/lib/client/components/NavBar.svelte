@@ -189,26 +189,15 @@
 />
 
 <style>
-  /* Use CSS Variables for better theming within the header */
-  /* Define colors specific to the header, potentially linking to a global palette */
-  /* :root {
-    --header-bg: #2c3e50;
-    --header-link-hover-color: #ffffff;
-    --header-shadow: rgba(0, 0, 0, 0.1);
-    --dropdown-bg: #ffffff;
-    --dropdown-border-color: #e0e0e0;
-    --dropdown-text-color: #333;
-    --dropdown-item-hover-bg: #f8f9fa;
-    --trigger-bg: transparent;
-    --trigger-color: var(--header-link-color);
-    --trigger-hover-bg: rgba(255, 255, 255, 0.1);
-  } */
 
   :root {
     /* --- Navbar Color Variables (Modified) --- */
     --header-bg: #2c3e50; 
+    /* --header-bg: #2c3e50;  */
+    /* --header-bg: var(--color-text-accent); */
     --header-link-color: lightgray;
-    --header-link-hover-color: var(--color-accent);
+    /* --header-link-hover-color: var(--color-accent); */
+    --header-link-hover-color: lightgreen;
     --header-shadow: var(--color-shadow);
 
     --dropdown-bg: var(--color-bg-component);

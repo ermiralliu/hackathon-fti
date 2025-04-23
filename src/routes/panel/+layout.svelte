@@ -1,6 +1,6 @@
 <script lang="ts">
   import { page } from "$app/state";
-  import PanelAside from "$lib/components/panelAside.svelte";
+  import PanelAside from "$lib/client/components/panelAside.svelte";
   import { onMount, type Snippet } from "svelte";
 
   let {children}: {children: Snippet} = $props();

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import NavBar from "../lib/components/NavBar.svelte";
+  import NavBar from "$lib/client/components/NavBar.svelte";
   import { type Snippet } from "svelte";
   import '../app.css';
 

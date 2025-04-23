@@ -53,14 +53,14 @@ body {
   /* Main text color (slightly darker than original #444) */
   --color-text-secondary: #777777;
   /* Lighter text for secondary info/labels */
-  --color-text-accent: #007bff;
+  --color-text-accent: #2b6e30;
   /* Text color matching the accent */
 
   /* Borders & Dividers */
   --color-border: #e0e0e0;
 
   /* Accent */
-  --color-accent: #007bff;
+  --color-accent: #2b6e30;
   --color-indicator-active: var(--color-accent);
   /* Active indicator color */
 
@@ -70,6 +70,7 @@ body {
   /* Button Colors */
   --button-primary-bg: #28a745;
   --button-primary-hover-bg: #218838;
+  --button-text-color: #e0e0e0;
 
   /* Form input colors */
   --form-border-color: #dcdcdc;
@@ -89,17 +90,21 @@ body {
   /* Optional: Dark hover background */
 
   /* Text */
+  
   --color-text-primary: #e0e0e0;
   --color-text-secondary: #a0a0a0;
-  --color-text-accent: #90b0ff;
-
+  --color-text-accent: #66BB6A;
+  
   /* Borders & Dividers */
   --color-border: #404040;
-
+  
   /* Accent */
-  --color-accent: #90b0ff;
+  --color-accent: #66BB6A;
+  /* --color-accent: #1E8449; */
   --color-indicator-active: var(--color-accent);
-
+  /* Buttons */
+  --button-primary-bg: #1E8449;
+  --button-primary-hover-bg: #186A3B;
   /* Form input colors */
   --form-border-color: #666666;
   --form-bg-color: var(--color-bg-component);
@@ -112,6 +117,10 @@ html,
 body {
   background-color: var(--color-bg-page);
   color: var(--color-text-primary);
+}
+
+h1, h2, h3 {
+  color: var(--color-text-accent);
 }
 
 a {
@@ -166,6 +175,8 @@ input[type="number"] {
 
 button {
   border: none;
+  color: var(--button-text-color);
+  /*Not the best color but whatever*/
   background-color: var(--button-primary-bg);
   transition:
     background-color 0.2s ease-in-out,
@@ -179,11 +190,10 @@ button:disabled {
 
 button:hover {
   background-color: var(--button-primary-hover-bg);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
 }
 
 input::placeholder,
 textarea::placeholder {
   color: var(--color-text-secondary);
-  opacity: 1;
 }

@@ -48,7 +48,7 @@
   <div class="modal">
     <header class="modal-header">
       {@render header()}
-      <button onclick={closeModal}>&times;</button>
+      <button style:color="darkgray" onclick={closeModal}>&times;</button>
     </header>
 
     <div class="modal-body">
@@ -81,9 +81,7 @@
 
   /* hide default backdrop */
   dialog::backdrop {
-    /* display: none; */
     visibility: hidden;
-    /* opacity: 0; */
   }
 
   :root {
@@ -105,10 +103,6 @@
     opacity: 1;
     visibility: visible;
   }
-  dialog:global(.openedDialog)::before {
-    /* display: block; */
-    backdrop-filter: blur(4px);
-  }
 
   /* Modal styles */
   dialog {
@@ -117,12 +111,13 @@
     padding: 0;
     width: 90%;
     max-width: 500px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); */
   }
 
   .modal {
     padding: 1.5rem;
-    background-color: white;
+    background-color: var(--color-bg-component);
+    color: var(--color-text-primary);
   }
 
   .modal-header {
@@ -133,10 +128,6 @@
     border-bottom: 1px solid #eee;
     padding-bottom: 1rem;
   }
-
-  /* .modal-header h2 {
-    margin: 0;
-  } */
 
   .modal-header button {
     background: none;

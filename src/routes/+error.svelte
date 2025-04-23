@@ -25,15 +25,12 @@
 		justify-content: center;
 		align-items: center;
 		min-height: 100vh;
-		background-color: #f4f4f4;
-		color: #333;
 		font-family: sans-serif;
 	}
 
 	.error-content {
 		text-align: center;
 		padding: 2rem;
-		background-color: #fff;
 		border-radius: 8px;
 		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 	}

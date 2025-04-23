@@ -4,7 +4,7 @@
   import { enhance } from "$app/forms";
   import { type ProductType, type Product } from "$prisma-client";
 
-  import ModalDialog from "$lib/components/modalDialog.svelte";
+  import ModalDialog from "$lib/client/components/modalDialog.svelte";
 
   let { data } = $props();
 
@@ -126,7 +126,7 @@
 
       {#each pageNumbers as pageNumber}
         <button
-          class:active={pageNumber === currentPage}
+          class:non-active={pageNumber !== currentPage}
           onclick={() => changePage(pageNumber)}
         >
           {pageNumber}
@@ -200,7 +200,7 @@
     display: block;
     margin-bottom: 0.5rem;
     font-weight: 600;
-    color: #333;
+    /* color: #333; */
   }
 
   form.modal-form input[type="text"] {
@@ -216,7 +216,7 @@
 
   form.modal-form p {
     margin: 0 0 1rem 0;
-    color: #555;
+    /* color: #555; */
     line-height: 1.5;
   }
 
@@ -237,18 +237,6 @@
     width: auto;
     min-width: 100px;
     border: 1px solid transparent;
-  }
-
-  .modal-footer button:first-child {
-    background-color: #f0f0f0;
-    color: #333;
-    border: 1px solid #ddd !important;
-  }
-
-  .modal-footer button.primary {
-    background-color: #2b6e30 !important;
-    color: white !important;
-    border: 1px solid #2b6e30 !important;
   }
 
   @media (max-width: 600px) {
@@ -285,10 +273,10 @@
   }
 
   .product-card {
-    background: white;
-    border-radius: 10px;
+    background-color: var(--color-bg-component);
+    border-radius: 12px;
     overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
     transition:
       transform 0.3s ease,
       box-shadow 0.3s ease;
@@ -296,7 +284,7 @@
 
   .product-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.25);
   }
 
   .product-image {
@@ -335,11 +323,11 @@
   .product-details h2 {
     margin: 0 0 0.5rem 0;
     font-size: 1.25rem;
-    color: #333;
+    /* color: #333; */
   }
 
   .product-description {
-    color: #666;
+    /* color: #666; */
     font-size: 0.9rem;
     margin-bottom: 1rem;
     display: -webkit-box;
@@ -370,17 +358,7 @@
   button {
     width: 100%;
     padding: 0.75rem;
-    background: #2b6e30;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
     font-weight: 600;
-    transition: background 0.2s ease;
-  }
-
-  button:hover {
-    background: #1e5a23;
   }
 
   @media (max-width: 768px) {
@@ -395,22 +373,12 @@
   }
 
   .pagination button {
-    padding: 0.5rem 1rem;
+    padding: 0.6rem 1rem;
     margin: 0 0.25rem;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+  }
+  
+  .pagination button.non-active {
     background-color: rgb(200, 19, 19);
-    cursor: pointer;
-  }
-
-  .pagination button.active {
-    background-color: #2b6e30;
-    color: white;
-    border-color: #2b6e30;
-  }
-
-  .pagination button:hover {
-    background-color: #f0f0f0;
   }
 
   .search-form {
@@ -425,36 +393,15 @@
 
   .search-form input[type="text"] {
     flex: 1 1 200px;
-    padding: 0.75rem;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 1rem;
   }
 
   .search-form select {
     flex: 1 1 200px;
-    padding: 0.75rem;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 1rem;
-    background-color: white;
     cursor: pointer;
   }
 
   .search-form button[type="submit"] {
     flex: 0 1 150px;
-    padding: 0.75rem;
-    background: #2b6e30;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: background 0.2s ease;
-  }
-
-  .search-form button[type="submit"]:hover {
-    background: #1e5a23;
   }
 
   @media (max-width: 600px) {
