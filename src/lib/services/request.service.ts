@@ -1,8 +1,8 @@
-import type { PurchaseRequest } from "@prisma/client/edge";
 import prisma from "../prisma";
+import type { Status } from "$prisma-client";
 
 
-export async function updateRequestStatus(requestId: number, status: String,){
+export async function updateRequestStatus(requestId: number, status: Status){
     try {
         const updateData = {
             status: status,

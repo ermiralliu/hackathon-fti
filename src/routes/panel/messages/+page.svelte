@@ -1,6 +1,10 @@
 <script>
 // @ts-nocheck
 
+    import { fade } from "svelte/transition";
+
+
+
      // Messages
   let activeChat = null;
   let messages = $state([]);
@@ -15,7 +19,13 @@
     }
   }
 </script>
-<div class="tab-content">
+
+<svelte:head>
+  <title>Messages</title>
+  <meta name="description" content="Chat Room" />
+</svelte:head>
+
+<div class="tab-content"  transition:fade={{duration: 200}}>
     <h2>Messages</h2>
     {#if activeChat}
       <div class="chat-container">
@@ -46,22 +56,11 @@
 
   <style>
     /* Base Styles */
-    :global(body) {
-      margin: 0;
-      padding: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #f8f9fa;
-      color: #212529;
-      min-width: 320px; /* Prevent horizontal scrolling on very narrow screens */
-    }
-  
-    
-    
+
     .tab-content {
       max-width: 1200px;
       margin: 0 auto;
     }
-    
     
     /* Chat */
     .chat-container {

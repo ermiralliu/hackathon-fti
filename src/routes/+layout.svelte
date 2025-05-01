@@ -1,9 +1,14 @@
-<script>
-  import NavBar from "../lib/components/NavBar.svelte";
+<script lang="ts">
+  import NavBar from "$lib/client/components/NavBar.svelte";
+  import { type Snippet } from "svelte";
+  import '../app.css';
 
-  let { children } = $props();
+  let { children, data } : { children : Snippet; data: {isLogged: boolean}} = $props();
+  
 </script>
 
-<NavBar />
+<NavBar isLogged={data.isLogged}/>
 
 {@render children()}
+
+

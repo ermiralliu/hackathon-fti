@@ -1,66 +1,66 @@
-<script lang="ts">
+<!-- <script lang="ts">
   import { enhance } from '$app/forms';
   import { goto } from '$app/navigation';
-  import LanguageSwitcher from '$lib/components/LanguageSwitcher.svelte';
+  // import LanguageSwitcher from '$lib/components/LanguageSwitcher.svelte';
 
-  interface Translation {
-    title: string;
-    tabs: { users: string; products: string };
-    tableHeaders: { id: string; name: string; email: string; role: string; actions: string; price: string };
-    messages: { noUsers: string; noProducts: string };
-    buttons: { delete: string; details: string; save: string; close: string; farmerProducts: string; prev: string; next: string };
-    userModal: { title: string; username: string; password: string; email: string; role: string };
-    roles: { admin: string; farmer: string; consumer: string };
-    pagination: string;
-  }
+  // interface Translation {
+  //   title: string;
+  //   tabs: { users: string; products: string };
+  //   tableHeaders: { id: string; name: string; email: string; role: string; actions: string; price: string };
+  //   messages: { noUsers: string; noProducts: string };
+  //   buttons: { delete: string; details: string; save: string; close: string; farmerProducts: string; prev: string; next: string };
+  //   userModal: { title: string; username: string; password: string; email: string; role: string };
+  //   roles: { admin: string; farmer: string; consumer: string };
+  //   pagination: string;
+  // }
 
-  const translations: Record<string, Translation> = {
-    en: {
-      title: "Admin Panel",
-      tabs: { users: "Users", products: "Products" },
-      tableHeaders: { id: "ID", name: "Name", email: "Email", role: "Role", actions: "Actions", price: "Price" },
-      messages: { noUsers: "No users found", noProducts: "No products found" },
-      buttons: { delete: "Delete", details: "Details", save: "Save Changes", close: "Close", farmerProducts: "Farmer's Products", prev: "« Prev", next: "Next »" },
-      userModal: { title: "User Details", username: "Username:", password: "New Password (leave blank to keep current):", email: "Email:", role: "Role:" },
-      roles: { admin: "admin", farmer: "farmer", consumer: "consumer" },
-      pagination: "Page {0} of {1}"
-    },
-    sq: {
-      title: "Paneli i Administratorit",
-      tabs: { users: "Përdoruesit", products: "Produktet" },
-      tableHeaders: { id: "ID", name: "Emri", email: "Email", role: "Roli", actions: "Veprime", price: "Çmimi" },
-      messages: { noUsers: "Nuk ka përdorues", noProducts: "Nuk ka produkte" },
-      buttons: { delete: "Fshi", details: "Të dhënat", save: "Ruaj ndryshimet", close: "Mbyll", farmerProducts: "Produktet e fermerit", prev: "« Para", next: "Pas »" },
-      userModal: { title: "Të dhënat e përdoruesit", username: "Emri:", password: "Fjalëkalimi i ri (lëreni bosh për të mos ndryshuar):", email: "Email:", role: "Roli:" },
-      roles: { admin: "admin", farmer: "fermer", consumer: "konsumator" },
-      pagination: "Faqja {0} nga {1}"
-    }
-  };
+  // const translations: Record<string, Translation> = {
+  //   en: {
+  //     title: "Admin Panel",
+  //     tabs: { users: "Users", products: "Products" },
+  //     tableHeaders: { id: "ID", name: "Name", email: "Email", role: "Role", actions: "Actions", price: "Price" },
+  //     messages: { noUsers: "No users found", noProducts: "No products found" },
+  //     buttons: { delete: "Delete", details: "Details", save: "Save Changes", close: "Close", farmerProducts: "Farmer's Products", prev: "« Prev", next: "Next »" },
+  //     userModal: { title: "User Details", username: "Username:", password: "New Password (leave blank to keep current):", email: "Email:", role: "Role:" },
+  //     roles: { admin: "admin", farmer: "farmer", consumer: "consumer" },
+  //     pagination: "Page {0} of {1}"
+  //   },
+  //   sq: {
+  //     title: "Paneli i Administratorit",
+  //     tabs: { users: "Përdoruesit", products: "Produktet" },
+  //     tableHeaders: { id: "ID", name: "Emri", email: "Email", role: "Roli", actions: "Veprime", price: "Çmimi" },
+  //     messages: { noUsers: "Nuk ka përdorues", noProducts: "Nuk ka produkte" },
+  //     buttons: { delete: "Fshi", details: "Të dhënat", save: "Ruaj ndryshimet", close: "Mbyll", farmerProducts: "Produktet e fermerit", prev: "« Para", next: "Pas »" },
+  //     userModal: { title: "Të dhënat e përdoruesit", username: "Emri:", password: "Fjalëkalimi i ri (lëreni bosh për të mos ndryshuar):", email: "Email:", role: "Roli:" },
+  //     roles: { admin: "admin", farmer: "fermer", consumer: "konsumator" },
+  //     pagination: "Faqja {0} nga {1}"
+  //   }
+  // };
 
-  let currentLang = 'sq';
-  if (typeof localStorage !== 'undefined') {
-    const savedLang = localStorage.getItem('selectedLanguage');
-    if (savedLang && translations[savedLang]) {
-      currentLang = savedLang;
-    }
-  }
+  // let currentLang = 'sq';
+  // if (typeof localStorage !== 'undefined') {
+  //   const savedLang = localStorage.getItem('selectedLanguage');
+  //   if (savedLang && translations[savedLang]) {
+  //     currentLang = savedLang;
+  //   }
+  // }
 
-  function t(key: string, ...params: any[]): string {
-    const keys = key.split('.');
-    let value: any = translations[currentLang];
+  // function t(key: string, ...params: any[]): string {
+  //   const keys = key.split('.');
+  //   let value: any = translations[currentLang];
 
-    for (const k of keys) {
-      if (value && typeof value === 'object' && k in value) {
-        value = value[k];
-      } else return key;
-    }
+  //   for (const k of keys) {
+  //     if (value && typeof value === 'object' && k in value) {
+  //       value = value[k];
+  //     } else return key;
+  //   }
 
-    if (typeof value === 'string' && params.length > 0) {
-      return params.reduce((acc, param, index) => acc.replace(`{${index}}`, param), value);
-    }
+  //   if (typeof value === 'string' && params.length > 0) {
+  //     return params.reduce((acc, param, index) => acc.replace(`{${index}}`, param), value);
+  //   }
 
-    return value || key;
-  }
+  //   return value || key;
+  // }
 
   export let data;
   let activeTab: "users" | "products" = "users";
@@ -121,7 +121,6 @@
 <div class="admin-panel">
   <div class="header">
     <h1>{t('title')}</h1>
-    <LanguageSwitcher />
   </div>
 
   <div class="tabs">
@@ -531,4 +530,4 @@
       padding: 0.75rem 0.5rem;
     }
   }
-</style>
+</style> -->

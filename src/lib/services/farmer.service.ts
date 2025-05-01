@@ -1,9 +1,11 @@
 
+import type { Product } from "$prisma-client";
 import prisma from "../prisma";
-import type { Product } from "@prisma/client";
 
-
-export async function addProduct(farmerId: number, entry: Omit<Product, 'id' | 'farmer' | 'farmerId'>) {
+export async function addProduct(
+  farmerId: number, 
+  entry: Omit<Product, 'id' | 'farmer' | 'farmerId'| "createdAt"| 'availability'>
+) {
   try {
       await prisma.product.create({
           data: {

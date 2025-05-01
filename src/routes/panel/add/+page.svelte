@@ -1,191 +1,262 @@
-<script>
-  // @ts-nocheck
+<script lang="ts">
   import { enhance } from "$app/forms";
-  
-  let currentImage = $state(null);
+  import { fade } from "svelte/transition";
+
+  let currentImage: null | File = $state(null);
   let imagePreview = $state("");
-  
-  function handleImageUpload(event) {
-    const file = event.target.files[0];
+
+  function handleImageUpload(event: Event) {
+    const inputElement = event.target as HTMLInputElement;
+    const fileList = inputElement.files;
+    if (!fileList) return;
+    const file = fileList[0];
     if (file) {
       currentImage = file;
       imagePreview = URL.createObjectURL(file);
     }
   }
+
+  let firstInputToFocus: HTMLInputElement;
+
+  $effect(() => {
+    setTimeout(() => firstInputToFocus.focus(), 600);
+  });
 </script>
 
-<div class="tab-content">
+<svelte:head>
+  <title>Add Product</title>
+  <meta name="description" content="Add Products to sell" />
+</svelte:head>
+
+<div class="tab-content" transition:fade={{ duration: 200 }}>
   <h2>Add New Product</h2>
   <!-- Add enctype attribute here -->
-  <form use:enhance method="POST" action="?/create" enctype="multipart/form-data">
-      <!-- Product Name -->
-      <div class="form-group">
-          <label for="product-name">Product Name</label>
-          <input
-              id="product-name"
-              type="text"
-              name="name"
-              placeholder="Enter product name"
-              required
-          />
-      </div>
+  <form
+    use:enhance
+    method="POST"
+    action="?/create"
+    enctype="multipart/form-data"
+  >
+    <!-- Product Name -->
+    <div class="form-group">
+      <label for="product-name">Product Name</label>
+      <input
+        id="product-name"
+        type="text"
+        name="name"
+        placeholder="Enter product name"
+        bind:this={firstInputToFocus}
+        required
+      />
+    </div>
 
-      <!-- Product Type -->
-      <div class="form-group">
-          <label for="product-type">Product Type</label>
-          <select id="product-type" name="type" required>
-              <option value="" selected disabled>-- Select type --</option>
-              <option value="fruit">Fruit</option>
-              <option value="vegetable">Vegetable</option>
-              <option value="alcoholic beverages">Alcoholic Beverage</option>
-              <option value="juice">Juice</option>
-              <option value="dairy">Dairy</option>
-              <option value="other">Other</option>
-          </select>
-      </div>
+    <!-- Product Type -->
+    <div class="form-group">
+      <label for="product-type">Product Type</label>
+      <select id="product-type" name="type" required>
+        <option value="" selected disabled>-- Select type --</option>
+        <option value="fruit">Fruit</option>
+        <option value="vegetable">Vegetable</option>
+        <option value="alcoholicBeverage">Alcoholic Beverage</option>
+        <option value="juice">Juice</option>
+        <option value="dairy">Dairy</option>
+        <option value="other">Other</option>
+      </select>
+    </div>
 
-      <!-- Product Price -->
-      <div class="form-group">
-          <label for="product-price">Price ($)</label>
-          <input
-              id="product-price"
-              type="number"
-              name="price"
-              placeholder="Enter price"
-              step="0.01"
-              min="0"
-              required
-          />
-      </div>
-  
-      <!-- Product Description -->
-      <div class="form-group">
-          <label for="product-description">Description</label>
-          <textarea
-              id="product-description"
-              name="description"
-              placeholder="Enter product description"
-              rows="4"
-          ></textarea>
-      </div>
-  
-      <!-- Product Image -->
-      <div class="form-group">
-          <label for="product-image">Product Image</label>
-          <input
-              id="product-image"
-              type="file"
-              accept="image/*"
-              name="photo"
-              onchange={handleImageUpload}
-          />
-          {#if imagePreview}
-              <img src={imagePreview} alt="Preview" class="image-preview" />
-          {/if}
-      </div>
-  
-      <!-- Submit Button -->
-      <button type="submit" class="submit-btn">Add Product</button>
+    <!-- Product Price -->
+    <div class="form-group">
+      <label for="product-price">Price ($)</label>
+      <input
+        id="product-price"
+        type="number"
+        name="price"
+        placeholder="Enter price"
+        step="0.01"
+        min="0"
+        required
+      />
+    </div>
+
+    <!-- Product Description -->
+    <div class="form-group">
+      <label for="product-description">Description</label>
+      <textarea
+        id="product-description"
+        name="description"
+        placeholder="Enter product description"
+        rows="4"
+      ></textarea>
+    </div>
+
+    <!-- Product Image -->
+    <div class="form-group">
+      <label for="product-image">Product Image</label>
+      <input
+        id="product-image"
+        type="file"
+        accept="image/*"
+        name="photo"
+        onchange={handleImageUpload}
+      />
+      {#if imagePreview}
+        <img src={imagePreview} alt="Preview" class="image-preview" />
+      {/if}
+    </div>
+
+    <!-- Submit Button -->
+    <button type="submit" class="submit-btn">Add Product</button>
   </form>
 </div>
 
 <style>
-  :global(body) {
-    margin: 0;
-    padding: 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f8f9fa;
-    color: #212529;
-    min-width: 320px;
+  :root {
+    --card-shadow: rgba(0, 0, 0, 0.25);
+    --tab-content-bg-color: var(--color-bg-component)
   }
+
+  :global(.dark-mode) {
+    --card-shadow: rgba(0, 0, 0, 0.4);
+    --tab-content-bg-color: var(--color-bg-hover);
+  }
+  
+  /* --- Tab Content Container (The Card) --- */
   .tab-content {
     max-width: 1200px;
-    margin: 0 auto;
+    padding: 30px 50px;
+    margin: 20px auto;
+    margin-top:0;
+    background-color: var(--tab-content-bg-color);
+    border-radius: 8px;
+    box-shadow: 0 4px 12px var(--card-shadow);
   }
+
+  /* Keep existing width media queries */
+  @media (min-width: 768px) {
+    .tab-content {
+      width: 85%;
+    }
+  }
+
+  @media (min-width: 1200px) {
+    .tab-content {
+      width: 60%;
+    }
+  }
+  /* Keep existing mobile width media query for tab-content */
+  @media (max-width: 400px) {
+    .tab-content {
+      width: 90%;
+      padding: 20px; /* Adjust padding for smaller screens */
+      margin: 15px auto; /* Adjust margin for smaller screens */
+    }
+  }
+
+  /* --- Form Group (Spacing) --- */
   .form-group {
     margin-bottom: 20px;
   }
+  
+  /* Adjust margin for smaller screens */
+  @media (max-width: 400px) {
+    .form-group {
+      margin-bottom: 15px;
+    }
+  }
+
+  /* --- Form Group Label --- */
   .form-group label {
     display: block;
-    margin-bottom: 8px;
-    font-weight: 600;
-    color: #495057;
+    margin-bottom: 8px; /* Space between label and input */
+    font-weight: 500; /* Slightly less bold */
+    /* color: var(--form-label-color); */
+    font-size: 0.95em; /* Slightly smaller than input text */
   }
-  .form-group input {
+
+  /* --- Form Input Fields (Text, Number, Textarea, Select) --- */
+  /* Combine common styles for consistency */
+  .form-group input[type="text"],
+  .form-group input[type="number"],
+  .form-group textarea,
+  .form-group select,
+  .form-group option {
+    display: block;
     width: 100%;
-    padding: 10px;
-    border: 1px solid #ced4da;
-    border-radius: 4px;
-    font-size: 16px;
-    background-color: #f8f9fa;
   }
+
+  /* Adjust padding and font size for smaller screens */
+  @media (max-width: 400px) {
+    .form-group input[type="text"],
+    .form-group input[type="number"],
+    .form-group textarea,
+    .form-group select {
+      padding: 8px 10px;
+      font-size: 0.9em;
+    }
+  }
+
+  /* --- Textarea specific --- */
+  textarea {
+    /* Keep textarea specific styles */
+    resize: vertical; /* Allow vertical resizing */
+    min-height: 100px; /* Minimum height */
+  }
+
+  /* --- Select Dropdown specific --- */
+  .form-group select {
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23888%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px top 50%;
+    background-size: 12px auto;
+    padding-right: 30px;
+  }
+
+  /* --- Submit Button --- */
   .submit-btn {
-    background-color: #28a745;
-    color: white;
-    padding: 12px 20px;
+    display: inline-block;
+    padding: 12px 25px; /* More padding */
     border: none;
     border-radius: 4px;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 1em; /* Use relative size */
     font-weight: 600;
-    transition: background-color 0.3s;
+    margin-top: 15px; /* Space above button */
+    box-sizing: border-box;
   }
-  .submit-btn:hover {
-    background-color: #218838;
+
+  @media (max-width: 1000px) {
+    /* .content{
+      width: 100%;
+    } */
+    .tab-content{
+      width: 100%;
+    }
   }
+
+  @media (max-width: 400px) {
+    .submit-btn {
+      padding: 10px 20px;
+      font-size: 0.95em;
+    }
+  }
+
+  /* --- Image Preview --- */
   .image-preview {
+    /* Keep image preview styles */
     max-width: 100%;
     max-height: 300px;
     margin-top: 15px;
     display: block;
     border-radius: 4px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    object-fit: cover; /* Ensure image covers area nicely if constrained */
   }
-  textarea {
-      width: 100%;
-      padding: 10px;
-      border: 1px solid #ced4da;
-      border-radius: 4px;
-      font-size: 16px;
-      background-color: #f8f9fa;
-      resize: vertical;
-  }
-  .form-group select {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ced4da;
-  border-radius: 4px;
-  font-size: 16px;
-  background-color: #f8f9fa;
-  color: #212529;
-  appearance: none; 
-  }
-  @media (max-width: 576px) {
-    .tab-content {
-      padding: 10px;
-    }
-    .form-group input {
-      width: calc(100% - 30px);
-    }
-    button {
-      white-space: normal;
-      word-wrap: break-word;
-    }
-  }
+  /* Adjust image preview max-height for smaller screens */
   @media (max-width: 400px) {
-    .form-group {
-      margin-bottom: 12px;
-    }
-    .form-group input {
-      padding: 8px 10px;
-      font-size: 14px;
-    }
-    button {
-      padding: 8px 12px;
-      font-size: 14px;
-    }
-      .image-preview {
-      max-height: 200px;
+    .image-preview {
+      max-height: 150px; /* Reduce height on smaller screens */
     }
   }
+
 </style>

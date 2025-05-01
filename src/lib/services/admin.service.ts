@@ -1,5 +1,5 @@
-import prisma from "$lib/prisma";
-import type { Role, ProductType } from "@prisma/client";// USERS
+import prisma from "../prisma";
+import type { Role, Product } from "$prisma-client";// USERS
 
 /**
  * Merr përdoruesit me pagination.
@@ -84,7 +84,7 @@ export async function getAllProducts(page: number = 1, pageSize: number = 6) {
       prisma.product.findMany({
         skip,
         take,
-        orderBy: { id: "asc" },
+        orderBy: { id: 'asc' },
         select: {
           id: true,
           name: true,
@@ -137,13 +137,8 @@ export async function deleteProductById(id: number) {
  */
 export async function updateProductById(
   id: number,
-  data: { 
-    name: string; 
-    description: string; 
-    price: number;
-    type: ProductType;
-    availability: boolean;
-  }
+  data: Partial<Omit<Product, 'id'|'createdAt'|'farmerId'>> // heqim fushat qe nuk i nderrojme dot, 
+  //dhe bejme nullable fushat te cilat nuk kemi nevoje t'i kalojme
 ) {
   try {
     return await prisma.product.update({

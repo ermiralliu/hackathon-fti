@@ -8,28 +8,31 @@ importers:
 
   .:
     dependencies:
+      '@prisma/client':
+        specifier: ^6.6.0
+        version: 6.6.0(prisma@6.6.0(typescript@5.8.3))(typescript@5.8.3)
+      bcrypt:
+        specifier: ^5.1.1
+        version: 5.1.1
+      prisma:
+        specifier: ^6.6.0
+        version: 6.6.0(typescript@5.8.3)
+    devDependencies:
       '@auth/core':
         specifier: ^0.38.0
         version: 0.38.0
       '@auth/sveltekit':
         specifier: ^1.8.0
         version: 1.8.0(@sveltejs/kit@2.20.5(@sveltejs/vite-plugin-svelte@5.0.3(svelte@5.26.1)(vite@6.2.6(@types/node@22.14.1)))(svelte@5.26.1)(vite@6.2.6(@types/node@22.14.1)))(svelte@5.26.1)
-      '@prisma/client':
-        specifier: ^6.6.0
-        version: 6.6.0(prisma@6.6.0(typescript@5.8.3))(typescript@5.8.3)
-      '@sveltejs/adapter-node':
-        specifier: ^5.2.12
-        version: 5.2.12(@sveltejs/kit@2.20.5(@sveltejs/vite-plugin-svelte@5.0.3(svelte@5.26.1)(vite@6.2.6(@types/node@22.14.1)))(svelte@5.26.1)(vite@6.2.6(@types/node@22.14.1)))
-      bcrypt:
-        specifier: ^5.1.1
-        version: 5.1.1
-      uuid:
-        specifier: ^11.1.0
-        version: 11.1.0
-    devDependencies:
       '@sveltejs/adapter-auto':
         specifier: ^4.0.0
         version: 4.0.0(@sveltejs/kit@2.20.5(@sveltejs/vite-plugin-svelte@5.0.3(svelte@5.26.1)(vite@6.2.6(@types/node@22.14.1)))(svelte@5.26.1)(vite@6.2.6(@types/node@22.14.1)))
+      '@sveltejs/adapter-node':
+        specifier: ^5.2.12
+        version: 5.2.12(@sveltejs/kit@2.20.5(@sveltejs/vite-plugin-svelte@5.0.3(svelte@5.26.1)(vite@6.2.6(@types/node@22.14.1)))(svelte@5.26.1)(vite@6.2.6(@types/node@22.14.1)))
+      '@sveltejs/adapter-static':
+        specifier: ^3.0.8
+        version: 3.0.8(@sveltejs/kit@2.20.5(@sveltejs/vite-plugin-svelte@5.0.3(svelte@5.26.1)(vite@6.2.6(@types/node@22.14.1)))(svelte@5.26.1)(vite@6.2.6(@types/node@22.14.1)))
       '@sveltejs/kit':
         specifier: ^2.16.0
         version: 2.20.5(@sveltejs/vite-plugin-svelte@5.0.3(svelte@5.26.1)(vite@6.2.6(@types/node@22.14.1)))(svelte@5.26.1)(vite@6.2.6(@types/node@22.14.1))
@@ -39,12 +42,15 @@ importers:
       '@types/bcrypt':
         specifier: ^5.0.2
         version: 5.0.2
+      '@types/ws':
+        specifier: ^8.18.1
+        version: 8.18.1
       cookie:
         specifier: ^1.0.2
         version: 1.0.2
-      prisma:
-        specifier: ^6.6.0
-        version: 6.6.0(typescript@5.8.3)
+      dotenv:
+        specifier: ^16.5.0
+        version: 16.5.0
       svelte:
         specifier: ^5.0.0
         version: 5.26.1
@@ -54,9 +60,15 @@ importers:
       typescript:
         specifier: ^5.0.0
         version: 5.8.3
+      uuid:
+        specifier: ^11.1.0
+        version: 11.1.0
       vite:
         specifier: ^6.2.5
         version: 6.2.6(@types/node@22.14.1)
+      ws:
+        specifier: ^8.18.1
+        version: 8.18.1
 
 packages:
 
@@ -453,6 +465,11 @@ packages:
     peerDependencies:
       '@sveltejs/kit': ^2.4.0
 
+  '@sveltejs/adapter-static@3.0.8':
+    resolution: {integrity: sha512-YaDrquRpZwfcXbnlDsSrBQNCChVOT9MGuSg+dMAyfsAa1SmiAhrA5jUYUiIMC59G92kIbY/AaQOWcBdq+lh+zg==}
+    peerDependencies:
+      '@sveltejs/kit': ^2.0.0
+
   '@sveltejs/kit@2.20.5':
     resolution: {integrity: sha512-zT/97KvVUo19jEGZa972ls7KICjPCB53j54TVxnEFT5VEwL16G+YFqRVwJbfxh7AmS7/Ptr1rKF7Qt4FBMDNlw==}
     engines: {node: '>=18.13'}
@@ -491,6 +508,9 @@ packages:
 
   '@types/resolve@1.20.2':
     resolution: {integrity: sha512-60BCwRFOZCQhDncwQdxxeOEEkbc5dIMccYLwbxsS4TUNeVECQ/pBJ0j09mrHOl/JJvpRPGwO9SvE4nR2Nb/a4Q==}
+
+  '@types/ws@8.18.1':
+    resolution: {integrity: sha512-ThVF6DCVhA8kUGy+aazFQ4kXQ7E1Ty7A3ypFOe0IcJV8O/M511G99AW24irKrW56Wt44yG9+ij8FaqoBGkuBXg==}
 
   abbrev@1.1.1:
     resolution: {integrity: sha512-nne9/IiQ/hzIhY6pdDnbBtz7DjPTKrY00P/zvPSm5pOFkl6xuGrGnXn/VtTNNfNtAfZ9/1RtehkszU9qcTii0Q==}
@@ -589,6 +609,10 @@ packages:
 
   devalue@5.1.1:
     resolution: {integrity: sha512-maua5KUiapvEwiEAe+XnlZ3Rh0GD+qI1J/nb9vrJc3muPXvcF/8gXYTWF76+5DAqHyDUtOIImEuo0YKE9mshVw==}
+
+  dotenv@16.5.0:
+    resolution: {integrity: sha512-m/C+AwOAr9/W1UOIZUo232ejMNnJAJtYQjUbHoNTBNTJSvqzzDh7vnrei3o3r3m9blf6ZoDkvcw0VmozNRFJxg==}
+    engines: {node: '>=12'}
 
   emoji-regex@8.0.0:
     resolution: {integrity: sha512-MSjYzcWNOA0ewAHpz0MxpYFvwg6yjy1NG3xteoqz644VCo/RPgnr1/GGt+ic3iJTzQ8Eu3TdM14SawnVUmGE6A==}
@@ -971,6 +995,18 @@ packages:
   wrappy@1.0.2:
     resolution: {integrity: sha512-l4Sp/DRseor9wL6EvV2+TuQn63dMkPjZ/sp9XkghTEbV9KlPS1xUsZ3u7/IQO4wxtcFB4bgpQPRcR3QCvezPcQ==}
 
+  ws@8.18.1:
+    resolution: {integrity: sha512-RKW2aJZMXeMxVpnZ6bck+RswznaxmzdULiBr6KY7XkTnW8uvt0iT9H5DkHUChXrc+uurzwa0rVI16n/Xzjdz1w==}
+    engines: {node: '>=10.0.0'}
+    peerDependencies:
+      bufferutil: ^4.0.1
+      utf-8-validate: '>=5.0.2'
+    peerDependenciesMeta:
+      bufferutil:
+        optional: true
+      utf-8-validate:
+        optional: true
+
   yallist@4.0.0:
     resolution: {integrity: sha512-3wdGidZyq5PB084XLES5TpOSRA3wjXAlIWMhum2kRcv/41Sn2emQ0dycQW4uZXLejwKvg6EsvbdlVL+FYEct7A==}
 
@@ -1256,6 +1292,10 @@ snapshots:
       '@sveltejs/kit': 2.20.5(@sveltejs/vite-plugin-svelte@5.0.3(svelte@5.26.1)(vite@6.2.6(@types/node@22.14.1)))(svelte@5.26.1)(vite@6.2.6(@types/node@22.14.1))
       rollup: 4.39.0
 
+  '@sveltejs/adapter-static@3.0.8(@sveltejs/kit@2.20.5(@sveltejs/vite-plugin-svelte@5.0.3(svelte@5.26.1)(vite@6.2.6(@types/node@22.14.1)))(svelte@5.26.1)(vite@6.2.6(@types/node@22.14.1)))':
+    dependencies:
+      '@sveltejs/kit': 2.20.5(@sveltejs/vite-plugin-svelte@5.0.3(svelte@5.26.1)(vite@6.2.6(@types/node@22.14.1)))(svelte@5.26.1)(vite@6.2.6(@types/node@22.14.1))
+
   '@sveltejs/kit@2.20.5(@sveltejs/vite-plugin-svelte@5.0.3(svelte@5.26.1)(vite@6.2.6(@types/node@22.14.1)))(svelte@5.26.1)(vite@6.2.6(@types/node@22.14.1))':
     dependencies:
       '@sveltejs/vite-plugin-svelte': 5.0.3(svelte@5.26.1)(vite@6.2.6(@types/node@22.14.1))
@@ -1308,6 +1348,10 @@ snapshots:
       undici-types: 6.21.0
 
   '@types/resolve@1.20.2': {}
+
+  '@types/ws@8.18.1':
+    dependencies:
+      '@types/node': 22.14.1
 
   abbrev@1.1.1: {}
 
@@ -1378,6 +1422,8 @@ snapshots:
   detect-libc@2.0.3: {}
 
   devalue@5.1.1: {}
+
+  dotenv@16.5.0: {}
 
   emoji-regex@8.0.0: {}
 
@@ -1751,6 +1797,8 @@ snapshots:
       string-width: 4.2.3
 
   wrappy@1.0.2: {}
+
+  ws@8.18.1: {}
 
   yallist@4.0.0: {}
 

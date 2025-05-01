@@ -1,20 +1,18 @@
 <script lang="ts">
+
 	import { page } from '$app/state';
   import { base } from '$app/paths';
-
-  const status = page.status;
-  const message = page.error?.message;
 
 </script>
 
 <svelte:head>
-	<title>{status} | Oops!</title>
+	<title>{page.status} | Oops!</title>
 </svelte:head>
 
 <div class="error-page">
 	<div class="error-content">
-		<h1 class="error-title">{status}</h1>
-		<p class="error-message">{message}</p>
+		<h1 class="error-title">{page.status}</h1>
+		<p class="error-message">{page.error?.message}</p>
 		<p class="error-suggestion">
 			Maybe you can <a href="{base}/">go back to the homepage</a>?
 		</p>
@@ -27,15 +25,12 @@
 		justify-content: center;
 		align-items: center;
 		min-height: 100vh;
-		background-color: #f4f4f4;
-		color: #333;
 		font-family: sans-serif;
 	}
 
 	.error-content {
 		text-align: center;
 		padding: 2rem;
-		background-color: #fff;
 		border-radius: 8px;
 		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 	}

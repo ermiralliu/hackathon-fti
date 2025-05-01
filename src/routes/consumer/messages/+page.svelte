@@ -45,18 +45,7 @@
   </div>
 
   <style>
-    /* Base Styles */
-    :global(body) {
-      margin: 0;
-      padding: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #f8f9fa;
-      color: #212529;
-      min-width: 320px; /* Prevent horizontal scrolling on very narrow screens */
-    }
-  
-    
-    
+ 
     .tab-content {
       max-width: 1200px;
       margin: 0 auto;

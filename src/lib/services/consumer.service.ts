@@ -1,6 +1,6 @@
-import prisma from "$lib/prisma";
+import prisma from "../prisma";
 
-export async function paginateProductRequest( page = 1, pageSize = 6, consumerId: number){ // do shtohen extra arguments per search me specifike
+export async function paginateProductRequest(consumerId: number, page = 1, pageSize = 6){ // do shtohen extra arguments per search me specifike
   const skip = (page - 1) * pageSize;
   const take = pageSize;
 

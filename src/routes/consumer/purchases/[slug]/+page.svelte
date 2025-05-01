@@ -22,7 +22,9 @@
           <tr>
             <td> {item.message ? item.message : "N/A"}</td>
             <td>
-              {new Date(item.createdAt).toLocaleString()}
+              <time datetime="{item.createdAt.toISOString()}">
+                {item.createdAt.toDateString()}
+              </time>
             </td>
             <td> {item.productId}</td>
             <td> {item.status}</td>
@@ -30,9 +32,13 @@
               {item.quantity ? item.quantity : "N/A"}
             </td>
             <td>
-              {item.finished
-                ? new Date(item.finished).toLocaleString()
-                : "Not Finished"}
+              {#if item.finished}
+                <time>
+                {item.finished}
+                </time>
+              {:else}
+                "Not Finished"
+              {/if}
             </td></tr
           >
         {/each}
