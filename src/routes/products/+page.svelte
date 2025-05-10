@@ -4,6 +4,9 @@
   import { enhance } from "$app/forms";
   import { type ProductType, type Product } from "$prisma-client";
 
+  import styles from '$lib/client/components/modal-footer.module.css';
+  console.log(styles);
+
   import ModalDialog from "$lib/client/components/modalDialog.svelte";
   import ProductCard from "$lib/client/components/productCard.svelte";
 
@@ -142,11 +145,11 @@
         value={selectedProduct?.id ?? -1}
         required
       />
-      <footer class="modal-footer">
+      <footer class={styles['modal-footer']}>
         <button class="primary" type="submit">Confirm</button>
         <button
           type="button"
-          style:background-color="darkred"
+          class="reject-btn"
           onclick={closeModal}>Cancel</button
         >
       </footer>
@@ -159,64 +162,20 @@
     display: flex;
     flex-direction: column;
     gap: 0.8rem;
+    padding-bottom: 0;
   }
 
   form.modal-form label {
     display: block;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.3rem;
     font-weight: 600;
-    /* color: #333; */
-  }
-
-  form.modal-form input[type="text"] {
-    width: 100%;
-    padding: 0.5rem 0.75rem;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 0.9rem;
-    margin-bottom: 0.5rem;
-    height: 36px;
-    box-sizing: border-box;
   }
 
   form.modal-form p {
     margin: 0 0 1rem 0;
-    /* color: #555; */
     line-height: 1.5;
   }
 
-  .modal-footer {
-    display: flex;
-    justify-content: flex-end;
-    gap: 1rem;
-    padding: 1.5rem;
-    border-top: 1px solid #eee;
-  }
-
-  .modal-footer button {
-    padding: 0.75rem 1.5rem;
-    border-radius: 6px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    width: auto;
-    min-width: 100px;
-    border: 1px solid transparent;
-  }
-
-  @media (max-width: 600px) {
-    .modal-footer {
-      padding: 1rem;
-    }
-
-    .modal-footer {
-      flex-direction: column;
-    }
-
-    .modal-footer button {
-      width: 100%;
-    }
-  }
   .products-container {
     max-width: 1200px;
     margin: 0 auto;

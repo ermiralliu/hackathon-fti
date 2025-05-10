@@ -51,8 +51,8 @@
     /* This container might not need its own background if html/body handles it,
      or it might represent the main content block background */
     background-color: var(
-      --color-bg-component
-    ); /* Use component bg for content area inside page bg */
+      --color-bg-page
+    );
     /* display: flex; */
     min-height: 100vh;
     min-width: 320px;

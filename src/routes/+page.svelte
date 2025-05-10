@@ -1,4 +1,5 @@
 <script>
+  import Card from "$lib/client/components/card.svelte";
   import verticalTransition from "$lib/client/transitions/verticalTransition";
   import { fade } from "svelte/transition";
 </script>
@@ -30,18 +31,18 @@
   <section class="how-it-works-section">
     <h2 class="section-title">Si funksionon?</h2>
     <div class="steps">
-      <div class="step">
+      <Card class="step">
         <h3 class="step-title">1. Regjistrohu</h3>
         <p>Krijo një llogari si fermer ose konsumator.</p>
-      </div>
-      <div class="step">
+      </Card>
+      <Card class="step">
         <h3 class="step-title">2. Publiko ose shfleto</h3>
         <p>Fermerët publikojnë produkte, konsumatorët i shfletojnë.</p>
-      </div>
-      <div class="step">
+      </Card>
+      <Card class="step">
         <h3 class="step-title">3. Bëj kërkesë</h3>
         <p>Bli direkt nga fermeri – pa ndërmjetës!</p>
-      </div>
+      </Card>
     </div>
   </section>
 
@@ -93,6 +94,7 @@
     max-width: 800px;
     padding: 0 0.5rem;
   }
+  
   .cta-section {
     margin: auto 1rem;
   }
@@ -155,29 +157,22 @@
   .steps {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 1rem;
     padding: 0 1rem;
   }
 
-  .step {
-    background-color: var(--color-bg-component);
-    padding: 1.5rem;
-    border-radius: 10px;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    transition: transform 0.3s ease;
+  :global(.step){
+    padding: 20px 15px;
   }
 
-  .step:hover {
-    transform: translateY(-5px);
-  }
-
-  .step-title {
+  :global(.step) h3{
+    margin-top: 0;
+    
     font-size: clamp(1.25rem, 3vw, 1.5rem);
-    margin-bottom: 0.75rem;
+    margin-bottom: 0.5rem;
   }
 
-  .step p {
+  :global(.step) p {
     color: var(--color-text-secondary);
     margin: 0;
     font-size: clamp(1rem, 2.5vw, 1.1rem);
@@ -213,16 +208,12 @@
     .steps {
       flex-direction: row;
       justify-content: space-between;
-      gap: 2rem;
-      padding: 0;
     }
 
-    .step {
+    :global(.step) {
       flex: 1;
-      min-width: 0;
       display: flex;
       flex-direction: column;
-      justify-content: flex-start;
     }
 
     .about-description {
@@ -235,11 +226,7 @@
       padding: 3rem 2rem;
     }
 
-    .steps {
-      gap: 3rem;
-    }
-
-    .step {
+    :global(.step) {
       padding: 2rem;
     }
   }

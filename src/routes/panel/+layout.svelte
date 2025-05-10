@@ -39,3 +39,9 @@
   <!-- The out animation in defined in PanelAside -->
   {@render children()}
 </PanelAside>
+
+<style>
+    :global(.main-header){
+    margin-top: 0;
+  }
+</style>

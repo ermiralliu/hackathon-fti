@@ -6,7 +6,7 @@
   import ModalDialog from "$lib/client/components/modalDialog.svelte";
   import ProductCard from "$lib/client/components/productCard.svelte";
   import type { Product, ProductType } from "$prisma-client";
-  import { fade } from "svelte/transition";
+  import styles from '$lib/client/components/modal-footer.module.css'
   let { data } = $props();
 
   let { products, currentPage, totalPages } = $derived(data.productData);
@@ -64,7 +64,7 @@
 </svelte:head>
 
 <main class="products-container">
-  <h1>Your Products 🌱</h1>
+  <h1 class="main-header">Your Products 🌱</h1>
   {#if !products.length}
     <div class="empty-state">
       <p>No products available at the moment.</p>
@@ -139,10 +139,8 @@
         </div>
       </div>
     {/if}
-  {/snippet}
-  {#snippet footer()}
     <form method="POST" action="?/deleteProduct" use:enhance>
-      <div class="modal-footer">
+      <div class={styles['modal-footer']}>
         <input
           type="hidden"
           name="productId"
@@ -310,14 +308,6 @@
 {/if} -->
 
 <style>
-  .modal-footer {
-    display: flex;
-  }
-
-  .modal-footer button {
-    padding: 8px 16px;
-  }
-
   .products-container {
     max-width: 1200px;
     margin: 0 auto;

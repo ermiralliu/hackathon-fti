@@ -185,6 +185,9 @@ button {
     box-shadow 0.2s ease-in-out;
   cursor: pointer;
 }
+.reject-btn{
+  background-color: rgb(190, 12, 12);
+}
 
 button:disabled {
   cursor: not-allowed;
@@ -193,6 +196,9 @@ button:disabled {
 button:hover {
   background-color: var(--button-primary-hover-bg);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+}
+.reject-btn:hover{
+  background-color: rgb(160, 28, 28);
 }
 
 input::placeholder,

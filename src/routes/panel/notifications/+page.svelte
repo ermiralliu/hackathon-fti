@@ -38,7 +38,7 @@
 </svelte:head>
 
 <main class="requests-container">
-  <h1>Purchase Requests 📋</h1>
+  <h1 class="main-header">Purchase Requests 📋</h1>
 
   {#if !data.purchaseRequests}
     <div class="loading-spinner">
@@ -191,6 +191,7 @@
 </ModalDialog>
 
 <style>
+
   .requests-grid > li {
     margin-bottom: 5px;
     list-style-type: none;

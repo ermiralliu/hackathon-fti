@@ -56,10 +56,6 @@
     <div class="modal-body">
       {@render body()}
     </div>
-
-    <footer class="status-actions">
-      {@render footer?.()}
-    </footer>
   </div>
 </dialog>
 
@@ -118,6 +114,7 @@
 
   .modal {
     padding: 1.5rem;
+    padding-top: 1rem;
     background-color: var(--color-bg-component);
     color: var(--color-text-primary);
   }
@@ -127,7 +124,7 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 1rem;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid #e0e0e0;
     padding-bottom: 1rem;
   }
 
@@ -136,12 +133,5 @@
     border: none;
     font-size: 1.5rem;
     cursor: pointer;
-  }
-  /* This last part just makes anything added to the footer a flex container */
-  .status-actions {
-    display: flex;
-    gap: 0.5rem;
-    margin-top: 1.5rem;
-    flex-wrap: wrap;
   }
 </style>

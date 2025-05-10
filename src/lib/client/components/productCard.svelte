@@ -1,20 +1,29 @@
 <script lang="ts">
-  import type { Product } from "$prisma-client";
+  import type { Product, ProductType } from "$prisma-client";
   import Card from "./card.svelte";
+  export interface ProductDto {
+    name: string;
+    type: ProductType;
+    price: number | null; // kto null do behen undefined maybe, idk
+    imagePath: string | null;
+    farmer: {
+      name: string| null;
+    };
+  }
   let {
     product,
     selectedProduct = $bindable(),
     show = $bindable(),
-  }: { product: Product & {farmer: {name:string|null}}; selectedProduct: Product|null ; show: boolean } = $props();
+  }: {
+    product: ProductDto;
+    selectedProduct?: ProductDto | Product | null;
+    show?: boolean;
+  } = $props();
 </script>
 
 <Card>
   <div class="product-image">
-    <img
-      src={product.imagePath}
-      alt={product.name}
-      loading="lazy"
-    />
+    <img src={product.imagePath} alt={product.name} loading="lazy" />
     <!-- {#if product.isOrganic} // we have to add isOrganic to the database table
           <span class="organic-badge">Organic</span>
         {/if} -->
@@ -26,19 +35,20 @@
       <span class="price">{product.price}€</span>
       <span class="farmer">By {product.farmer.name}</span>
     </div>
-    <button
-      onclick={() => {
-        selectedProduct = product;
-        show = true;
-      }}
-    >
-      Me shume
-    </button>
+    {#if show !== undefined }
+      <button
+        onclick={() => {
+          selectedProduct = product;
+          show = true;
+        }}
+      >
+        Me shume
+      </button>
+    {/if}
   </div>
 </Card>
 
 <style>
-  
   .product-image {
     position: relative;
     height: 200px;
@@ -102,5 +112,4 @@
     font-size: 0.8rem;
     color: #888;
   }
-
 </style>
