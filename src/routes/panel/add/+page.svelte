@@ -1,6 +1,20 @@
 <script lang="ts">
   import { enhance } from "$app/forms";
-  import { fade } from "svelte/transition";
+  import ModalDialog from "$lib/client/components/modalDialog.svelte";
+  import styles from "$lib/client/components/modal-footer.module.css";
+  import ProductCard from "$lib/client/components/productCard.svelte";
+
+  let { form } = $props();
+
+  let inputs = {
+    name : null,
+    productType : null,
+    price : null,
+  } as {
+    name: HTMLInputElement| null,
+    productType: HTMLSelectElement| null,
+    price: HTMLInputElement| null
+  }
 
   let currentImage: null | File = $state(null);
   let imagePreview = $state("");
@@ -16,11 +30,33 @@
     }
   }
 
-  let firstInputToFocus: HTMLInputElement;
+  let showConfirmDialog = $state(false);
+  let showSuccessDialog = $state(false);
+
+  $inspect("Form success: ", form?.success);
 
   $effect(() => {
-    setTimeout(() => firstInputToFocus.focus(), 600);
+    setTimeout(() => inputs.name?.focus(), 600);
   });
+  $effect(()=>{
+    if(form?.success){
+      showSuccessDialog = true;
+      currentImage = null;
+      imagePreview = '';
+    }
+  })
+
+  function validateForm() {
+    for( const [_, input] of Object.entries(inputs)){
+      if( input?.value.trim() === ''){
+        input.reportValidity();
+        return false;
+      }
+    }
+    if(currentImage === null)
+      return false;
+    return true;
+  }
 </script>
 
 <svelte:head>
@@ -28,10 +64,11 @@
   <meta name="description" content="Add Products to sell" />
 </svelte:head>
 
-<div class="tab-content" transition:fade={{ duration: 200 }}>
+<div class="tab-content">
   <h2>Add New Product</h2>
   <!-- Add enctype attribute here -->
   <form
+    id="additionForm"
     use:enhance
     method="POST"
     action="?/create"
@@ -45,7 +82,7 @@
         type="text"
         name="name"
         placeholder="Enter product name"
-        bind:this={firstInputToFocus}
+        bind:this={inputs.name}
         required
       />
     </div>
@@ -53,7 +90,7 @@
     <!-- Product Type -->
     <div class="form-group">
       <label for="product-type">Product Type</label>
-      <select id="product-type" name="type" required>
+      <select id="product-type" name="type"  bind:this={inputs.productType} required>
         <option value="" selected disabled>-- Select type --</option>
         <option value="fruit">Fruit</option>
         <option value="vegetable">Vegetable</option>
@@ -68,6 +105,7 @@
     <div class="form-group">
       <label for="product-price">Price ($)</label>
       <input
+        bind:this={inputs.price}
         id="product-price"
         type="number"
         name="price"
@@ -105,27 +143,75 @@
     </div>
 
     <!-- Submit Button -->
-    <button type="submit" class="submit-btn">Add Product</button>
+    <button
+      type="button"
+      class="submit-btn"
+      onclick={()=>{
+        if(validateForm())
+          showConfirmDialog = true
+      }
+      }>Add Product</button
+    >
   </form>
 </div>
+
+<ModalDialog bind:show={showConfirmDialog}>
+  {#snippet header()}
+    <h2>Confirm</h2>
+  {/snippet}
+  {#snippet body()}
+    <p>
+      Are you sure you want to proceed to add this product in your catalog?
+    </p>
+    <footer class={styles["modal-footer"]}>
+      <button
+        type="submit"
+        form="additionForm"
+        onclick={() => (showConfirmDialog = false)}>Yes</button
+      >
+      <button
+        type="button"
+        class="reject-btn"
+        onclick={() => (showConfirmDialog = false)}>No</button
+      >
+    </footer>
+  {/snippet}
+</ModalDialog>
+
+<ModalDialog bind:show={showSuccessDialog}>
+  {#snippet header()}
+    <h2>Addition Successful</h2>
+  {/snippet}
+  {#snippet body()}
+    <p>You successfully added this product to your catalogue</p>
+    {#if form?.product}
+      <ProductCard product={form?.product} selectedProduct={form?.product}/>
+    {/if}
+    <footer class={styles['modal-footer']}>
+      <button type="button" class="reject-btn" onclick={() => showSuccessDialog = false}>
+        Close
+      </button>
+    </footer>
+  {/snippet}
+</ModalDialog>
 
 <style>
   :root {
     --card-shadow: rgba(0, 0, 0, 0.25);
-    --tab-content-bg-color: var(--color-bg-component)
+    --tab-content-bg-color: var(--color-bg-component);
   }
 
-  :global(.dark-mode) {
+  :global(:root):has(:global(#theme-switch):checked) {
     --card-shadow: rgba(0, 0, 0, 0.4);
     --tab-content-bg-color: var(--color-bg-hover);
   }
-  
+
   /* --- Tab Content Container (The Card) --- */
   .tab-content {
     max-width: 1200px;
     padding: 30px 50px;
     margin: 20px auto;
-    margin-top:0;
+    margin-top: 0;
     background-color: var(--tab-content-bg-color);
     border-radius: 8px;
     box-shadow: 0 4px 12px var(--card-shadow);
@@ -156,7 +242,7 @@
   .form-group {
     margin-bottom: 20px;
   }
-  
+
   /* Adjust margin for smaller screens */
   @media (max-width: 400px) {
     .form-group {
@@ -229,7 +315,7 @@
     /* .content{
       width: 100%;
     } */
-    .tab-content{
+    .tab-content {
       width: 100%;
     }
   }
@@ -258,5 +344,4 @@
       max-height: 150px; /* Reduce height on smaller screens */
     }
   }
-
 </style>

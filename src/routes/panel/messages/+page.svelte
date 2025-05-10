@@ -1,23 +1,20 @@
 <script>
-// @ts-nocheck
 
     import { fade } from "svelte/transition";
 
-
-
      // Messages
   let activeChat = null;
-  let messages = $state([]);
-  // svelte-ignore non_reactive_update
-    let newMessage = '';
+  // let messages = $state([]);
+  // // svelte-ignore non_reactive_update
+  //   let newMessage = '';
 
-  // Send message
-  function sendMessage() {
-    if (newMessage.trim()) {
-      messages.update(m => [...m, { sender: 'You', text: newMessage }]);
-      newMessage = '';
-    }
-  }
+  // // Send message
+  // function sendMessage() {
+  //   if (newMessage.trim()) {
+  //     messages.update(m => [...m, { sender: 'You', text: newMessage }]);
+  //     newMessage = '';
+  //   }
+  // }
 </script>
 
 <svelte:head>
@@ -25,14 +22,14 @@
   <meta name="description" content="Chat Room" />
 </svelte:head>
 
-<div class="tab-content"  transition:fade={{duration: 200}}>
+<div class="tab-content">
     <h2>Messages</h2>
     {#if activeChat}
       <div class="chat-container">
         <div class="chat-header">
           <h3>Chat with {activeChat}</h3>
         </div>
-        <div class="messages">
+        <!-- <div class="messages">
           {#each $messages as message}
             <div class="message {message.sender === 'You' ? 'sent' : 'received'}">
               <strong>{message.sender}:</strong> {message.text}
@@ -47,7 +44,7 @@
             onkeydown={(e) => e.key === 'Enter' && sendMessage()}
           />
           <button onclick={sendMessage}>Send</button>
-        </div>
+        </div> -->
       </div>
     {:else}
       <p>No active chats. Accept a purchase request to start chatting.</p>
@@ -60,6 +57,7 @@
     .tab-content {
       max-width: 1200px;
       margin: 0 auto;
+      padding: 1rem 0.5rem;
     }
     
     /* Chat */

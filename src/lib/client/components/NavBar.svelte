@@ -17,7 +17,7 @@
     { name: "Panel", link: "/panel" },
   ];
 
-  let { isLogged }: { isLogged: boolean } = $props();
+  let { isLogged, isDark }: { isLogged: boolean, isDark: boolean } = $props();
 
   let dropdownOpen = $state(false);
   let dropdownVisibility = $state(false);
@@ -68,15 +68,28 @@
   };
 
   // The section here is all about dark mode toggle
-  let isDarkMode = $state(false);
+  let isDarkMode = $state(isDark);
 
   onMount(() => {
-    if (!browser || !window.localStorage) return;
+    if (!browser) return;
+
     const id = "theme-switch";
-    if (localStorage.getItem(`toggle-switch-${id}-preference`)) return;
+    // if (localStorage.getItem(`toggle-switch-${id}-preference`)) return;
 
     function applyTheme(isDark: boolean) {
       isDarkMode = isDark;
+    }
+
+    const cookieKey = `preference-${id}`;
+    const cookies = document.cookie.split("; ");
+    const themeCookie = cookies.find(cookie =>
+      cookie.startsWith(cookieKey + "="),
+    );
+
+    if (themeCookie) {
+      const cookieValue = themeCookie.split("=")[1];
+      isDarkMode = cookieValue === "on";
+      return;
     }
 
     if (
@@ -89,13 +102,13 @@
     }
   });
 
-  $effect(() => {
-    if (isDarkMode && !document.body.classList.contains("dark-mode")) {
-      document.body.classList.add("dark-mode");
-    } else if (!isDarkMode && document.body.classList.contains("dark-mode")) {
-      document.body.classList.remove("dark-mode");
-    }
-  });
+  // $effect(() => {
+  //   if (isDarkMode && !document.body.classList.contains("dark-mode")) {
+  //     document.body.classList.add("dark-mode");
+  //   } else if (!isDarkMode && document.body.classList.contains("dark-mode")) {
+  //     document.body.classList.remove("dark-mode");
+  //   }
+  // });
 
   // The section in here will be all about sq, en language toggle
   let isEnglish = $state(true);
@@ -189,10 +202,9 @@
 />
 
 <style>
-
   :root {
     /* --- Navbar Color Variables (Modified) --- */
-    --header-bg: #2c3e50; 
+    --header-bg: #2c3e50;
     /* --header-bg: #2c3e50;  */
     /* --header-bg: var(--color-text-accent); */
     --header-link-color: lightgray;
@@ -210,8 +222,8 @@
     --trigger-hover-bg: rgba(0, 0, 0, 0.05);
   }
 
-  :global(.dark-mode) {
-    --header-bg: #030303; 
+  :global(:root):has(:global(#theme-switch):checked) {
+    --header-bg: #030303;
     --header-link-color: var(--color-text-primary);
     --header-link-hover-color: var(--color-accent);
     --header-shadow: var(--color-shadow);
@@ -417,7 +429,6 @@
 
   /* Mobile Media Query */
   @media (max-width: 768px) {
-
     .nav-left {
       margin-left: 0;
     }

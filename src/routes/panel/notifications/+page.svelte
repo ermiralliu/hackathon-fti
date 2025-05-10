@@ -2,6 +2,7 @@
 <script lang="ts">
   import { enhance } from "$app/forms";
   import { goto } from "$app/navigation";
+  import Card from "$lib/client/components/card.svelte";
   import InfoRow from "$lib/client/components/infoRow.svelte";
   import ModalDialog from "$lib/client/components/modalDialog.svelte";
   import type { Status } from "$prisma-client";
@@ -15,12 +16,8 @@
   }
   $inspect(show);
 
-  let purchaseRequests = $derived(data.purchaseRequests.requests || []);
-  let currentPage = $derived(data.purchaseRequests.currentPage);
-  let totalPages = $derived(data.purchaseRequests.totalPages);
-
-  let selectedRequest: null | (typeof purchaseRequests)[0] = $state(null);
-  let modalView: HTMLDialogElement; // I'll need to check, cause I think there's probably a better way, but just to remove the error for now
+  let selectedRequest: null | (typeof data.purchaseRequests.requests)[0] =
+    $state(null);
 
   // Pagination functions
   function changePage(page: number) {
@@ -28,11 +25,10 @@
   }
 
   function getPageNumbers() {
-    let pages = [];
-    for (let i = 1; i <= totalPages; i++) {
-      pages.push(i);
-    }
-    return pages;
+    return Array.from(
+      { length: data.purchaseRequests.totalPages },
+      (_, i) => i + 1,
+    );
   }
 </script>
 
@@ -41,76 +37,95 @@
   <meta name="description" content="Notifications from buyers" />
 </svelte:head>
 
-<main class="requests-container" transition:fade={{ duration: 200 }}>
-  <h1>Purchase Requests 📋</h1>
+<main class="requests-container">
+  <h1 class="main-header">Purchase Requests 📋</h1>
 
-  {#if !purchaseRequests}
+  {#if !data.purchaseRequests}
     <div class="loading-spinner">
       <div class="spinner"></div>
       <p>Loading purchase requests...</p>
     </div>
-  {:else if !purchaseRequests.length}
+  {:else if !data.purchaseRequests.requests.length}
     <div class="empty-state">
       <p>No purchase requests available.</p>
     </div>
   {:else}
-    <div class="requests-grid">
-      {#each purchaseRequests as request (request.id)}
-        <article class="request-card" in:fade={{ duration: 300 }}>
-          <div class="request-header">
-            <h3>Request #{request.id}</h3>
-            <span class={`status-badge ${request.status.toLowerCase()}`}>
-              {request.status}
-            </span>
-          </div>
-
-          <dl class="request-details">
-            <dt><strong>Product:</strong></dt>
-            <dd>{request.product.name}</dd>
-            <dt><strong>From:</strong></dt>
-            <dd>{request.consumer.name}</dd>
-            {#if request.quantity}
-              <dt><strong>Quantity:</strong></dt>
-              <dd>{request.quantity}</dd>
-            {/if}
-            <dt><strong>Date:</strong></dt>
-            <dd>
-              <time datetime={request.createdAt.toISOString()}>
-                {request.createdAt.toDateString()}
-              </time>
-            </dd>
-          </dl>
-
-          <div class="request-actions">
-            <button
-              onclick={() => {
-                selectedRequest = request;
-                show = true;
-              }}
-            >
-              View Details
-            </button>
-          </div>
-        </article>
+    <ul class="requests-grid">
+      {#each data.purchaseRequests.requests as request (request.id)}
+        <li>
+          <Card class="notification-item">
+            <div class="request-header-notification">
+              <h3 class="request-id">Request #{request.id}</h3>
+              <span
+                class={[
+                  "status-badge",
+                  `status-${request.status.toLowerCase()}`,
+                ]}
+              >
+                {request.status}
+              </span>
+            </div>
+            <dl class="request-details-notification">
+              <div class="detail-pair">
+                <dt><strong>Product:</strong></dt>
+                <dd>{request.product.name}</dd>
+              </div>
+              <div class="detail-pair">
+                <dt><strong>From:</strong></dt>
+                <dd>{request.consumer.name}</dd>
+              </div>
+              {#if request.quantity}
+                <div class="detail-pair">
+                  <dt><strong>Quantity:</strong></dt>
+                  <dd>{request.quantity}</dd>
+                </div>
+              {/if}
+              <div class="detail-pair">
+                <dt><strong>Date:</strong></dt>
+                <dd>
+                  <time datetime={request.createdAt.toISOString()}>
+                    {request.createdAt.toDateString()}
+                  </time>
+                </dd>
+              </div>
+            </dl>
+            <div class="request-actions-notification">
+              <button
+                class="view-details-button"
+                onclick={() => {
+                  selectedRequest = request;
+                  show = true;
+                }}
+              >
+                View Details
+              </button>
+            </div>
+          </Card>
+        </li>
       {/each}
-    </div>
-    {#if totalPages < 1}
+    </ul>
+    {#if data.purchaseRequests.totalPages < 1}
       <div class="pagination">
-        {#if currentPage > 1}
-          <button onclick={() => changePage(currentPage - 1)}>Previous</button>
+        {#if data.purchaseRequests.currentPage > 1}
+          <button
+            onclick={() => changePage(data.purchaseRequests.currentPage - 1)}
+            >Previous</button
+          >
         {/if}
 
         {#each getPageNumbers() as pageNumber}
           <button
-            class:active={pageNumber === currentPage}
+            class:active={pageNumber === data.purchaseRequests.currentPage}
             onclick={() => changePage(pageNumber)}
           >
             {pageNumber}
           </button>
         {/each}
 
-        {#if currentPage < totalPages}
-          <button onclick={() => changePage(Number(currentPage) + 1)}
+        {#if data.purchaseRequests.currentPage < data.purchaseRequests.totalPages}
+          <button
+            onclick={() =>
+              changePage(Number(data.purchaseRequests.currentPage) + 1)}
             >Next</button
           >
         {/if}
@@ -176,6 +191,71 @@
 </ModalDialog>
 
 <style>
+
+  .requests-grid > li {
+    margin-bottom: 5px;
+    list-style-type: none;
+  }
+
+  :global(.notification-item) {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin: 0;
+    padding: 0 3%;
+  }
+
+  .request-header-notification {
+    display: flex;
+    align-items: center;
+  }
+
+  .request-id {
+    margin-right: 10px;
+  }
+
+  .status-badge {
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 0.8em;
+  }
+
+  .status-badge.status-open {
+    background-color: #e0f7fa;
+    color: #00acc1;
+  }
+
+  .status-badge.status-pending {
+    background-color: #fffde7;
+    color: #fbc02d;
+  }
+
+  .status-badge.status-closed {
+    background-color: #f1f8e9;
+    color: #4caf50;
+  }
+
+  .request-details-notification {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0;
+    width: 60%;
+  }
+
+  .detail-pair {
+    margin-right: 15px;
+  }
+
+  .detail-pair dt {
+    display: inline;
+  }
+
+  .detail-pair dd {
+    display: inline;
+    margin-left: 5px;
+  }
+
   .requests-container {
     max-width: 1200px;
     margin: 0 auto;
@@ -188,11 +268,11 @@
     font-size: 2rem;
   }
 
-  .requests-grid {
+  /* .requests-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 1.5rem;
-  }
+  } */
 
   .request-card {
     background-color: var(--color-bg-active);
@@ -233,16 +313,6 @@
   .status-badge.rejected {
     background-color: #f8d7da;
     color: #721c24;
-  }
-
-  .request-details {
-    margin-bottom: 1rem;
-  }
-
-  .request-actions button {
-    width: 100%;
-    padding: 0.75rem;
-    font-weight: 600;
   }
 
   .reject-btn {
