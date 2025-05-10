@@ -15,18 +15,27 @@
   } = $props();
 
   const localStorageKey = `toggle-switch-${id}-preference`;
+  const cookieKey = `preference-${id}`;
+  const maxAgeSeconds = 31536000; // 1 year in seconds
 
-  onMount(() => {
-    if (!browser || !window.localStorage) return;
-    const item = localStorage.getItem(localStorageKey);
-    if (!item) return;
-    isOn = item == "on" ? true : false;
-  });
+  // onMount(() => {
+  //   if (!browser || !window.localStorage) return;
+  //   const item = localStorage.getItem(localStorageKey);
+  //   if (!item) return;
+  //   isOn = item == "on" ? true : false;
+  // });
 
-  $effect(() => {
-    if (!browser || !window.localStorage) return;
-    console.log(`Saving ${id} preference: ${isOn}`);
-    localStorage.setItem(localStorageKey, isOn ? "on" : "off");
+  // $effect(() => {
+  //   if (!browser || !window.localStorage) return;
+  //   console.log(`Saving ${id} preference: ${isOn}`);
+  //   localStorage.setItem(localStorageKey, isOn ? "on" : "off");
+  // });
+  
+  $effect(()=>{
+    if (browser) {
+      console.log(`Saving ${id} preference to cookie: ${isOn}`);
+      document.cookie = `${cookieKey}=${isOn ? 'on' : 'off'}; max-age=${maxAgeSeconds}; path=/`;
+    }
   });
 
 </script>
@@ -73,7 +82,7 @@
     --toggle-switch-thumb-color: #fff;
   }
 
-  :global(.dark-mode){
+  :global(:root):has(:global(#theme-switch):checked){
     --toggle-switch-text-color: rgb(212, 212, 212);
     --toggle-switch-color:rgb(245, 245, 245);
     --toggle-switch-color-active: black;

@@ -36,5 +36,6 @@
 </script>
 
 <PanelAside {tabs} {activeTab}>
+  <!-- The out animation in defined in PanelAside -->
   {@render children()}
 </PanelAside>

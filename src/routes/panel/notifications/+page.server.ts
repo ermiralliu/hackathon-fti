@@ -17,7 +17,7 @@ export const load: PageServerLoad = async ({url, locals }) => {
   console.log(page);
   return{
     purchaseRequests: {
-        requests: requestsData.requests,
+        requests: requestsData.requests || [],
         currentPage: requestsData.currentPage,
         totalPages: requestsData.totalPages,
         totalCount: requestsData.totalCount

@@ -53,9 +53,9 @@ export default function verticalTransition(
     easing,
     // Use (1 - t) to animate FROM the original value TO 0
     css: (t: number) => `
+    padding-top: ${(t) * oPT}${paddingTopUnit};
+    padding-bottom: ${(t) * oPB}${paddingBottomUnit};
           height: ${(t) * oHeight}${heightUnit};
-          padding-top: ${(t) * oPT}${paddingTopUnit};
-          padding-bottom: ${(t) * oPB}${paddingBottomUnit};
           margin-top: ${(t) * oMT}${marginTopUnit};
           margin-bottom: ${(t) * oMB}${marginBottomUnit};
           opacity: ${t}; /* Also animate opacity from 1 down to 0 */

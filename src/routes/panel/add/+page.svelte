@@ -28,7 +28,7 @@
   <meta name="description" content="Add Products to sell" />
 </svelte:head>
 
-<div class="tab-content" transition:fade={{ duration: 200 }}>
+<div class="tab-content">
   <h2>Add New Product</h2>
   <!-- Add enctype attribute here -->
   <form
@@ -115,7 +115,7 @@
     --tab-content-bg-color: var(--color-bg-component)
   }
 
-  :global(.dark-mode) {
+  :global(:root):has(:global(#theme-switch):checked) {
     --card-shadow: rgba(0, 0, 0, 0.4);
     --tab-content-bg-color: var(--color-bg-hover);
   }

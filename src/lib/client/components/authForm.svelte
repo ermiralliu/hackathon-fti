@@ -88,7 +88,7 @@
     --card-shadow: rgba(0, 0, 0, 0.25);
   }
 
-  :global(.dark-mode) {
+  :global(:root):has(:global(#theme-switch):checked) {
     --card-shadow: rgba(0, 0, 0, 0.4);
   }
 

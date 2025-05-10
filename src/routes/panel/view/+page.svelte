@@ -4,67 +4,30 @@
 
   import { goto } from "$app/navigation";
   import ModalDialog from "$lib/client/components/modalDialog.svelte";
+  import ProductCard from "$lib/client/components/productCard.svelte";
   import type { Product, ProductType } from "$prisma-client";
   import { fade } from "svelte/transition";
   let { data } = $props();
 
-  let products = $derived(data.products.products || []);
-  let isLoading = $derived(false);
-  let error = $derived(false);
-  let currentPage = $derived(data.products.currentPage);
-  let totalPages = $derived(data.products.totalPages);
+  let { products, currentPage, totalPages } = $derived(data.productData);
 
   function changePage(page: number) {
     goto(`/panel/view?page=${page}`, { noScroll: true });
   }
 
   function getPageNumbers() {
-    let pages = [];
-    for (let i = 1; i <= totalPages; i++) {
-      pages.push(i);
-    }
-    return pages;
+    return Array.from({ length: data.productData.totalPages }, (_, i) => i + 1)
   }
 
   let selectedProduct: null | Product = $state(null);
   let showViewModal = $state(false);
   let showEditModal = $state(false);
-  // Kto dy poshte duhet te shikohen gjithashtu, cause I think the usage of states here might be unnecessary
-  // let modalView: null | HTMLDialogElement = $state(null);
-  let modalEdit: null | HTMLDialogElement = $state(null);
 
-  // $effect(() => {
-  //   if (showViewModal && modalView) {
-  //     modalView.showModal();
-  //   } else if (showViewModal && !modalView) {
-  //     console.error("View modal element not found");
-  //   }
-
-  //   if (showEditModal && modalEdit) {
-  //     modalEdit.showModal();
-  //   } else if (showEditModal && !modalEdit) {
-  //     console.error("Edit modal element not found");
-  //   }
-  // });
-
-  function openViewModal(product: Product) {
-    selectedProduct = product;
-    showViewModal = true;
-    showEditModal = false;
-  }
-  // function closeModals() {
-  //   if (showViewModal && modalView) modalView.close();
-  //   if (showEditModal && modalEdit) modalEdit.close();
-  //   showViewModal = false;
-  //   showEditModal = false;
-  //   isEditing = false;
-  //   selectedProduct = null;
+  // async function reloadProducts() {
+  //   const response = await fetch(`?page=${currentPage}`);
+  //   const data = await response.json();
+  //   products = data.products.products || [];
   // }
-  async function reloadProducts() {
-    const response = await fetch(`?page=${currentPage}`);
-    const data = await response.json();
-    products = data.products.products || [];
-  }
 
   function openEditModal() {
     if (!selectedProduct) return;
@@ -74,7 +37,7 @@
     showEditModal = true;
   }
 
-  let isEditing = $state(false);
+  // let isEditing = $state(false);
   // A lot of questionable stuff here (more stuff we need to check)
   let editValues = $state({
     id: -1 as number,
@@ -85,11 +48,11 @@
     imagePath: null as null | File | string,
   });
 
-  function startEditing() {
-    if (selectedProduct === null) return;
-    editValues = selectedProduct;
-    isEditing = true;
-  }
+  // function startEditing() {
+  //   if (selectedProduct === null) return;
+  //   editValues = selectedProduct;
+  //   isEditing = true;
+  // }
 </script>
 
 <svelte:head>
@@ -100,56 +63,16 @@
   />
 </svelte:head>
 
-<main class="products-container" transition:fade={{ duration: 200 }}>
+<main class="products-container">
   <h1>Your Products 🌱</h1>
-
-  {#if isLoading}
-    <div class="loading-spinner">
-      <div class="spinner"></div>
-      <p>Loading fresh products...</p>
-    </div>
-  {:else if error}
-    <div class="error-message">
-      <p>⚠️ Error loading products: {error}</p>
-      <button onclick={reloadProducts}>Try Again</button>
-    </div>
-  {:else if !products.length}
+  {#if !products.length}
     <div class="empty-state">
       <p>No products available at the moment.</p>
     </div>
   {:else}
     <div class="product-grid">
       {#each products as product (product.id)}
-        <article class="product-card">
-          <div in:fade={{ duration: 700 }} out:fade>
-            {console.log(product.imagePath)}
-            <div class="product-image">
-              <img
-                src={"../../.." + product.imagePath}
-                alt={product.name}
-                loading="lazy"
-              />
-              <!-- {#if product.isOrganic}
-                <span class="organic-badge">Organic</span>
-              {/if} -->
-            </div>
-            <div class="product-details">
-              <h2>{product.name}</h2>
-              <p class="product-description">{product.type}</p>
-              <div class="product-meta">
-                <span class="price">{product.price}€</span>
-                <span class="farmer">By {product.farmer.name}</span>
-              </div>
-              <button
-                onclick={() => {
-                  (selectedProduct = product), openViewModal(product);
-                }}
-              >
-                Me shume
-              </button>
-            </div>
-          </div>
-        </article>
+        <ProductCard {product} bind:selectedProduct bind:show={showViewModal} />
       {/each}
     </div>
     {#if totalPages > 1}
@@ -414,75 +337,14 @@
     padding: 0.5rem;
   }
 
-  .product-card {
-    background: var(--color-bg-active);
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-    transition:
-      transform 0.3s ease,
-      box-shadow 0.3s ease;
-  }
-
-  .product-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-  }
-
   .product-image {
     position: relative;
     height: 200px;
     overflow: hidden;
   }
 
-  .product-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.3s ease;
-  }
-
-  .product-card:hover .product-image img {
-    transform: scale(1.05);
-  }
-
   .product-details {
     padding: 1.25rem;
-  }
-
-  .product-details h2 {
-    margin: 0 0 0.5rem 0;
-    font-size: 1.25rem;
-    /* color: #333; */
-  }
-
-  .product-description {
-    /* color: #666; */
-    font-size: 0.9rem;
-    margin-bottom: 1rem;
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-
-  .product-meta {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1rem;
-  }
-
-  .price {
-    font-weight: bold;
-    /* color: #2b6e30; */
-    font-size: 1.1rem;
-  }
-
-  .farmer {
-    font-size: 0.8rem;
-    color: #888;
   }
 
   button {
@@ -535,8 +397,7 @@
     flex-direction: column;
   }
 
-
-/* 
+  /* 
   .modal-header {
     display: flex;
     justify-content: space-between;

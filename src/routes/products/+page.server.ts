@@ -17,7 +17,7 @@ export const load: PageServerLoad =  async({ url }) => {  // the docs use arrow 
   const products = await paginate(page, 6, searchString, typeFilter); // kto paginate do emertohen into sth better
 
   return {
-    products: products,
+    products: products || [],
     allTypes: Object.keys(ProductType),
   }
 };

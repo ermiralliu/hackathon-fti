@@ -11,7 +11,7 @@ export const load: PageServerLoad = async ({url, locals }) => {
   const products = await paginateUserProducts(locals.user ? locals.user.id : 1, page) //params.limit, params.sort, params.search, params.category);
   console.log(page);
   return{
-      products: products
+      productData: products
   }
 }
 
