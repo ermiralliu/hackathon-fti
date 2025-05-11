@@ -1,0 +1,44 @@
+{
+  "title": "MerrBio",
+  "description": "Mirë se vini në MerrBio",
+  "hero_title": "Mirë se vini në MerrBio 🌿",
+  "hero_description": "Lidh konsumatorët me fermerët vendas për ushqim të freskët dhe organik.",
+  "hero_button": "Shfleto Produktet",
+  "about_title": "Çfarë është MerrBio?",
+  "about_description": "MerrBio është një platformë që ndihmon fermerët vendas të shesin drejtpërdrejt tek konsumatorët që kërkojnë cilësi, freski dhe produkte organike. Misioni ynë është të forcojmë ekonominë lokale dhe të promovojmë qëndrueshmërinë.",
+  "how_it_works_title": "Si funksionon?",
+  "step_1_title": "1. Regjistrohu",
+  "step_1_description": "Krijo një llogari si fermer ose konsumator.",
+  "step_2_title": "2. Publiko ose shfleto",
+  "step_2_description": "Fermerët publikojnë produkte, konsumatorët i shfletojnë.",
+  "step_3_title": "3. Bëj kërkesë",
+  "step_3_description": "Bli direkt nga fermeri – pa ndërmjetës!",
+  "cta_title": "Gati për të filluar?",
+  "cta_description": "Bashkohu me qindra përdorues që besojnë tek produktet lokale dhe të freskëta.",
+  "cta_button": "Regjistrohu Tani",
+
+  
+  "header": {
+    "toggleSidebar": "Ndrysho Anësorin",
+    "menuIcon": "☰",
+    "userMenu": "Menuja e Përdoruesit",
+    "userIcon": "👤",
+    "themeToggleLabel": "Modaliteti i Errët",
+    "toggleThemeAriaLabel": "Ndrysho modalitetin e dritës ose errësirës",
+    "toggleLanguageAriaLabel": "Ndrysho gjuhën ndërmjet Anglishtes dhe Shqipes",
+    "profile": "Profili",
+    "settings": "Cilësimet",
+    "logOut": "Dil",
+    "logOutAriaLabel": "Dil nga llogaria",
+    "logIn": "Hyr"
+  },
+  "nav": {
+    "home": "Kryefaqja",
+    "browse": "Shfleto Produktet",
+    "panel": "Panel"
+  },
+  "languages": {
+    "en": "Anglisht",
+    "al": "Shqip"
+  }
+}

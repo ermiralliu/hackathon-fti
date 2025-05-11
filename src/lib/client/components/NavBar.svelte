@@ -3,31 +3,30 @@
   import { goto } from "$app/navigation";
   import type { SubmitFunction, ActionResult } from "@sveltejs/kit";
   import type { MouseEventHandler } from "svelte/elements";
-
   import sidebarButton, {
     toggleOpen,
   } from "$lib/client/globalStates/sidebarButton.svelte";
   import InputSwitch from "./inputSwitch.svelte";
   import { onMount } from "svelte";
   import { browser } from "$app/environment";
-
-  let tabs = [
-    { name: "Home", link: "/" },
-    { name: "Browse Products", link: "/products" },
-    { name: "Panel", link: "/panel" },
+  
+  const tabs = [
+    { name: "Home", link: "/", i18nKey: 'nav.home' },
+    { name: "Browse Products", link: "/products", i18nKey: 'nav.browse' },
+    { name: "Panel", link: "/panel", i18nKey: 'nav.panel' },
   ];
-
-  let { isLogged, isDark }: { isLogged: boolean, isDark: boolean } = $props();
+  
+  let { isLogged, isDark }: { isLogged: boolean; isDark: boolean } = $props();
 
   let dropdownOpen = $state(false);
   let dropdownVisibility = $state(false);
   let dropdownRef: HTMLMenuElement;
-
+  
   const handleLogout: SubmitFunction = () => {
     console.log("Form Called");
     return async ({ result }: { result: ActionResult }) => {
       console.log(JSON.stringify(result));
-
+      
       console.log("Form result received");
       const res = result as ActionResult & { success: boolean };
       if (res.success) {
@@ -36,17 +35,17 @@
       }
     };
   };
-
+  
   let closeTimeoutId: NodeJS.Timeout | undefined;
 
   function toggleDropdown(e?: MouseEvent) {
     e?.stopPropagation(); // this was key. It stops document from immediately closing it
-
+    
     const nextDropdownOpen = !dropdownOpen;
-
+    
     clearTimeout(closeTimeoutId);
     closeTimeoutId = undefined; // Reset the ID
-
+    
     if (nextDropdownOpen) {
       dropdownVisibility = true;
     } else {
@@ -54,11 +53,11 @@
         dropdownVisibility = false;
       }, 200);
     }
-
+    
     // Update the primary state immediately
     dropdownOpen = nextDropdownOpen;
   }
-
+  
   const softNavigation: MouseEventHandler<HTMLAnchorElement> = e => {
     e.preventDefault();
     toggleDropdown();
@@ -66,32 +65,48 @@
     console.log(target.href);
     goto(target.href);
   };
-
+  
   // The section here is all about dark mode toggle
   let isDarkMode = $state(isDark);
-
-  onMount(() => {
+  import { waitLocale } from 'svelte-i18n';
+  import {  initI18n } from '$lib/i18n';
+  export type FormatXMLElementFn<T, R = string | T | (string | T)[]> = (parts: Array<string | T>) => R;
+  type InterpolationValues = Record<string, string | number | boolean | Date | FormatXMLElementFn<unknown> | null | undefined> | undefined;
+  interface MessageObject {
+    id: string;
+    locale?: string;
+    format?: string;
+    default?: string;
+    values?: InterpolationValues;
+}
+  type MessageFormatter = (id: string | MessageObject, options?: Omit<MessageObject, 'id'>) => string;
+  let translator: Readable<MessageFormatter>;
+  initI18n().then( () => import('$lib/i18n').then((imported)=>{translator = imported.t}));
+  waitLocale();
+  
+  onMount( async () => {
     if (!browser) return;
-
+    console.log("awaited success");
+    
     const id = "theme-switch";
     // if (localStorage.getItem(`toggle-switch-${id}-preference`)) return;
-
+    
     function applyTheme(isDark: boolean) {
       isDarkMode = isDark;
     }
-
+    
     const cookieKey = `preference-${id}`;
     const cookies = document.cookie.split("; ");
     const themeCookie = cookies.find(cookie =>
-      cookie.startsWith(cookieKey + "="),
-    );
-
-    if (themeCookie) {
-      const cookieValue = themeCookie.split("=")[1];
-      isDarkMode = cookieValue === "on";
+    cookie.startsWith(cookieKey + "="),
+  );
+  
+  if (themeCookie) {
+    const cookieValue = themeCookie.split("=")[1];
+    isDarkMode = cookieValue === "on";
       return;
     }
-
+    
     if (
       window.matchMedia &&
       window.matchMedia("(prefers-color-scheme: dark)").matches
@@ -101,17 +116,31 @@
       applyTheme(false);
     }
   });
-
-  // $effect(() => {
-  //   if (isDarkMode && !document.body.classList.contains("dark-mode")) {
-  //     document.body.classList.add("dark-mode");
-  //   } else if (!isDarkMode && document.body.classList.contains("dark-mode")) {
-  //     document.body.classList.remove("dark-mode");
-  //   }
-  // });
-
+  
   // The section in here will be all about sq, en language toggle
-  let isEnglish = $state(true);
+  import { page } from "$app/state";
+  import type { Readable } from "svelte/store";
+  let isEnglish = $state(page.url.pathname.includes('/en'));
+  $inspect("English: " + isEnglish);
+  $effect(() => {
+    const pathname = page.url.pathname;
+    const invalidateAll = { invalidateAll: true };
+    $inspect(pathname);
+    function gotoSomewhere(wrongLang: string, correctLang: string){
+      if (pathname.includes(correctLang)) return;
+      if(pathname.includes(wrongLang)){
+        goto(pathname.replace(wrongLang, correctLang), invalidateAll);
+      }
+      else{
+        goto(correctLang+ pathname, invalidateAll);
+      }
+    }
+    if (isEnglish) {
+      gotoSomewhere('/al', '/en')
+    } else {
+      gotoSomewhere('/en', '/al');
+    }
+  });
 </script>
 
 <header>
@@ -121,14 +150,14 @@
         class="mobile-menu-button"
         class:hidden={!sidebarButton.isPanelPage}
         aria-hidden={!sidebarButton.isPanelPage}
-        aria-label="Toggle Sidebar"
+        aria-label={$translator('header.toggleSidebar')}
         onclick={toggleOpen}
       >
         ☰
       </button>
       <ul>
         {#each tabs as tab}
-          <li><a href={tab.link}>{tab.name}</a></li>
+          <li><a href={tab.link}>{$translator(tab.i18nKey)}</a></li>
         {/each}
       </ul>
     </div>
@@ -137,8 +166,8 @@
     <button
       class="user-dropdown-trigger"
       aria-haspopup="menu"
-      aria-expanded="false"
-      aria-label="User menu"
+      aria-expanded={dropdownOpen}
+      aria-label={$translator('header.userMenu')}
       onclick={toggleDropdown}
     >
       👤
@@ -153,36 +182,37 @@
         <InputSwitch
           id="theme-switch"
           bind:isOn={isDarkMode}
-          labelText="Theme Toggle"
-          ariaLabel="Toggle light or dark mode"
+          labelText={$translator('header.themeToggleLabel')}
+          ariaLabel={$translator('header.toggleThemeAriaLabel')}
         />
       </li>
       <li role="none" class="theme-switch-li">
         <InputSwitch
           id="language-switch"
           bind:isOn={isEnglish}
-          labelText={isEnglish ? "English" : "Shqip"}
-          ariaLabel="Toggle Albanian or English"
+          labelText={isEnglish ? $translator('languages.en') : $translator('languages.al')}
+          ariaLabel={$translator('header.toggleLanguageAriaLabel')}
         />
       </li>
       {#if isLogged}
         <li role="none">
-          <a href="/profile" role="menuitem" onclick={softNavigation}>Profile</a
+          <a href="/profile" role="menuitem" onclick={softNavigation}
+            >{$translator('header.profile')}</a
           >
         </li>
         <li role="none">
-          <a href="/settings" role="menuitem">Settings</a>
+          <a href="/settings" role="menuitem">{$translator('header.settings')}</a>
         </li>
         <li role="none" class="logout-li">
           <form method="POST" action="/logout" use:enhance={handleLogout}>
-            <button type="submit" aria-label="Log Out" class="logout-btn"
-              >Log Out</button
+            <button type="submit" aria-label={$translator('header.logOutAriaLabel')} class="logout-btn"
+              >{$translator('header.logOut')}</button
             >
           </form>
         </li>
       {:else}
         <li role="none">
-          <a href="/login" role="menuitem" onclick={softNavigation}>Log In</a>
+          <a href="/login" role="menuitem" onclick={softNavigation}>{$translator('header.logIn')}</a>
         </li>
       {/if}
     </menu>

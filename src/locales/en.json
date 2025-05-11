@@ -1,0 +1,44 @@
+{
+  "title": "MerrBio",
+  "description": "Welcome to MerrBio",
+  "hero_title": "Welcome to MerrBio 🌿",
+  "hero_description": "Connect consumers with local farmers for fresh and organic food.",
+  "hero_button": "Browse Products",
+  "about_title": "What is MerrBio?",
+  "about_description": "MerrBio is a platform that helps local farmers sell directly to consumers seeking quality, freshness, and organic products. Our mission is to strengthen the local economy and promote sustainability.",
+  "how_it_works_title": "How does it work?",
+  "step_1_title": "1. Register",
+  "step_1_description": "Create an account as a farmer or consumer.",
+  "step_2_title": "2. Publish or Browse",
+  "step_2_description": "Farmers publish products, consumers browse them.",
+  "step_3_title": "3. Make a Request",
+  "step_3_description": "Buy directly from the farmer – without intermediaries!",
+  "cta_title": "Ready to get started?",
+  "cta_description": "Join hundreds of users who believe in local and fresh products.",
+  "cta_button": "Register Now",
+
+  
+  "header": {
+    "toggleSidebar": "Toggle Sidebar",
+    "menuIcon": "☰",
+    "userMenu": "User menu",
+    "userIcon": "👤",
+    "themeToggleLabel": "Dark Mode",
+    "toggleThemeAriaLabel": "Toggle light or dark mode",
+    "toggleLanguageAriaLabel": "Switch language between English and Albanian",
+    "profile": "Profile",
+    "settings": "Settings",
+    "logOut": "Log Out",
+    "logOutAriaLabel": "Log Out",
+    "logIn": "Log In"
+  },
+  "nav": {
+    "home": "Home",
+    "browse": "Browse Products",
+    "panel": "Panel"
+  },
+  "languages": {
+    "en": "English",
+    "al": "Albanian"
+  }
+}

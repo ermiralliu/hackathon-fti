@@ -1,58 +1,55 @@
 <script>
+  import { t } from '$lib/i18n';
   import Card from "$lib/client/components/card.svelte";
   import verticalTransition from "$lib/client/transitions/verticalTransition";
   import { fade } from "svelte/transition";
 </script>
 
 <svelte:head>
-  <title>MerrBio</title>
-  <meta name="description" content="Welcome to MerrBio" />
+  <title>{$t('title')}</title>
+  <meta name="description" content={$t('description')} />
 </svelte:head>
 
 <main in:fade out:verticalTransition>
   <section class="hero-section">
-    <h1 class="hero-title">Mirë se vini në MerrBio 🌿</h1>
+    <h1 class="hero-title">{$t('hero_title')}</h1>
     <p class="hero-description">
-      Lidh konsumatorët me fermerët vendas për ushqim të freskët dhe organik.
+      {$t('hero_description')}
     </p>
-    <a class="main-btn" href="/products">Shfleto Produktet</a>
+    <a class="main-btn" href="/products">{$t('hero_button')}</a>
   </section>
 
   <section class="about-section">
-    <h2 class="about-title">Çfarë është MerrBio?</h2>
+    <h2 class="about-title">{$t('about_title')}</h2>
     <p class="about-description">
-      MerrBio është një platformë që ndihmon fermerët vendas të shesin
-      drejtpërdrejt tek konsumatorët që kërkojnë cilësi, freski dhe produkte
-      organike. Misioni ynë është të forcojmë ekonominë lokale dhe të promovojmë
-      qëndrueshmërinë.
+      {$t('about_description')}
     </p>
   </section>
 
   <section class="how-it-works-section">
-    <h2 class="section-title">Si funksionon?</h2>
+    <h2 class="section-title">{$t('how_it_works_title')}</h2>
     <div class="steps">
       <Card class="step">
-        <h3 class="step-title">1. Regjistrohu</h3>
-        <p>Krijo një llogari si fermer ose konsumator.</p>
+        <h3 class="step-title">{$t('step_1_title')}</h3>
+        <p>{$t('step_1_description')}</p>
       </Card>
       <Card class="step">
-        <h3 class="step-title">2. Publiko ose shfleto</h3>
-        <p>Fermerët publikojnë produkte, konsumatorët i shfletojnë.</p>
+        <h3 class="step-title">{$t('step_2_title')}</h3>
+        <p>{$t('step_2_description')}</p>
       </Card>
       <Card class="step">
-        <h3 class="step-title">3. Bëj kërkesë</h3>
-        <p>Bli direkt nga fermeri – pa ndërmjetës!</p>
+        <h3 class="step-title">{$t('step_3_title')}</h3>
+        <p>{$t('step_3_description')}</p>
       </Card>
     </div>
   </section>
 
   <section class="cta-section">
-    <h2 class="cta-title">Gati për të filluar?</h2>
+    <h2 class="cta-title">{$t('cta_title')}</h2>
     <p class="cta-description">
-      Bashkohu me qindra përdorues që besojnë tek produktet lokale dhe të
-      freskëta.
+      {$t('cta_description')}
     </p>
-    <a href="/register" class="main-btn">Regjistrohu Tani</a>
+    <a href="/register" class="main-btn">{$t('cta_button')}</a>
   </section>
 </main>
 
