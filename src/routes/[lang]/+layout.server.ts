@@ -13,8 +13,8 @@ export const load: LayoutServerLoad = async ({locals, cookies, params, url}) => 
   }
 
   const lang = params.lang;
-  console.log("Lang: ", lang);
-  await loadTranslations(lang, url.pathname);
+  // console.log("Lang: ", lang);
+  // await loadTranslations(lang, url.pathname);
 
   return {
     lang,

@@ -15,9 +15,7 @@
   $effect(() => {
     console.log('loading other language');
     locale.set(data.lang);
-    loadTranslations(data.lang, page.url.pathname)?.then(()=>{
-      console.log('loaded language successfully');
-    }).catch( e => {console.log('problem happened')});
+    loadTranslations(data.lang, page.url.pathname);
   });
 
 </script>
