@@ -1,7 +1,7 @@
-import { locale as activeLocale, defaultLocale, initI18n, supportedLocales, translator } from "$lib/i18n";
+import { loadTranslations } from "$lib/translations";
 import type { LayoutServerLoad } from "./$types";
 
-export const load: LayoutServerLoad = async ({locals, cookies, url}) => {
+export const load: LayoutServerLoad = async ({locals, cookies, params, url}) => {
   let isLogged = false;
   const themeCookie = cookies.get('preference-theme-switch');
   console.log(themeCookie);
@@ -12,19 +12,12 @@ export const load: LayoutServerLoad = async ({locals, cookies, url}) => {
     isDarkMode = true;
   }
 
-  const pathLang = url.pathname.split('/')[1];
-  let langToSet = defaultLocale; // Fallback to defaultLocale
-
-  if (supportedLocales.includes(pathLang)) {
-    langToSet = pathLang;
-  }
-  if(!translator.initialized)
-    await initI18n();
-  await activeLocale.set(langToSet);
-  console.log("is it initialized: ", translator.initialized);
-
+  const lang = params.lang;
+  console.log("Lang: ", lang);
+  await loadTranslations(lang, url.pathname);
 
   return {
+    lang,
     isLogged,
     isDark: isDarkMode
   }

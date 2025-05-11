@@ -15,30 +15,5 @@
   "step_3_description": "Buy directly from the farmer – without intermediaries!",
   "cta_title": "Ready to get started?",
   "cta_description": "Join hundreds of users who believe in local and fresh products.",
-  "cta_button": "Register Now",
-
-  
-  "header": {
-    "toggleSidebar": "Toggle Sidebar",
-    "menuIcon": "☰",
-    "userMenu": "User menu",
-    "userIcon": "👤",
-    "themeToggleLabel": "Dark Mode",
-    "toggleThemeAriaLabel": "Toggle light or dark mode",
-    "toggleLanguageAriaLabel": "Switch language between English and Albanian",
-    "profile": "Profile",
-    "settings": "Settings",
-    "logOut": "Log Out",
-    "logOutAriaLabel": "Log Out",
-    "logIn": "Log In"
-  },
-  "nav": {
-    "home": "Home",
-    "browse": "Browse Products",
-    "panel": "Panel"
-  },
-  "languages": {
-    "en": "English",
-    "al": "Albanian"
-  }
+  "cta_button": "Register Now"
 }

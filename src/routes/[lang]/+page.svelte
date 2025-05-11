@@ -1,55 +1,55 @@
 <script>
-  import { t } from '$lib/i18n';
+  import { t } from '$lib/translations';
   import Card from "$lib/client/components/card.svelte";
   import verticalTransition from "$lib/client/transitions/verticalTransition";
   import { fade } from "svelte/transition";
 </script>
 
 <svelte:head>
-  <title>{$t('title')}</title>
-  <meta name="description" content={$t('description')} />
+  <title>{$t('home.title')}</title>
+  <meta name="description" content={$t('home.description')} />
 </svelte:head>
 
 <main in:fade out:verticalTransition>
   <section class="hero-section">
-    <h1 class="hero-title">{$t('hero_title')}</h1>
+    <h1 class="hero-title">{$t('home.hero_title')}</h1>
     <p class="hero-description">
-      {$t('hero_description')}
+      {$t('home.hero_description')}
     </p>
-    <a class="main-btn" href="/products">{$t('hero_button')}</a>
+    <a class="main-btn" href="/products">{$t('home.hero_button')}</a>
   </section>
 
   <section class="about-section">
-    <h2 class="about-title">{$t('about_title')}</h2>
+    <h2 class="about-title">{$t('home.about_title')}</h2>
     <p class="about-description">
-      {$t('about_description')}
+      {$t('home.about_description')}
     </p>
   </section>
 
   <section class="how-it-works-section">
-    <h2 class="section-title">{$t('how_it_works_title')}</h2>
+    <h2 class="section-title">{$t('home.how_it_works_title')}</h2>
     <div class="steps">
       <Card class="step">
-        <h3 class="step-title">{$t('step_1_title')}</h3>
-        <p>{$t('step_1_description')}</p>
+        <h3 class="step-title">{$t('home.step_1_title')}</h3>
+        <p>{$t('home.step_1_description')}</p>
       </Card>
       <Card class="step">
-        <h3 class="step-title">{$t('step_2_title')}</h3>
-        <p>{$t('step_2_description')}</p>
+        <h3 class="step-title">{$t('home.step_2_title')}</h3>
+        <p>{$t('home.step_2_description')}</p>
       </Card>
       <Card class="step">
-        <h3 class="step-title">{$t('step_3_title')}</h3>
-        <p>{$t('step_3_description')}</p>
+        <h3 class="step-title">{$t('home.step_3_title')}</h3>
+        <p>{$t('home.step_3_description')}</p>
       </Card>
     </div>
   </section>
 
   <section class="cta-section">
-    <h2 class="cta-title">{$t('cta_title')}</h2>
+    <h2 class="cta-title">{$t('home.cta_title')}</h2>
     <p class="cta-description">
-      {$t('cta_description')}
+      {$t('home.cta_description')}
     </p>
-    <a href="/register" class="main-btn">{$t('cta_button')}</a>
+    <a href="/register" class="main-btn">{$t('home.cta_button')}</a>
   </section>
 </main>
 

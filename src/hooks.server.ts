@@ -1,9 +1,11 @@
 import { redirect, type Handle } from '@sveltejs/kit';
 import { getUserBySessionId } from '$lib/services/auth.service';
 import { getSessionIdFromCookie } from '$lib/helpers/session.helper';
-import { defaultLocale, locale, supportedLocales } from '$lib/i18n';
 
 const allAllowed = ['/products', '/login', '/register', '/logout']; // top level routes
+
+const defaultLocale = 'sq';
+const supportedLocales = ['sq', 'en'];
 
 export const handle: Handle = async ({ event, resolve }) => {
   let user = null;
@@ -19,7 +21,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 
   const { pathname } = event.url;
   const lang = pathname.split('/')[1];
-
+  
   const hasLanguagePrefix = supportedLocales.includes(lang);
   // Redirect to default locale if no prefix and not the root path
   // Redirect to default locale if no language prefix and it's the root path
@@ -30,23 +32,24 @@ export const handle: Handle = async ({ event, resolve }) => {
   if (!hasLanguagePrefix && pathname !== '/' && !allAllowed.includes(pathname)) {
     throw redirect(303, `/${defaultLocale}${pathname}`);
   }
-
+  
   const isPublic = [
     '/',
     ...supportedLocales.map(loc => '/' + loc),
     ...allAllowed.map(route => (hasLanguagePrefix ? `/${lang}${route}` : route)),
   ].some(e => pathname.startsWith(e));
-
+  
   if (isPublic) {
     // If it's a public page, resolve it.  The resolveSuccess function is now redundant
     if (hasLanguagePrefix) {
       // locale.set(lang);
-
       return await resolve(event, {
         transformPageChunk: ({ html }) => html.replace('%lang%', lang),
       });
     }
-    return await resolve(event);
+    return await resolve(event,{
+      transformPageChunk: ({ html }) => html.replace('%lang%', defaultLocale),
+    });
   }
 
   const isTopRouteOfCurrentUrl = (route: string) => pathname.startsWith(route) || (pathname === route);
@@ -59,7 +62,6 @@ export const handle: Handle = async ({ event, resolve }) => {
     throw redirect(303, `/${lang}/consumer/purchases/1`);
   }
 
-  // locale.set(lang);
   return await resolve(event, {
     transformPageChunk: ({ html }) => html.replace('%lang%', lang),
   });

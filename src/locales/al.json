@@ -15,30 +15,5 @@
   "step_3_description": "Bli direkt nga fermeri – pa ndërmjetës!",
   "cta_title": "Gati për të filluar?",
   "cta_description": "Bashkohu me qindra përdorues që besojnë tek produktet lokale dhe të freskëta.",
-  "cta_button": "Regjistrohu Tani",
-
-  
-  "header": {
-    "toggleSidebar": "Ndrysho Anësorin",
-    "menuIcon": "☰",
-    "userMenu": "Menuja e Përdoruesit",
-    "userIcon": "👤",
-    "themeToggleLabel": "Modaliteti i Errët",
-    "toggleThemeAriaLabel": "Ndrysho modalitetin e dritës ose errësirës",
-    "toggleLanguageAriaLabel": "Ndrysho gjuhën ndërmjet Anglishtes dhe Shqipes",
-    "profile": "Profili",
-    "settings": "Cilësimet",
-    "logOut": "Dil",
-    "logOutAriaLabel": "Dil nga llogaria",
-    "logIn": "Hyr"
-  },
-  "nav": {
-    "home": "Kryefaqja",
-    "browse": "Shfleto Produktet",
-    "panel": "Panel"
-  },
-  "languages": {
-    "en": "Anglisht",
-    "al": "Shqip"
-  }
+  "cta_button": "Regjistrohu Tani"
 }

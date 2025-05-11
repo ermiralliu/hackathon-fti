@@ -16,7 +16,7 @@
     { name: "Panel", link: "/panel", i18nKey: 'nav.panel' },
   ];
   
-  let { isLogged, isDark }: { isLogged: boolean; isDark: boolean } = $props();
+  let { isLogged, isDark, lang }: { isLogged: boolean; isDark: boolean; lang?: 'en'|'sq' } = $props();
 
   let dropdownOpen = $state(false);
   let dropdownVisibility = $state(false);
@@ -68,21 +68,6 @@
   
   // The section here is all about dark mode toggle
   let isDarkMode = $state(isDark);
-  import { waitLocale } from 'svelte-i18n';
-  import {  initI18n } from '$lib/i18n';
-  export type FormatXMLElementFn<T, R = string | T | (string | T)[]> = (parts: Array<string | T>) => R;
-  type InterpolationValues = Record<string, string | number | boolean | Date | FormatXMLElementFn<unknown> | null | undefined> | undefined;
-  interface MessageObject {
-    id: string;
-    locale?: string;
-    format?: string;
-    default?: string;
-    values?: InterpolationValues;
-}
-  type MessageFormatter = (id: string | MessageObject, options?: Omit<MessageObject, 'id'>) => string;
-  let translator: Readable<MessageFormatter>;
-  initI18n().then( () => import('$lib/i18n').then((imported)=>{translator = imported.t}));
-  waitLocale();
   
   onMount( async () => {
     if (!browser) return;
@@ -119,28 +104,31 @@
   
   // The section in here will be all about sq, en language toggle
   import { page } from "$app/state";
-  import type { Readable } from "svelte/store";
-  let isEnglish = $state(page.url.pathname.includes('/en'));
+  let isEnglish = $state(lang === 'en');
+
   $inspect("English: " + isEnglish);
   $effect(() => {
     const pathname = page.url.pathname;
-    const invalidateAll = { invalidateAll: true };
+    // const invalidateAll = { invalidateAll: false };
+    const noScroll = {noScroll: true};
     $inspect(pathname);
     function gotoSomewhere(wrongLang: string, correctLang: string){
       if (pathname.includes(correctLang)) return;
       if(pathname.includes(wrongLang)){
-        goto(pathname.replace(wrongLang, correctLang), invalidateAll);
+        goto(pathname.replace(wrongLang, correctLang), noScroll);
       }
       else{
-        goto(correctLang+ pathname, invalidateAll);
+        goto(correctLang+ pathname, noScroll);
       }
     }
     if (isEnglish) {
-      gotoSomewhere('/al', '/en')
+      gotoSomewhere('/sq', '/en')
     } else {
-      gotoSomewhere('/en', '/al');
+      gotoSomewhere('/en', '/sq');
     }
   });
+
+  import { t } from '$lib/translations';
 </script>
 
 <header>
@@ -150,14 +138,14 @@
         class="mobile-menu-button"
         class:hidden={!sidebarButton.isPanelPage}
         aria-hidden={!sidebarButton.isPanelPage}
-        aria-label={$translator('header.toggleSidebar')}
+        aria-label={$t('top-bar.header.toggleSidebar')}
         onclick={toggleOpen}
       >
         ☰
       </button>
       <ul>
         {#each tabs as tab}
-          <li><a href={tab.link}>{$translator(tab.i18nKey)}</a></li>
+          <li><a href={tab.link}>{$t('top-bar.'+tab.i18nKey)}</a></li>
         {/each}
       </ul>
     </div>
@@ -167,7 +155,7 @@
       class="user-dropdown-trigger"
       aria-haspopup="menu"
       aria-expanded={dropdownOpen}
-      aria-label={$translator('header.userMenu')}
+      aria-label={$t('top-bar.header.userMenu')}
       onclick={toggleDropdown}
     >
       👤
@@ -182,37 +170,37 @@
         <InputSwitch
           id="theme-switch"
           bind:isOn={isDarkMode}
-          labelText={$translator('header.themeToggleLabel')}
-          ariaLabel={$translator('header.toggleThemeAriaLabel')}
+          labelText={$t('top-bar.header.themeToggleLabel')}
+          ariaLabel={$t('top-bar.header.toggleThemeAriaLabel')}
         />
       </li>
       <li role="none" class="theme-switch-li">
         <InputSwitch
           id="language-switch"
           bind:isOn={isEnglish}
-          labelText={isEnglish ? $translator('languages.en') : $translator('languages.al')}
-          ariaLabel={$translator('header.toggleLanguageAriaLabel')}
+          labelText={isEnglish ? $t('top-bar.languages.en') : $t('top-bar.languages.al')}
+          ariaLabel={$t('top-bar.header.toggleLanguageAriaLabel')}
         />
       </li>
       {#if isLogged}
         <li role="none">
           <a href="/profile" role="menuitem" onclick={softNavigation}
-            >{$translator('header.profile')}</a
+            >{$t('top-bar.header.profile')}</a
           >
         </li>
         <li role="none">
-          <a href="/settings" role="menuitem">{$translator('header.settings')}</a>
+          <a href="/settings" role="menuitem">{$t('top-bar.header.settings')}</a>
         </li>
         <li role="none" class="logout-li">
           <form method="POST" action="/logout" use:enhance={handleLogout}>
-            <button type="submit" aria-label={$translator('header.logOutAriaLabel')} class="logout-btn"
-              >{$translator('header.logOut')}</button
+            <button type="submit" aria-label={$t('top-bar.header.logOutAriaLabel')} class="logout-btn"
+              >{$t('top-bar.header.logOut')}</button
             >
           </form>
         </li>
       {:else}
         <li role="none">
-          <a href="/login" role="menuitem" onclick={softNavigation}>{$translator('header.logIn')}</a>
+          <a href="/login" role="menuitem" onclick={softNavigation}>{$t('top-bar.header.logIn')}</a>
         </li>
       {/if}
     </menu>

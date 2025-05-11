@@ -1,0 +1,23 @@
+{
+  "header": {
+    "toggleSidebar": "Ndrysho Anësorin",
+    "userMenu": "Menuja e Përdoruesit",
+    "themeToggleLabel": "Errët",
+    "toggleThemeAriaLabel": "Ndrysho modalitetin e dritës ose errësirës",
+    "toggleLanguageAriaLabel": "Ndrysho gjuhën ndërmjet Anglishtes dhe Shqipes",
+    "profile": "Profili",
+    "settings": "Cilësimet",
+    "logOut": "Dil",
+    "logOutAriaLabel": "Dil nga llogaria",
+    "logIn": "Hyr"
+  },
+  "nav": {
+    "home": "Kryefaqja",
+    "browse": "Shfleto Produktet",
+    "panel": "Panel"
+  },
+  "languages": {
+    "en": "Anglisht",
+    "al": "Shqip"
+  }
+}
