@@ -20,6 +20,6 @@
 
 </script>
 
-<NavBar isLogged={data.isLogged} isDark={data.isDark} lang={data.lang} />
+<NavBar {...data}/>
 
 {@render children()}

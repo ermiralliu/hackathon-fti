@@ -3,11 +3,14 @@
   import Card from "$lib/client/components/card.svelte";
   import verticalTransition from "$lib/client/transitions/verticalTransition";
   import { fade } from "svelte/transition";
+
+  const BIG_IMAGE="https://images.unsplash.com/photo-1594771804886-a933bb2d609b?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTh8fGFncmljdWx0dXJlfGVufDB8fDB8fHww";
 </script>
 
 <svelte:head>
   <title>{$t('home.title')}</title>
   <meta name="description" content={$t('home.description')} />
+  <link rel="preload" as="image" href={BIG_IMAGE}>
 </svelte:head>
 
 <main in:fade out:verticalTransition>
