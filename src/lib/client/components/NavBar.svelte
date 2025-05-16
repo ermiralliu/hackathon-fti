@@ -9,24 +9,27 @@
   import InputSwitch from "./inputSwitch.svelte";
   import { onMount } from "svelte";
   import { browser } from "$app/environment";
-  
+
   const tabs = [
-    { name: "Home", link: "/", i18nKey: 'nav.home' },
-    { name: "Browse Products", link: "/products", i18nKey: 'nav.browse' },
-    { name: "Panel", link: "/panel", i18nKey: 'nav.panel' },
+    { name: "Home", link: "/", i18nKey: "nav.home" },
+    { name: "Browse Products", link: "/products", i18nKey: "nav.browse" },
+    { name: "Panel", link: "/panel", i18nKey: "nav.panel" },
   ];
-  
-  let { isLogged, isDark, lang }: { isLogged: boolean; isDark: boolean; lang?: 'en'|'sq' } = $props();
+
+  let {
+    isLogged,
+    isDark
+  }: { isLogged: boolean; isDark: boolean} = $props();
 
   let dropdownOpen = $state(false);
   let dropdownVisibility = $state(false);
   let dropdownRef: HTMLMenuElement;
-  
+
   const handleLogout: SubmitFunction = () => {
     console.log("Form Called");
     return async ({ result }: { result: ActionResult }) => {
       console.log(JSON.stringify(result));
-      
+
       console.log("Form result received");
       const res = result as ActionResult & { success: boolean };
       if (res.success) {
@@ -35,17 +38,17 @@
       }
     };
   };
-  
+
   let closeTimeoutId: NodeJS.Timeout | undefined;
 
   function toggleDropdown(e?: MouseEvent) {
     e?.stopPropagation(); // this was key. It stops document from immediately closing it
-    
+
     const nextDropdownOpen = !dropdownOpen;
-    
+
     clearTimeout(closeTimeoutId);
     closeTimeoutId = undefined; // Reset the ID
-    
+
     if (nextDropdownOpen) {
       dropdownVisibility = true;
     } else {
@@ -53,11 +56,11 @@
         dropdownVisibility = false;
       }, 200);
     }
-    
+
     // Update the primary state immediately
     dropdownOpen = nextDropdownOpen;
   }
-  
+
   const softNavigation: MouseEventHandler<HTMLAnchorElement> = e => {
     e.preventDefault();
     toggleDropdown();
@@ -65,33 +68,30 @@
     console.log(target.href);
     goto(target.href);
   };
-  
+
   // The section here is all about dark mode toggle
   let isDarkMode = $state(isDark);
-  
-  onMount( async () => {
+
+  onMount(async () => {
     if (!browser) return;
     console.log("awaited success");
-    
     const id = "theme-switch";
     // if (localStorage.getItem(`toggle-switch-${id}-preference`)) return;
-    
     function applyTheme(isDark: boolean) {
       isDarkMode = isDark;
     }
-    
     const cookieKey = `preference-${id}`;
     const cookies = document.cookie.split("; ");
     const themeCookie = cookies.find(cookie =>
-    cookie.startsWith(cookieKey + "="),
-  );
-  
-  if (themeCookie) {
-    const cookieValue = themeCookie.split("=")[1];
-    isDarkMode = cookieValue === "on";
+      cookie.startsWith(cookieKey + "="),
+    );
+
+    if (themeCookie) {
+      const cookieValue = themeCookie.split("=")[1];
+      isDarkMode = cookieValue === "on";
       return;
     }
-    
+
     if (
       window.matchMedia &&
       window.matchMedia("(prefers-color-scheme: dark)").matches
@@ -101,34 +101,36 @@
       applyTheme(false);
     }
   });
-  
+
   // The section in here will be all about sq, en language toggle
   import { page } from "$app/state";
-  let isEnglish = $state(lang === 'en');
+  
+  
+  import language from "../globalStates/language.svelte";
+  let isEnglish = $derived(language.lang === "en");
 
   $inspect("English: " + isEnglish);
   $effect(() => {
     const pathname = page.url.pathname;
     // const invalidateAll = { invalidateAll: false };
-    const noScroll = {noScroll: true};
+    const noScroll = { noScroll: true };
     $inspect(pathname);
-    function gotoSomewhere(wrongLang: string, correctLang: string){
+    function gotoSomewhere(wrongLang: string, correctLang: string) {
       if (pathname.includes(correctLang)) return;
-      if(pathname.includes(wrongLang)){
+      if (pathname.includes(wrongLang)) {
         goto(pathname.replace(wrongLang, correctLang), noScroll);
-      }
-      else{
-        goto(correctLang+ pathname, noScroll);
+      } else {
+        goto(correctLang + pathname, noScroll);
       }
     }
     if (isEnglish) {
-      gotoSomewhere('/sq', '/en')
+      gotoSomewhere("/sq", "/en");
     } else {
-      gotoSomewhere('/en', '/sq');
+      gotoSomewhere("/en", "/sq");
     }
   });
 
-  import { t } from '$lib/translations';
+  import { t } from "$lib/translations";
 </script>
 
 <header>
@@ -138,14 +140,16 @@
         class="mobile-menu-button"
         class:hidden={!sidebarButton.isPanelPage}
         aria-hidden={!sidebarButton.isPanelPage}
-        aria-label={$t('top-bar.header.toggleSidebar')}
+        aria-label={$t("top-bar.header.toggleSidebar")}
         onclick={toggleOpen}
       >
         ☰
       </button>
       <ul>
         {#each tabs as tab}
-          <li><a href={tab.link}>{$t('top-bar.'+tab.i18nKey)}</a></li>
+          <li>
+            <a href={language.link + tab.link}>{$t("top-bar." + tab.i18nKey)}</a>
+          </li>
         {/each}
       </ul>
     </div>
@@ -155,7 +159,7 @@
       class="user-dropdown-trigger"
       aria-haspopup="menu"
       aria-expanded={dropdownOpen}
-      aria-label={$t('top-bar.header.userMenu')}
+      aria-label={$t("top-bar.header.userMenu")}
       onclick={toggleDropdown}
     >
       👤
@@ -170,37 +174,44 @@
         <InputSwitch
           id="theme-switch"
           bind:isOn={isDarkMode}
-          labelText={$t('top-bar.header.themeToggleLabel')}
-          ariaLabel={$t('top-bar.header.toggleThemeAriaLabel')}
+          labelText={$t("top-bar.header.themeToggleLabel")}
+          ariaLabel={$t("top-bar.header.toggleThemeAriaLabel")}
         />
       </li>
       <li role="none" class="theme-switch-li">
         <InputSwitch
           id="language-switch"
           bind:isOn={isEnglish}
-          labelText={isEnglish ? $t('top-bar.languages.en') : $t('top-bar.languages.al')}
-          ariaLabel={$t('top-bar.header.toggleLanguageAriaLabel')}
+          labelText={isEnglish
+            ? $t("top-bar.languages.en")
+            : $t("top-bar.languages.al")}
+          ariaLabel={$t("top-bar.header.toggleLanguageAriaLabel")}
         />
       </li>
       {#if isLogged}
         <li role="none">
-          <a href="/profile" role="menuitem" onclick={softNavigation}
-            >{$t('top-bar.header.profile')}</a
+          <a href={language.link + "/profile"} role="menuitem" onclick={softNavigation}
+            >{$t("top-bar.header.profile")}</a
           >
         </li>
         <li role="none">
-          <a href="/settings" role="menuitem">{$t('top-bar.header.settings')}</a>
+          <a href={language.link +"/settings"} role="menuitem">{$t("top-bar.header.settings")}</a
+          >
         </li>
         <li role="none" class="logout-li">
           <form method="POST" action="/logout" use:enhance={handleLogout}>
-            <button type="submit" aria-label={$t('top-bar.header.logOutAriaLabel')} class="logout-btn"
-              >{$t('top-bar.header.logOut')}</button
+            <button
+              type="submit"
+              aria-label={$t("top-bar.header.logOutAriaLabel")}
+              class="logout-btn">{$t("top-bar.header.logOut")}</button
             >
           </form>
         </li>
       {:else}
         <li role="none">
-          <a href="/login" role="menuitem" onclick={softNavigation}>{$t('top-bar.header.logIn')}</a>
+          <a href={language.link +"/login"} role="menuitem" onclick={softNavigation}
+            >{$t("top-bar.header.logIn")}</a
+          >
         </li>
       {/if}
     </menu>

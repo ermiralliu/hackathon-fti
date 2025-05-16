@@ -1,8 +1,9 @@
-<script>
+<script lang="ts">
   import { t } from '$lib/translations';
   import Card from "$lib/client/components/card.svelte";
   import verticalTransition from "$lib/client/transitions/verticalTransition";
   import { fade } from "svelte/transition";
+  import language from '$lib/client/globalStates/language.svelte';
 
   const BIG_IMAGE="https://images.unsplash.com/photo-1594771804886-a933bb2d609b?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTh8fGFncmljdWx0dXJlfGVufDB8fDB8fHww";
 </script>
@@ -14,12 +15,12 @@
 </svelte:head>
 
 <main in:fade out:verticalTransition>
-  <section class="hero-section">
+  <section class="hero-section" style:--cool-background-url={`url(${BIG_IMAGE})`}>
     <h1 class="hero-title">{$t('home.hero_title')}</h1>
     <p class="hero-description">
       {$t('home.hero_description')}
     </p>
-    <a class="main-btn" href="/products">{$t('home.hero_button')}</a>
+    <a class="main-btn" href={language.link +"/products"}>{$t('home.hero_button')}</a>
   </section>
 
   <section class="about-section">
@@ -52,14 +53,14 @@
     <p class="cta-description">
       {$t('home.cta_description')}
     </p>
-    <a href="/register" class="main-btn">{$t('home.cta_button')}</a>
+    <a href={language.link + "/register"} class="main-btn">{$t('home.cta_button')}</a>
   </section>
 </main>
 
 <style>
-  :root {
+  /* :root {
     --cool-background-url: url("https://images.unsplash.com/photo-1594771804886-a933bb2d609b?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTh8fGFncmljdWx0dXJlfGVufDB8fDB8fHww");
-  }
+  } */
 
   section {
     padding: 2.5rem 0;

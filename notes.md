@@ -1,0 +1,1 @@
+It seems preload on hover is what caused some problems with translations,  it would preload other pages which were in english only (maybe?)

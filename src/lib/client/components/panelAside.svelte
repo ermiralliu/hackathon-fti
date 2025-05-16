@@ -14,6 +14,7 @@
     toggleOpen,
   } from "$lib/client/globalStates/sidebarButton.svelte";
     import verticalTransition from "../transitions/verticalTransition";
+    import language from "../globalStates/language.svelte";
 
   $inspect(sidebarButton.opened);
 </script>
@@ -31,7 +32,7 @@
       <ul>
         {#each tabs as tab}
           <li class:active={activeTab === tab.id}>
-            <a href={tab.route} onclick={toggleOpen}>{tab.label}</a>
+            <a href={language.link+ tab.route} onclick={toggleOpen}>{tab.label}</a>
             <!-- data-sveltekit-preload-data="eager" // this could be used for interesting preload effects -->
           </li>
         {/each}
