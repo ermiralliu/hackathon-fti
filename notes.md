@@ -1,1 +1,2 @@
 It seems preload on hover is what caused some problems with translations,  it would preload other pages which were in english only (maybe?)
+Fixed after putting the languages within the links instead of relying in redirects

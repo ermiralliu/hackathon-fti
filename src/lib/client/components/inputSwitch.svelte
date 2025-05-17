@@ -14,7 +14,7 @@
     ariaLabel: string;
   } = $props();
 
-  const localStorageKey = `toggle-switch-${id}-preference`;
+  // const localStorageKey = `toggle-switch-${id}-preference`;
   const cookieKey = `preference-${id}`;
   const maxAgeSeconds = 31536000; // 1 year in seconds
 

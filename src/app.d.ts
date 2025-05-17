@@ -8,6 +8,7 @@ declare global {
 		interface Locals {
 			user: User | null | undefined; // Define the 'user' property and its type
       theme?: string;
+      lang: 'en' | 'sq'
 		}
 		// interface PageData {}
 		// interface PageState {}

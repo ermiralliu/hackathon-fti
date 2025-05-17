@@ -18,7 +18,11 @@ export const POST: RequestHandler = async ({ cookies, locals }) => {
   }
 
   // throw redirect(303, '/'); // we prefer throws to redirects
-  return json({ success: true, redirectTo: '/' });
+  return json({ 
+    success: true, 
+    // type: 'redirect', 
+    location: `/${locals.lang}` 
+  });
 }
 
 // export const GET: RequestHandler = ()=>{

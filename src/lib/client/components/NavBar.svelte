@@ -31,10 +31,10 @@
       console.log(JSON.stringify(result));
 
       console.log("Form result received");
-      const res = result as ActionResult & { success: boolean };
+      const res = result as ActionResult & { success: boolean, location: string };
       if (res.success) {
         toggleDropdown();
-        goto("/", { invalidateAll: true });
+        goto(res.location, { invalidateAll: true });
       }
     };
   };

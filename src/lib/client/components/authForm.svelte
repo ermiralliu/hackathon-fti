@@ -3,6 +3,7 @@
   import verticalTransition from "$lib/client/transitions/verticalTransition";
   import { onMount } from "svelte";
   import { fade, fly } from "svelte/transition";
+    import language from "../globalStates/language.svelte";
 
   let { auth } = $props();
   let isRegisterPage = $derived(auth === "register");
@@ -79,7 +80,7 @@
     {/if}
 
     <button type="submit" disabled={!passwordsMatch}>Send</button>
-    <a href="/{otherPage}"> Go to {otherPage} </a>
+    <a href="{language.link+'/'+ otherPage}" data-sveltekit-preload-code="eager"> Go to {otherPage} </a>
   {/key}
 </form>
 

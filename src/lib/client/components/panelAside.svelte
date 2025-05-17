@@ -32,8 +32,9 @@
       <ul>
         {#each tabs as tab}
           <li class:active={activeTab === tab.id}>
-            <a href={language.link+ tab.route} onclick={toggleOpen}>{tab.label}</a>
-            <!-- data-sveltekit-preload-data="eager" // this could be used for interesting preload effects -->
+            <a href={language.link+ tab.route} onclick={toggleOpen} data-sveltekit-preload-code="eager">{tab.label}</a>
+            <!-- The code itself shouldn't be too big, so I think eager code preloading could be beneficial -->
+            <!-- data-sveltekit-preload-data="eager" // if you want to preload data too -->
           </li>
         {/each}
       </ul>
